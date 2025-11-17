@@ -19,7 +19,7 @@
             </div>
             <a class="today" (click)="goToToday()">Hoje</a>
 
-            <div class="history">
+            <div class="history" (click)="showHistory()">
                 <mat-icon>access_time</mat-icon>
                 <span>Ver Histórico</span>
             </div>
@@ -30,8 +30,27 @@
         </button>
     </div>
 
+    <app-history *ngIf="showHistoryFlag"></app-history>
+
     <div class="cards">
         <app-card *ngFor="let card of listCards" [description]="card.description" [complement]="card.complement"
             [icon]="card.icon"></app-card>
     </div>
+
+    <div class="habts">
+        <div style="display: flex; justify-content: space-between;margin-bottom: 20px;">
+            <h3>Hábitos de Hoje</h3>
+            <button class="add" (click)="openAddHabitModal()">Adicionar Hábito</button>
+        </div>
+
+        <div class="cards-horizontal">
+            <app-card-horizont *ngFor="let habito of listHabitos; let i = index" [index]="i"
+                (habitChanged)="onHabitChanged($event)" [habito]="habito"></app-card-horizont>
+        </div>
+    </div>
+
+    <footer>
+        <h3>Continue assim! 💪</h3>
+        <span>Você está a {{ restante}}% de completar todas as suas metas de hoje.</span>
+    </footer>
 </div>
