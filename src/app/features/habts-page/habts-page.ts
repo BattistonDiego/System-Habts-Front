@@ -10,6 +10,7 @@ import { AddHabitModal } from '../../components/add-habit-modal/add-habit-modal'
 import { HabitoService } from '../../service/habito.service';
 import { CreateHabito, Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 
 @Component({
   selector: 'app-habts-page',
@@ -69,15 +70,47 @@ export class HabtsPage implements OnInit {
 
   addHabit(habit: Habito) {
     this.habitoService.postHabitos(habit).subscribe({
-      next: (response) => {
-        // aqui eu quero colocar aquele mensagem que aparece em cima da tela
-        console.log('Habit added successfully:', response);
+      next: () => {
+        this.snackBar.openFromComponent(CustomSnackbar, {
+          data: {
+            message: 'Hábito adicionado com sucesso!',
+            icon: 'check_circle',
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success'],
+        });
+
+        this.loadHabitos();
+      },
+      error: () => {
+        this.snackBar.openFromComponent(CustomSnackbar, {
+          data: {
+            message: 'Hábito adicionado com sucesso!',
+            icon: 'check_circle',
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error'],
+        });
       },
     });
   }
 
   deleteHabit(event: { id: number }) {
-    this.habitoService.deleteHabitos(event.id).subscribe();
+    this.habitoService.deleteHabitos(event.id).subscribe({
+      next: () => {
+        this.snackBar.open('Hábito Deletado com sucesso!', '', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error'],
+        });
+        this.loadHabitos();
+      },
+    });
   }
 
   changeDate(days: number) {
