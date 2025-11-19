@@ -1,4 +1,5 @@
 export interface Habito {
+  id: number;
   nome: string;
   meta: number;
   unidade?: string;

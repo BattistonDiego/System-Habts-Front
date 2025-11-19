@@ -1,32 +1,38 @@
 <mat-card class="habit-card">
-    <div class="container">
-        <div class="left">
-            <img [src]="habito.icone" alt="">
-            <div class="text">
-                <div class="title">{{ habito.nome }}</div>
-                <div class="meta">Meta: {{ habito.meta }} {{habito.unidade}}</div>
-            </div>
-        </div>
-
-        <div class="right">
-            <button mat-icon-button (click)="decrease()">
-                <mat-icon>remove</mat-icon>
-            </button>
-
-            <span class="counter">{{ current }}/{{ goal }}</span>
-
-            <button mat-icon-button color="primary" (click)="increase()">
-                <mat-icon>add</mat-icon>
-            </button>
-        </div>
+  <div class="container">
+    <div class="left">
+      <img [src]="habito.icone" alt="" />
+      <div class="text">
+        <div class="title">{{ habito.nome }}</div>
+        <div class="meta">Meta: {{ habito.meta }} {{ habito.unidade }}</div>
+      </div>
     </div>
 
+    <div class="right">
+      <button mat-icon-button (click)="decrease()">
+        <mat-icon>remove</mat-icon>
+      </button>
 
-    <mat-progress-bar [value]="(current / goal) * 100" mode="determinate"
-        [ngClass]="{ 'completed-bar': current === goal }">
-    </mat-progress-bar>
+      <span class="counter">{{ current }}/{{ goal }}</span>
 
-    <div class="meta" *ngIf="current === goal" [ngClass]="'completed-text'">
-        <img src="assets/png/icon-goal-success.png" alt=""> Meta concluída!
+      <button mat-icon-button color="primary" (click)="increase()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
+
+    <div class="buttons">
+      <img src="assets/png/icon-delete.png" alt="" (click)="deleteHabit(habito.id)" />
+    </div>
+  </div>
+
+  <mat-progress-bar
+    [value]="(current / goal) * 100"
+    mode="determinate"
+    [ngClass]="{ 'completed-bar': current === goal }"
+  >
+  </mat-progress-bar>
+
+  <div class="meta" *ngIf="current === goal" [ngClass]="'completed-text'">
+    <img src="assets/png/icon-goal-success.png" alt="" /> Meta concluída!
+  </div>
 </mat-card>
