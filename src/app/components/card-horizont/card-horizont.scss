@@ -50,6 +50,14 @@
     }
   }
 
+  .buttons{
+    padding-top: 6px;
+
+    img{
+      cursor: pointer;
+    }
+  }
+
   mat-progress-bar {
     height: 8px;
     border-radius: 4px;

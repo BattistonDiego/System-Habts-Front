@@ -9,10 +9,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddHabitModal } from '../../components/add-habit-modal/add-habit-modal';
 import { HabitoService } from '../../service/habito.service';
 import { CreateHabito, Habito } from '../../interface/habito.model';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 
 @Component({
   selector: 'app-habts-page',
-  imports: [MatIconModule, MatButtonModule, CommonModule, Card, CardHorizont, History],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    CommonModule,
+    Card,
+    CardHorizont,
+    History,
+    MatSnackBarModule,
+  ],
   templateUrl: './habts-page.html',
   styleUrl: './habts-page.scss',
 })
@@ -23,7 +33,11 @@ export class HabtsPage implements OnInit {
   restante = 100;
   showHistoryFlag = false;
 
-  constructor(private dialog: MatDialog, private habitoService: HabitoService) {}
+  constructor(
+    private dialog: MatDialog,
+    private habitoService: HabitoService,
+    private snackBar: MatSnackBar
+  ) {}
 
   listCards = [
     {
@@ -51,8 +65,51 @@ export class HabtsPage implements OnInit {
         ...h,
         current: 0,
       }));
+    });
+  }
 
-      console.log(this.listHabitos);
+  addHabit(habit: Habito) {
+    this.habitoService.postHabitos(habit).subscribe({
+      next: () => {
+        this.snackBar.openFromComponent(CustomSnackbar, {
+          data: {
+            message: 'Hábito adicionado com sucesso!',
+            icon: 'check_circle',
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success'],
+        });
+
+        this.loadHabitos();
+      },
+      error: () => {
+        this.snackBar.openFromComponent(CustomSnackbar, {
+          data: {
+            message: 'Hábito adicionado com sucesso!',
+            icon: 'check_circle',
+          },
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error'],
+        });
+      },
+    });
+  }
+
+  deleteHabit(event: { id: number }) {
+    this.habitoService.deleteHabitos(event.id).subscribe({
+      next: () => {
+        this.snackBar.open('Hábito Deletado com sucesso!', '', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error'],
+        });
+        this.loadHabitos();
+      },
     });
   }
 
@@ -71,7 +128,6 @@ export class HabtsPage implements OnInit {
   }
 
   onHabitChanged(event: { index: number; current: number }) {
-    console.log(event.index, event.current);
     this.listHabitos[event.index].current = event.current;
     this.recalculateProgress();
   }
@@ -101,6 +157,7 @@ export class HabtsPage implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         const newHabit: Habito = {
+          id: result.habit.id,
           nome: result.habit.nome,
           meta: result.habit.meta,
           unidade: result.habit.unidade,
@@ -108,16 +165,7 @@ export class HabtsPage implements OnInit {
           cor: result.color,
         };
         this.addHabit(newHabit);
-        console.log(newHabit);
       }
-    });
-  }
-
-  addHabit(habit: Habito) {
-    this.habitoService.postHabitos(habit).subscribe({
-      next: (response) => {
-        console.log('Habit added successfully:', response);
-      },
     });
   }
 }

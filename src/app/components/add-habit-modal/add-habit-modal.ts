@@ -28,7 +28,7 @@ export class AddHabitModal implements OnInit {
   icons = [
     { name: 'water_drop', label: 'Água', src: 'assets/png/icon-water.png' },
     { name: 'menu_book', label: 'Livro', src: 'assets/png/menu-book.svg' },
-    { name: 'fitness_center', label: 'Exercício', src: 'assets/png/fitness-center.svg' },
+    { name: 'fitness_center', label: 'Exercício', src: 'assets/png/icon-workout.png' },
     { name: 'favorite', label: 'Coração', src: 'assets/png/favorite.svg' },
     { name: 'coffee', label: 'Café', src: 'assets/png/coffee.svg' },
     { name: 'psychology', label: 'Cérebro', src: 'assets/png/psychology.svg' },

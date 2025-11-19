@@ -23,6 +23,7 @@ export class CardHorizont {
   @Input() habito!: Habito;
 
   @Output() habitChanged = new EventEmitter<{ index: number; current: number }>();
+  @Output() habitDeletd = new EventEmitter<{ id: number }>();
 
   increase() {
     if (this.current < this.goal) {
@@ -36,6 +37,10 @@ export class CardHorizont {
       this.current--;
       this.habitChanged.emit({ index: this.index, current: this.current });
     }
+  }
+
+  deleteHabit(idHabit: number) {
+    this.habitDeletd.emit({ id: idHabit });
   }
 
   get progress(): number {

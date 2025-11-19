@@ -18,4 +18,10 @@ export class HabitoService {
   postHabitos(body: Habito): Observable<Habito> {
     return this.http.post<Habito>(this.baseUrl, body);
   }
+
+  deleteHabitos(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+
+    //I could do like this - return this.http.delete<any>(this.baseUrl + '/' + id);
+  }
 }
