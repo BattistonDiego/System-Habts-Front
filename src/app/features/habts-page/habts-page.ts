@@ -103,6 +103,10 @@ export class HabtsPage implements OnInit {
     });
   }
 
+  updateHabit(id: number) {
+    console.log('Aqui faremos a logica de editar chamar service e etc -- idHabito: ' + id);
+  }
+
   updatesCards() {
     this.listCards = [
       {
@@ -135,6 +139,7 @@ export class HabtsPage implements OnInit {
 
   onHabitChanged(event: { index: number; current: number }) {
     this.listHabitos[event.index].current = event.current;
+    console.log(this.listHabitos[event.index]);
     this.recalculateProgress();
   }
 

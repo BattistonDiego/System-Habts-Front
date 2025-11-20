@@ -13,7 +13,7 @@
         <mat-icon>remove</mat-icon>
       </button>
 
-      <span class="counter">{{ current }}/{{ goal }}</span>
+      <span class="counter">{{ current }}/{{ habito.meta }}</span>
 
       <button mat-icon-button color="primary" (click)="increase()">
         <mat-icon>add</mat-icon>
@@ -22,17 +22,18 @@
 
     <div class="buttons">
       <img src="assets/png/icon-delete.png" alt="" (click)="deleteHabit(habito.id)" />
+      <img src="assets/svg/icon-update.svg" alt="" (click)="updateHabit(habito.id)" />
     </div>
   </div>
 
   <mat-progress-bar
-    [value]="(current / goal) * 100"
+    [value]="(current / habito.meta) * 100"
     mode="determinate"
-    [ngClass]="{ 'completed-bar': current === goal }"
+    [ngClass]="{ 'completed-bar': current === habito.meta }"
   >
   </mat-progress-bar>
 
-  <div class="meta" *ngIf="current === goal" [ngClass]="'completed-text'">
+  <div class="meta" *ngIf="current === habito.meta" [ngClass]="'completed-text'">
     <img src="assets/png/icon-goal-success.png" alt="" /> Meta concluída!
   </div>
 </mat-card>

@@ -52,7 +52,8 @@
         *ngFor="let habito of listHabitos; let i = index"
         [index]="i"
         (habitChanged)="onHabitChanged($event)"
-        (habitDeletd)="deleteHabit($event)"
+        (habitDelete)="deleteHabit($event)"
+        (habitUpdate)="updateHabit($event)"
         [habito]="habito"
       ></app-card-horizont>
     </div>

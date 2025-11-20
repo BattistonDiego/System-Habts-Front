@@ -23,10 +23,11 @@ export class CardHorizont {
   @Input() habito!: Habito;
 
   @Output() habitChanged = new EventEmitter<{ index: number; current: number }>();
-  @Output() habitDeletd = new EventEmitter<{ id: number }>();
+  @Output() habitDelete = new EventEmitter<{ id: number }>();
+  @Output() habitUpdate = new EventEmitter<number>();
 
   increase() {
-    if (this.current < this.goal) {
+    if (this.current < this.habito.meta) {
       this.current++;
       this.habitChanged.emit({ index: this.index, current: this.current });
     }
@@ -40,10 +41,15 @@ export class CardHorizont {
   }
 
   deleteHabit(idHabit: number) {
-    this.habitDeletd.emit({ id: idHabit });
+    this.habitDelete.emit({ id: idHabit });
+  }
+
+  updateHabit(idHabit: number) {
+    // ver com o chat se é aqui mesmo se eu devo abrir 0 modal para editar ou se é no componente pai
+    this.habitUpdate.emit(idHabit);
   }
 
   get progress(): number {
-    return (this.current / this.goal) * 100;
+    return (this.current / this.habito.meta) * 100;
   }
 }
