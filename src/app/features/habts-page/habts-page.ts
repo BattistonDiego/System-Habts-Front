@@ -39,20 +39,8 @@ export class HabtsPage implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  listCards = [
-    {
-      description: 'Progresso',
-      complement: this.progress + '%',
-      icon: 'assets/png/icon-progress.png',
-    },
-    {
-      description: 'Hábitos Completos',
-      complement: '0/3',
-      icon: 'assets/png/icon-complete.png',
-    },
-    { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
-  ];
-
+  listCards: any[] = [];
+  totalHabitos: number = 0;
   listHabitos: Habito[] = [];
 
   ngOnInit() {
@@ -65,6 +53,8 @@ export class HabtsPage implements OnInit {
         ...h,
         current: 0,
       }));
+      this.totalHabitos = habitos.length;
+      this.updatesCards();
     });
   }
 
@@ -111,6 +101,22 @@ export class HabtsPage implements OnInit {
         this.loadHabitos();
       },
     });
+  }
+
+  updatesCards() {
+    this.listCards = [
+      {
+        description: 'Progresso',
+        complement: this.progress + '%',
+        icon: 'assets/png/icon-progress.png',
+      },
+      {
+        description: 'Hábitos Completos',
+        complement: '0/' + this.totalHabitos,
+        icon: 'assets/png/icon-complete.png',
+      },
+      { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
+    ];
   }
 
   changeDate(days: number) {

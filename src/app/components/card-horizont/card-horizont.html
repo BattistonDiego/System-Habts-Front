@@ -1,7 +1,7 @@
 <mat-card class="habit-card">
   <div class="container">
     <div class="left">
-      <img [src]="habito.icone" alt="" />
+      <img [src]="habito.icone" alt="" [style.background]="habito.cor" />
       <div class="text">
         <div class="title">{{ habito.nome }}</div>
         <div class="meta">Meta: {{ habito.meta }} {{ habito.unidade }}</div>
