@@ -29,7 +29,7 @@ export class HabitModal implements OnInit {
     { name: 'water_drop', label: 'Água', src: 'assets/svg/icon-water.svg' },
     { name: 'menu_book', label: 'Livro', src: 'assets/png/icon-study.png' },
     { name: 'fitness_center', label: 'Exercício', src: 'assets/png/icon-workout.png' },
-    { name: 'code', label: 'Codar', src: 'assets/png/icon-workout.png' },
+    { name: 'code', label: 'Codar', src: 'assets/svg/icon-code.svg' },
   ];
 
   colors = ['#4A90E2', '#F7D154', '#F55E5E', '#53D86A', '#B55EFF', '#FF5AAA', '#000000'];

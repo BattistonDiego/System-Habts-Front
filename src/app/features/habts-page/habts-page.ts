@@ -104,13 +104,39 @@ export class HabtsPage implements OnInit {
   }
 
   updateHabit(id: number) {
-    console.log('Aqui faremos a logica de editar chamar service e etc -- idHabito: ' + id);
     const habitoSelected = this.listHabitos.filter((h) => h.id === id);
     const dialogRef = this.dialog.open(HabitModal, {
       data: {
         habitSelected: habitoSelected[0],
         mode: 'edit',
       },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const body = {
+          nome: result.habit.nome,
+          meta: result.habit.meta,
+          unidade: result.habit.unidade,
+          icone: result.icon,
+          cor: result.color,
+        };
+        this.habitoService.editHabitos(habitoSelected[0].id, body).subscribe({
+          next: () => {
+            this.snackBar.openFromComponent(CustomSnackbar, {
+              data: {
+                message: 'Hábito alterado com sucesso!',
+                icon: 'check_circle',
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success'],
+            });
+            this.loadHabitos();
+          },
+        });
+      }
     });
   }
 
