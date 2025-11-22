@@ -6,11 +6,12 @@ import { Card } from '../../components/card/card';
 import { CardHorizont } from '../../components/card-horizont/card-horizont';
 import { History } from '../../components/history/history';
 import { MatDialog } from '@angular/material/dialog';
-import { HabitModal } from '../../components/add-habit-modal/habit-modal';
+import { HabitModal } from '../../components/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
 import { CreateHabito, Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
+import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
 
 @Component({
   selector: 'app-habts-page',
@@ -90,17 +91,20 @@ export class HabtsPage implements OnInit {
   }
 
   deleteHabit(event: { id: number }) {
-    this.habitoService.deleteHabitos(event.id).subscribe({
-      next: () => {
-        this.snackBar.open('Hábito Deletado com sucesso!', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error'],
-        });
-        this.loadHabitos();
-      },
+    const dialogRef = this.dialog.open(DeleteHabitoModal, {
+      data: {},
     });
+    // this.habitoService.deleteHabitos(event.id).subscribe({
+    //   next: () => {
+    //     this.snackBar.open('Hábito Deletado com sucesso!', '', {
+    //       duration: 3000,
+    //       horizontalPosition: 'center',
+    //       verticalPosition: 'top',
+    //       panelClass: ['snackbar-error'],
+    //     });
+    //     this.loadHabitos();
+    //   },
+    // });
   }
 
   updateHabit(id: number) {
