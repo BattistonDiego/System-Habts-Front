@@ -6,7 +6,7 @@ import { Card } from '../../components/card/card';
 import { CardHorizont } from '../../components/card-horizont/card-horizont';
 import { History } from '../../components/history/history';
 import { MatDialog } from '@angular/material/dialog';
-import { AddHabitModal } from '../../components/add-habit-modal/add-habit-modal';
+import { HabitModal } from '../../components/add-habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
 import { CreateHabito, Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -105,6 +105,13 @@ export class HabtsPage implements OnInit {
 
   updateHabit(id: number) {
     console.log('Aqui faremos a logica de editar chamar service e etc -- idHabito: ' + id);
+    const habitoSelected = this.listHabitos.filter((h) => h.id === id);
+    const dialogRef = this.dialog.open(HabitModal, {
+      data: {
+        habitSelected: habitoSelected[0],
+        mode: 'edit',
+      },
+    });
   }
 
   updatesCards() {
@@ -159,7 +166,7 @@ export class HabtsPage implements OnInit {
   }
 
   openAddHabitModal() {
-    const dialogRef = this.dialog.open(AddHabitModal, {
+    const dialogRef = this.dialog.open(HabitModal, {
       data: {
         // You can pass data to the modal here if needed
       },
