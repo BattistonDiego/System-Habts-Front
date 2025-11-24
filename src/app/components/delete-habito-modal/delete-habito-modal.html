@@ -4,14 +4,14 @@
     <div class="details">
       <h3>Excluir Hábito?</h3>
       <span
-        >Tem certeza que deseja excluir o hábito <span class="grife">" Beber Água "</span> ? Esta
-        ação não pode ser desfeita.</span
+        >Tem certeza que deseja excluir o hábito
+        <span class="grife">"{{ data.nomeHabito }}"</span> ? Esta ação não pode ser desfeita.</span
       >
     </div>
   </div>
 
   <div class="buttons">
-    <button>Cancelar</button>
-    <button>Excluir</button>
+    <button (click)="closeModal()">Cancelar</button>
+    <button (click)="excluirModal()">Excluir</button>
   </div>
 </div>

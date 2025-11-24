@@ -19,7 +19,7 @@
       <button
         *ngFor="let ic of icons"
         mat-icon-button
-        [class.selected]="selectedIcon === ic.name"
+        [class.selected]="selectedIcon === ic.src"
         (click)="selectedIcon = ic.src"
       >
         <mat-icon>{{ ic.name }}</mat-icon>

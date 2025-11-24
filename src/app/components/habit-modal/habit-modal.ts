@@ -26,10 +26,15 @@ export class HabitModal implements OnInit {
   selectedColor: string | undefined = '';
 
   icons = [
-    { name: 'water_drop', label: 'Água', src: 'assets/svg/icon-water.svg' },
-    { name: 'menu_book', label: 'Livro', src: 'assets/png/icon-study.png' },
-    { name: 'fitness_center', label: 'Exercício', src: 'assets/png/icon-workout.png' },
-    { name: 'code', label: 'Codar', src: 'assets/svg/icon-code.svg' },
+    { name: 'water_drop', label: 'Água', src: 'assets/svg/icon-water.svg', color: '#4A90E2' },
+    { name: 'menu_book', label: 'Livro', src: 'assets/png/icon-study.png', color: '#F55E5E' },
+    {
+      name: 'fitness_center',
+      label: 'Exercício',
+      src: 'assets/png/icon-workout.png',
+      color: '#F7D154',
+    },
+    { name: 'code', label: 'Codar', src: 'assets/svg/icon-code.svg', color: '#53D86A' },
   ];
 
   colors = ['#4A90E2', '#F7D154', '#F55E5E', '#53D86A', '#B55EFF', '#FF5AAA', '#000000'];

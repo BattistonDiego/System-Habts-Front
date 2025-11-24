@@ -90,21 +90,26 @@ export class HabtsPage implements OnInit {
     });
   }
 
-  deleteHabit(event: { id: number }) {
+  deleteHabit(event: { id: number }, habito: Habito) {
     const dialogRef = this.dialog.open(DeleteHabitoModal, {
-      data: {},
+      data: { nomeHabito: habito.nome },
     });
-    // this.habitoService.deleteHabitos(event.id).subscribe({
-    //   next: () => {
-    //     this.snackBar.open('Hábito Deletado com sucesso!', '', {
-    //       duration: 3000,
-    //       horizontalPosition: 'center',
-    //       verticalPosition: 'top',
-    //       panelClass: ['snackbar-error'],
-    //     });
-    //     this.loadHabitos();
-    //   },
-    // });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.habitoService.deleteHabitos(event.id).subscribe({
+          next: () => {
+            this.snackBar.open('Hábito Deletado com sucesso!', '', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-error'],
+            });
+            this.loadHabitos();
+          },
+        });
+      }
+    });
   }
 
   updateHabit(id: number) {
