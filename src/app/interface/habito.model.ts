@@ -6,6 +6,8 @@ export interface Habito {
   icone?: string;
   cor?: string;
   current?: number;
+  concluidoHoje?: boolean;
+  valorAtual?: number;
 }
 
 export interface CreateHabito {

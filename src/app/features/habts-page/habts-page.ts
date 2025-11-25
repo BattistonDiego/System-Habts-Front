@@ -12,6 +12,7 @@ import { CreateHabito, Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
+import { HistoricoService } from '../../service/historico.service';
 
 @Component({
   selector: 'app-habts-page',
@@ -33,16 +34,19 @@ export class HabtsPage implements OnInit {
   progress = 0;
   restante = 100;
   showHistoryFlag = false;
+  habitoCompletado!: boolean;
 
   constructor(
     private dialog: MatDialog,
     private habitoService: HabitoService,
+    private historicoService: HistoricoService,
     private snackBar: MatSnackBar
   ) {}
 
   listCards: any[] = [];
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
+  listHistorico: any[] = [];
 
   ngOnInit() {
     this.loadHabitos();
@@ -56,6 +60,22 @@ export class HabtsPage implements OnInit {
       }));
       this.totalHabitos = habitos.length;
       this.updatesCards();
+      this.loadHistrorico();
+    });
+  }
+
+  loadHistrorico() {
+    this.historicoService.getListHistorico().subscribe((res) => {
+      this.listHistorico = res;
+
+      // ver pra que serve esse some
+      const habitosComRegistro = this.listHabitos.filter((h) =>
+        this.listHistorico.some((r) => r.habito.id === h.id)
+      );
+
+      if (habitosComRegistro.length > 0) {
+        this.getHabitosCompletadoHoje();
+      }
     });
   }
 
@@ -99,7 +119,11 @@ export class HabtsPage implements OnInit {
       if (res) {
         this.habitoService.deleteHabitos(event.id).subscribe({
           next: () => {
-            this.snackBar.open('Hábito Deletado com sucesso!', '', {
+            this.snackBar.openFromComponent(CustomSnackbar, {
+              data: {
+                message: 'Hábito deletado com sucesso!',
+                icon: 'check_circle',
+              },
               duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'top',
@@ -165,6 +189,22 @@ export class HabtsPage implements OnInit {
     ];
   }
 
+  getHabitosCompletadoHoje() {
+    const listHabito = this.listHabitos;
+    const listHistorico = this.listHistorico;
+    const newList = listHabito.map((h) => {
+      const registro = listHistorico.find((r) => r.habito.id === h.id);
+
+      return {
+        ...h,
+        concluidoHoje: registro?.status ?? false,
+        valorAtual: registro?.valorAtual ?? 0,
+      };
+    });
+
+    this.listHabitos = newList;
+  }
+
   changeDate(days: number) {
     const newDate = new Date(this.selectedDate);
     newDate.setDate(this.selectedDate.getDate() + days);
@@ -181,8 +221,8 @@ export class HabtsPage implements OnInit {
 
   onHabitChanged(event: { index: number; current: number }) {
     this.listHabitos[event.index].current = event.current;
-    console.log(this.listHabitos[event.index]);
     this.recalculateProgress();
+    this.habitCompleted();
   }
 
   recalculateProgress() {
@@ -198,6 +238,34 @@ export class HabtsPage implements OnInit {
     if (habitsCard) habitsCard.complement = `${completed}/${this.listHabitos.length}`;
 
     this.restante = 100 - progress;
+  }
+
+  habitCompleted() {
+    const habitoComplet = this.listHabitos.find((h) => h.current === h.meta);
+    const body = {
+      habitoId: habitoComplet?.id,
+      status: true,
+      valorAtual: habitoComplet?.current,
+    };
+    if (habitoComplet) {
+      this.historicoService.postHistorico(body).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (erro) => {
+          this.snackBar.openFromComponent(CustomSnackbar, {
+            data: {
+              message: 'Hábito ja completado na data de hoje!',
+              icon: 'error_outline',
+            },
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error'],
+          });
+        },
+      });
+    }
   }
 
   openAddHabitModal() {
