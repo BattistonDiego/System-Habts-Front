@@ -65,7 +65,9 @@ export class HabtsPage implements OnInit {
   }
 
   loadHistrorico() {
-    this.historicoService.getListHistorico().subscribe((res) => {
+    const hoje = new Date().toISOString().split('T')[0];
+
+    this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
       this.listHistorico = res;
 
       // ver pra que serve esse some
