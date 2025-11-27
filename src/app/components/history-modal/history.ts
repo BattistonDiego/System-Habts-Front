@@ -34,4 +34,8 @@ export class History {
   close() {
     this.dialogRef.close();
   }
+
+  clear() {
+    this.dataSelecionada.setValue(null);
+  }
 }

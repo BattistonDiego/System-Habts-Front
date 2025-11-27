@@ -10,18 +10,31 @@
     </button>
   </div>
 
-  <mat-form-field appearance="outline" class="campo-data">
-    <mat-label>Selecione uma data</mat-label>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      [formControl]="dataSelecionada"
-      placeholder="DD/MM/AAAA"
-    />
+  <div class="details">
+    <mat-form-field appearance="outline" class="campo-data">
+      <mat-label>Selecione uma data</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControl]="dataSelecionada"
+        placeholder="DD/MM/AAAA"
+      />
 
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
 
-    <mat-error *ngIf="dataSelecionada.invalid"> Por favor selecione uma data válida. </mat-error>
-  </mat-form-field>
+      <mat-error *ngIf="dataSelecionada.invalid"> Por favor selecione uma data válida. </mat-error>
+    </mat-form-field>
+
+    <div (click)="clear()" class="clear">
+      <img src="assets/png/icon-close.png" alt="" />
+      <span>Limpar</span>
+    </div>
+  </div>
+
+  <div class="container-image">
+    <img src="assets/png/icon-find.png" />
+    <span>Selecione uma data</span>
+    <p>Escolha uma data acima para visualizar seus hábitos</p>
+  </div>
 </div>
