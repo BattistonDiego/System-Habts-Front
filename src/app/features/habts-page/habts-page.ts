@@ -4,11 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Card } from '../../components/card/card';
 import { CardHorizont } from '../../components/card-horizont/card-horizont';
-import { History } from '../../components/history/history';
+import { History } from '../../components/history-modal/history';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
-import { CreateHabito, Habito } from '../../interface/habito.model';
+import { Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
@@ -33,7 +33,6 @@ export class HabtsPage implements OnInit {
   completedHabitsCount = 0;
   progress = 0;
   restante = 100;
-  showHistoryFlag = false;
   habitoCompletado!: boolean;
 
   constructor(
@@ -217,10 +216,6 @@ export class HabtsPage implements OnInit {
     this.selectedDate = new Date();
   }
 
-  showHistory() {
-    this.showHistoryFlag = !this.showHistoryFlag;
-  }
-
   onHabitChanged(event: { index: number; current: number }) {
     this.listHabitos[event.index].current = event.current;
     this.recalculateProgress();
@@ -289,6 +284,14 @@ export class HabtsPage implements OnInit {
         };
         this.addHabit(newHabit);
       }
+    });
+  }
+
+  openHistoryModal() {
+    const dialogRef = this.dialog.open(History, {
+      data: {
+        // You can pass data to the modal here if needed
+      },
     });
   }
 }

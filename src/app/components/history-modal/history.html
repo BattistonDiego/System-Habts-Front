@@ -1,0 +1,27 @@
+<div class="historico-container">
+  <div class="cabecalho">
+    <img src="assets/png/icon-history.png" alt="teste" />
+    <div class="info">
+      <span class="title">Histórico de Hábitos</span>
+      <p class="description">Busque e visualize seus hábitos de dias anteriores</p>
+    </div>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="campo-data">
+    <mat-label>Selecione uma data</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [formControl]="dataSelecionada"
+      placeholder="DD/MM/AAAA"
+    />
+
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+
+    <mat-error *ngIf="dataSelecionada.invalid"> Por favor selecione uma data válida. </mat-error>
+  </mat-form-field>
+</div>

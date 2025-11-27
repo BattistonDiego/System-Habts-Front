@@ -19,9 +19,9 @@
       </div>
       <a class="today" (click)="goToToday()">Hoje</a>
 
-      <div class="history" (click)="showHistory()">
+      <div class="history">
         <mat-icon>access_time</mat-icon>
-        <span>Ver Histórico</span>
+        <span (click)="openHistoryModal()">Ver Histórico</span>
       </div>
     </div>
 
@@ -29,8 +29,6 @@
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
-
-  <app-history *ngIf="showHistoryFlag"></app-history>
 
   <div class="cards">
     <app-card
