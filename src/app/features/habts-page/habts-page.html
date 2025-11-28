@@ -52,7 +52,7 @@
         (habitChanged)="onHabitChanged($event)"
         (habitDelete)="deleteHabit($event, habito)"
         (habitUpdate)="updateHabit($event)"
-        [habitoCompleted]="habito.concluidoHoje"
+        [habitoCompleted]="habitoCompletado"
         [current]="habito.valorAtual ?? 0"
         [habito]="habito"
       ></app-card-horizont>

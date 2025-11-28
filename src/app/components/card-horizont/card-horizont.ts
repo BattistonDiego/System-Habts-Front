@@ -34,6 +34,8 @@ export class CardHorizont {
   @Output() habitDelete = new EventEmitter<{ id: number }>();
   @Output() habitUpdate = new EventEmitter<number>();
 
+  mensagemConcluidoHoje: string | null = null;
+
   increase() {
     if (this.current < this.habito.meta) {
       this.current++;

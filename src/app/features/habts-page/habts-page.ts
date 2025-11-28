@@ -33,7 +33,7 @@ export class HabtsPage implements OnInit {
   completedHabitsCount = 0;
   progress = 0;
   restante = 100;
-  habitoCompletado!: boolean;
+  habitoCompletado: boolean = false;
 
   constructor(
     private dialog: MatDialog,
@@ -248,6 +248,7 @@ export class HabtsPage implements OnInit {
       this.historicoService.postHistorico(body).subscribe({
         next: (res) => {
           console.log(res);
+          this.habitoCompletado = true;
         },
         error: (erro) => {
           this.snackBar.openFromComponent(CustomSnackbar, {

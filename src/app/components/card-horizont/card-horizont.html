@@ -27,13 +27,13 @@
   </div>
 
   <mat-progress-bar
-    [value]="(current ?? 0 / habito.meta) * 100"
+    [value]="(current / habito.meta) * 100"
     mode="determinate"
     [ngClass]="{ 'completed-bar': current === habito.meta }"
   >
   </mat-progress-bar>
 
-  <div class="meta" *ngIf="habitoCompleted === true" [ngClass]="'completed-text'">
+  <div class="meta" *ngIf="current === habito.meta" [ngClass]="'completed-text'">
     <img src="assets/png/icon-goal-success.png" alt="" /> Meta concluída!
   </div>
 </mat-card>
