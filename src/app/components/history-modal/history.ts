@@ -8,6 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { HistoricoService } from '../../service/historico.service';
+import { Habito } from '../../interface/habito.model';
 
 @Component({
   selector: 'app-history',
@@ -27,7 +29,12 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './history.scss',
 })
 export class History {
-  constructor(private dialogRef: MatDialogRef<History>) {}
+  constructor(
+    private dialogRef: MatDialogRef<History>,
+    private historicoService: HistoricoService
+  ) {}
+
+  listHistorico: any[] = [];
 
   dataSelecionada = new FormControl<Date | null>(null, Validators.required);
 
@@ -37,5 +44,18 @@ export class History {
 
   clear() {
     this.dataSelecionada.setValue(null);
+    console.log(this.dataSelecionada);
+  }
+
+  filter() {
+    const data = this.dataSelecionada.value!.toISOString().split('T')[0];
+
+    // quando a data filtrada nao tiver nenhum habito concluido, mostrar o toaste
+
+    this.historicoService.getListHistoricoByDate(data).subscribe({
+      next: (res) => {
+        this.listHistorico = res;
+      },
+    });
   }
 }
