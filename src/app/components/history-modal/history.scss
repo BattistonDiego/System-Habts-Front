@@ -121,6 +121,39 @@
     }
   }
 
+  .habito {
+    background-color: #111827;
+    height: 60px;
+    border-radius: 8px;
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 8px;
+
+    .icon {
+      width: 35px;
+      height: 35px;
+    }
+
+    .progress-bar {
+      width: 385px;
+    }
+
+    .meta {
+      color: #fff;
+    }
+
+    .icon-success {
+      width: 20px;
+      height: 20px;
+    }
+
+    .title {
+      color: #fff;
+    }
+  }
+
   .container-image {
     width: 100%;
     flex: 1;

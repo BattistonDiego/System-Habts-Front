@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { HistoricoService } from '../../service/historico.service';
-import { Habito } from '../../interface/habito.model';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-history',
@@ -22,6 +22,7 @@ import { Habito } from '../../interface/habito.model';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    MatProgressBarModule,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
 
@@ -35,6 +36,7 @@ export class History {
   ) {}
 
   listHistorico: any[] = [];
+  showList: boolean = false;
 
   dataSelecionada = new FormControl<Date | null>(null, Validators.required);
 
@@ -44,10 +46,11 @@ export class History {
 
   clear() {
     this.dataSelecionada.setValue(null);
-    console.log(this.dataSelecionada);
+    this.showList = false;
   }
 
   filter() {
+    console.log(this.dataSelecionada);
     const data = this.dataSelecionada.value!.toISOString().split('T')[0];
 
     // quando a data filtrada nao tiver nenhum habito concluido, mostrar o toaste
@@ -55,6 +58,8 @@ export class History {
     this.historicoService.getListHistoricoByDate(data).subscribe({
       next: (res) => {
         this.listHistorico = res;
+
+        this.showList = this.listHistorico.length > 0;
       },
     });
   }

@@ -36,22 +36,37 @@
     </div>
   </div>
 
-  <div *ngIf="listHistorico.length > 0" class="data-selected">
-    <div style="display: flex; gap: 12px">
-      <img src="assets/png/icon-calendar.png" alt="" />
-      <div class="info-data">
-        <span class="selected"> Data selecionada:</span>
-        <span class="date">5 de Dezembro</span>
+  <div *ngIf="showList" style="height: 240px; overflow-y: auto">
+    <div class="data-selected">
+      <div style="display: flex; gap: 12px">
+        <img src="assets/png/icon-calendar.png" alt="" />
+        <div class="info-data">
+          <span class="selected"> Data selecionada:</span>
+          <span class="date">{{ dataSelecionada.value | date : "d 'de' MMMM 'de' yyyy" }}</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <span class="progress-text">Progresso</span>
+        <span class="porcentagem">100% </span>
       </div>
     </div>
 
-    <div class="progress">
-      <span class="progress-text">Progresso</span>
-      <span class="porcentagem">100% </span>
+    <div class="habito" *ngFor="let item of listHistorico">
+      <img class="icon" [src]="item.habito.icone" alt="" />
+      <div class="progress-bar">
+        <span class="title">{{ item.habito.nome }}</span>
+        <mat-progress-bar [value]="(item.valorAtual / item.meta) * 100" mode="determinate">
+        </mat-progress-bar>
+      </div>
+      <div style="display: flex; gap: 3px">
+        <span class="meta">{{ item.valorAtual }}/{{ item.meta }}</span>
+        <img class="icon-success" src="assets/png/icon-success-history.png" alt="" />
+      </div>
     </div>
   </div>
 
-  <div *ngIf="dataSelecionada.value === null || listHistorico.length === 0" class="container-image">
+  <div *ngIf="!showList" class="container-image">
     <img src="assets/png/icon-find.png" />
     <span>Selecione uma data</span>
     <p>Escolha uma data acima para visualizar seus hábitos</p>
