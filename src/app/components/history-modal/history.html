@@ -22,8 +22,6 @@
 
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-
-      <mat-error *ngIf="dataSelecionada.invalid"> Por favor selecione uma data válida. </mat-error>
     </mat-form-field>
 
     <div (click)="filter()" class="filter">

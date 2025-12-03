@@ -134,3 +134,11 @@
     }
   }
 }
+
+@media (max-width: 630px) {
+  /* CSS para celular pequeno */
+
+  .date-container {
+    width: 512px;
+  }
+}
