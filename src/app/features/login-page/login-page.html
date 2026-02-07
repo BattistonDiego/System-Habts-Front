@@ -5,10 +5,16 @@
     <span>Acompanhe seus hábitos e alcance suas metas</span>
   </div>
   <div class="form">
-    <form action="">
+    <form action="" [formGroup]="loginForm">
       <div class="field" style="margin-bottom: 27px">
         <label for="email">E-mail</label>
-        <input type="text" name="" id="email" />
+        <input
+          formControlName="email"
+          type="text"
+          name=""
+          id="email"
+          placeholder="Digite seu e-mail..."
+        />
       </div>
 
       <div class="field">
@@ -16,8 +22,21 @@
           <label for="password">Password</label>
           <span>Esqueceu a senha?</span>
         </div>
-        <input type="password" name="" id="password" />
+        <input
+          formControlName="senha"
+          type="password"
+          name=""
+          id="password"
+          placeholder="Digite sua senha..."
+        />
       </div>
+
+      <div class="check">
+        <mat-checkbox></mat-checkbox>
+        Lembrar-me
+      </div>
+
+      <button (click)="login()">Entrar</button>
     </form>
   </div>
 </div>
