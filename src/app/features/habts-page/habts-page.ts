@@ -11,6 +11,8 @@ import { HabitoService } from '../../service/habito.service';
 import { CreateHabito, Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
+import { AuthenticationService } from '../../service/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-habts-page',
@@ -34,9 +36,11 @@ export class HabtsPage implements OnInit {
   showHistoryFlag = false;
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
     private habitoService: HabitoService,
-    private snackBar: MatSnackBar
+    private authService: AuthenticationService,
+    private snackBar: MatSnackBar,
   ) {}
 
   listCards = [
@@ -167,5 +171,10 @@ export class HabtsPage implements OnInit {
         this.addHabit(newHabit);
       }
     });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

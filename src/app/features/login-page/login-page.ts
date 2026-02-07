@@ -35,16 +35,14 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    // this.router.navigate(['/Habits']);
     this.authService.login(email, senha).subscribe({
-      next: (value) => {
-        console.log(value);
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/habits']);
       },
       error: (err) => {
         console.log('Erro no login', err);
       },
     });
-
-    console.log(this.loginForm.value);
   }
 }

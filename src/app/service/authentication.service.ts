@@ -13,4 +13,12 @@ export class AuthenticationService {
   login(email: string, senha: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login`, { email, senha });
   }
+
+  isLogged(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+  }
 }
