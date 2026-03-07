@@ -1,8 +1,11 @@
 <div class="conteudo">
   <div class="my-progress">
-    <div class="cabecalho">
-      <img src="assets/icon-title.svg" alt="teste" />
-      <h2>Meu progresso</h2>
+    <div style="display: flex; justify-content: space-between">
+      <div class="cabecalho">
+        <img src="assets/icon-title.svg" alt="teste" />
+        <h2>Meu progresso</h2>
+      </div>
+      <button (click)="logout()" class="logout">Sair</button>
     </div>
     <p>Acompanhe seus hábitos diários e alcance suas metas</p>
   </div>
@@ -15,7 +18,7 @@
     <div class="date-display">
       <div class="date-info">
         <mat-icon>calendar_month</mat-icon>
-        <span>{{ selectedDate | date : "dd 'de' MMMM 'de' yyyy" }}</span>
+        <span>{{ selectedDate | date: "dd 'de' MMMM 'de' yyyy" }}</span>
       </div>
       <a class="today" (click)="goToToday()">Hoje</a>
 

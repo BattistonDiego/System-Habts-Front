@@ -27,7 +27,8 @@
     }
   }
 
-  .add {
+  .add,
+  .logout {
     width: 120px;
     border-radius: 8px;
     background-color: #3b82f6;
@@ -35,6 +36,10 @@
     color: white;
     font-size: 12px;
     cursor: pointer;
+  }
+  .logout {
+    width: 60px;
+    height: 27px;
   }
 
   .date-container {

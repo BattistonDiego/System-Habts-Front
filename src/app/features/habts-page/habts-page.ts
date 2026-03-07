@@ -8,11 +8,13 @@ import { History } from '../../components/history-modal/history';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
-import { Habito } from '../../interface/habito.model';
+import { Habito, Usuario } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
 import { HistoricoService } from '../../service/historico.service';
+import { AuthenticationService } from '../../service/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-habts-page',
@@ -36,10 +38,12 @@ export class HabtsPage implements OnInit {
   habitoCompletado: boolean = false;
 
   constructor(
+    private router: Router,
     private dialog: MatDialog,
     private habitoService: HabitoService,
     private historicoService: HistoricoService,
-    private snackBar: MatSnackBar
+    private authService: AuthenticationService,
+    private snackBar: MatSnackBar,
   ) {}
 
   listCards: any[] = [];
@@ -49,6 +53,10 @@ export class HabtsPage implements OnInit {
 
   ngOnInit() {
     this.loadHabitos();
+
+    const usuario = this.getUsuario();
+
+    console.log(usuario);
   }
 
   loadHabitos() {
@@ -71,7 +79,7 @@ export class HabtsPage implements OnInit {
 
       // ver pra que serve esse some
       const habitosComRegistro = this.listHabitos.filter((h) =>
-        this.listHistorico.some((r) => r.habito.id === h.id)
+        this.listHistorico.some((r) => r.habito.id === h.id),
       );
 
       if (habitosComRegistro.length > 0) {
@@ -294,5 +302,26 @@ export class HabtsPage implements OnInit {
         // You can pass data to the modal here if needed
       },
     });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  getUsuario(): any {
+    const user: Usuario = {
+      nome: 'Diego',
+      email: 'Diego@gmail.com',
+      idade: 22,
+      nacionalidade: 'Brazil',
+    };
+
+    const obj = {
+      ...user,
+      ativo: true,
+    };
+
+    return obj;
   }
 }
