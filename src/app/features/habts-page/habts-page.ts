@@ -8,7 +8,7 @@ import { History } from '../../components/history/history';
 import { MatDialog } from '@angular/material/dialog';
 import { AddHabitModal } from '../../components/add-habit-modal/add-habit-modal';
 import { HabitoService } from '../../service/habito.service';
-import { CreateHabito, Habito } from '../../interface/habito.model';
+import { CreateHabito, Habito, Usuario } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { AuthenticationService } from '../../service/authentication.service';
@@ -61,6 +61,10 @@ export class HabtsPage implements OnInit {
 
   ngOnInit() {
     this.loadHabitos();
+
+    const usuario = this.getUsuario();
+
+    console.log(usuario);
   }
 
   loadHabitos() {
@@ -176,5 +180,21 @@ export class HabtsPage implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  getUsuario(): any {
+    const user: Usuario = {
+      nome: 'Diego',
+      email: 'Diego@gmail.com',
+      idade: 22,
+      nacionalidade: 'Brazil',
+    };
+
+    const obj = {
+      ...user,
+      ativo: true,
+    };
+
+    return obj;
   }
 }

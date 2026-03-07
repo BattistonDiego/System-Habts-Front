@@ -15,3 +15,10 @@ export interface CreateHabito {
   icone?: string;
   cor?: string;
 }
+
+export interface Usuario {
+  nome: string;
+  email: string;
+  idade: number;
+  nacionalidade: string;
+}
