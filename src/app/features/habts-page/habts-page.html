@@ -22,7 +22,7 @@
       </div>
       <a class="today" (click)="goToToday()">Hoje</a>
 
-      <div class="history" (click)="showHistory()">
+      <div (click)="openHistoryModal()" class="history">
         <mat-icon>access_time</mat-icon>
         <span>Ver Histórico</span>
       </div>
@@ -32,8 +32,6 @@
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
-
-  <app-history *ngIf="showHistoryFlag"></app-history>
 
   <div class="cards">
     <app-card
@@ -55,7 +53,10 @@
         *ngFor="let habito of listHabitos; let i = index"
         [index]="i"
         (habitChanged)="onHabitChanged($event)"
-        (habitDeletd)="deleteHabit($event)"
+        (habitDelete)="deleteHabit($event, habito)"
+        (habitUpdate)="updateHabit($event)"
+        [habitoCompleted]="habitoCompletado"
+        [current]="habito.valorAtual ?? 0"
         [habito]="habito"
       ></app-card-horizont>
     </div>

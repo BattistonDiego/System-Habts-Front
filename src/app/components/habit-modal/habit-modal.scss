@@ -41,6 +41,8 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  height: 127px;
+  overflow-y: auto;
 
   button {
     width: 60px;
@@ -61,6 +63,7 @@
 .row {
   display: flex;
   gap: 14px;
+  margin-top: 20px;
 }
 
 .color-list {
@@ -84,7 +87,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 90px;
+  margin-top: 70px;
 
   .cancel {
     color: #bbb;

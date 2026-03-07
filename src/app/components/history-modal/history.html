@@ -1,0 +1,72 @@
+<div class="historico-container">
+  <div class="cabecalho">
+    <img src="assets/png/icon-history.png" alt="teste" />
+    <div class="info">
+      <span class="title">Histórico de Hábitos</span>
+      <p class="description">Busque e visualize seus hábitos de dias anteriores</p>
+    </div>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="details">
+    <mat-form-field appearance="outline" class="campo-data">
+      <mat-label>Selecione uma data</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControl]="dataSelecionada"
+        placeholder="DD/MM/AAAA"
+      />
+
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <div (click)="filter()" class="filter">
+      <span>Filtrar</span>
+    </div>
+
+    <div (click)="clear()" class="clear">
+      <img src="assets/png/icon-close.png" alt="" />
+      <span>Limpar</span>
+    </div>
+  </div>
+
+  <div *ngIf="showList" style="height: 240px; overflow-y: auto">
+    <div class="data-selected">
+      <div style="display: flex; gap: 12px">
+        <img src="assets/png/icon-calendar.png" alt="" />
+        <div class="info-data">
+          <span class="selected"> Data selecionada:</span>
+          <span class="date">{{ dataSelecionada.value | date : "d 'de' MMMM 'de' yyyy" }}</span>
+        </div>
+      </div>
+
+      <div class="progress">
+        <span class="progress-text">Progresso</span>
+        <span class="porcentagem">100% </span>
+      </div>
+    </div>
+
+    <div class="habito" *ngFor="let item of listHistorico">
+      <img class="icon" [src]="item.habito.icone" alt="" />
+      <div class="progress-bar">
+        <span class="title">{{ item.habito.nome }}</span>
+        <mat-progress-bar [value]="(item.valorAtual / item.meta) * 100" mode="determinate">
+        </mat-progress-bar>
+      </div>
+      <div style="display: flex; gap: 3px">
+        <span class="meta">{{ item.valorAtual }}/{{ item.meta }}</span>
+        <img class="icon-success" src="assets/png/icon-success-history.png" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!showList" class="container-image">
+    <img src="assets/png/icon-find.png" />
+    <span>Selecione uma data</span>
+    <p>Escolha uma data acima para visualizar seus hábitos</p>
+  </div>
+</div>

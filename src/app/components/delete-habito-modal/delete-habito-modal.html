@@ -1,0 +1,17 @@
+<div class="container-habito">
+  <div class="info">
+    <img src="assets/png/icon-alert-delete.png" alt="" />
+    <div class="details">
+      <h3>Excluir Hábito?</h3>
+      <span
+        >Tem certeza que deseja excluir o hábito
+        <span class="grife">"{{ data.nomeHabito }}"</span> ? Esta ação não pode ser desfeita.</span
+      >
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button (click)="closeModal()">Cancelar</button>
+    <button (click)="excluirModal()">Excluir</button>
+  </div>
+</div>

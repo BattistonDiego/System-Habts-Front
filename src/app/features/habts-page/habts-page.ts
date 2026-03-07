@@ -4,13 +4,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Card } from '../../components/card/card';
 import { CardHorizont } from '../../components/card-horizont/card-horizont';
-import { History } from '../../components/history/history';
+import { History } from '../../components/history-modal/history';
 import { MatDialog } from '@angular/material/dialog';
-import { AddHabitModal } from '../../components/add-habit-modal/add-habit-modal';
+import { HabitModal } from '../../components/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
-import { CreateHabito, Habito, Usuario } from '../../interface/habito.model';
+import { Habito, Usuario } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
+import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
+import { HistoricoService } from '../../service/historico.service';
 import { AuthenticationService } from '../../service/authentication.service';
 import { Router } from '@angular/router';
 
@@ -33,31 +35,21 @@ export class HabtsPage implements OnInit {
   completedHabitsCount = 0;
   progress = 0;
   restante = 100;
-  showHistoryFlag = false;
+  habitoCompletado: boolean = false;
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private habitoService: HabitoService,
+    private historicoService: HistoricoService,
     private authService: AuthenticationService,
     private snackBar: MatSnackBar,
   ) {}
 
-  listCards = [
-    {
-      description: 'Progresso',
-      complement: this.progress + '%',
-      icon: 'assets/png/icon-progress.png',
-    },
-    {
-      description: 'Hábitos Completos',
-      complement: '0/3',
-      icon: 'assets/png/icon-complete.png',
-    },
-    { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
-  ];
-
+  listCards: any[] = [];
+  totalHabitos: number = 0;
   listHabitos: Habito[] = [];
+  listHistorico: any[] = [];
 
   ngOnInit() {
     this.loadHabitos();
@@ -73,6 +65,26 @@ export class HabtsPage implements OnInit {
         ...h,
         current: 0,
       }));
+      this.totalHabitos = habitos.length;
+      this.updatesCards();
+      this.loadHistrorico();
+    });
+  }
+
+  loadHistrorico() {
+    const hoje = new Date().toISOString().split('T')[0];
+
+    this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
+      this.listHistorico = res;
+
+      // ver pra que serve esse some
+      const habitosComRegistro = this.listHabitos.filter((h) =>
+        this.listHistorico.some((r) => r.habito.id === h.id),
+      );
+
+      if (habitosComRegistro.length > 0) {
+        this.getHabitosCompletadoHoje();
+      }
     });
   }
 
@@ -107,18 +119,99 @@ export class HabtsPage implements OnInit {
     });
   }
 
-  deleteHabit(event: { id: number }) {
-    this.habitoService.deleteHabitos(event.id).subscribe({
-      next: () => {
-        this.snackBar.open('Hábito Deletado com sucesso!', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error'],
+  deleteHabit(event: { id: number }, habito: Habito) {
+    const dialogRef = this.dialog.open(DeleteHabitoModal, {
+      data: { nomeHabito: habito.nome },
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) {
+        this.habitoService.deleteHabitos(event.id).subscribe({
+          next: () => {
+            this.snackBar.openFromComponent(CustomSnackbar, {
+              data: {
+                message: 'Hábito deletado com sucesso!',
+                icon: 'check_circle',
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-error'],
+            });
+            this.loadHabitos();
+          },
         });
-        this.loadHabitos();
+      }
+    });
+  }
+
+  updateHabit(id: number) {
+    const habitoSelected = this.listHabitos.filter((h) => h.id === id);
+    const dialogRef = this.dialog.open(HabitModal, {
+      data: {
+        habitSelected: habitoSelected[0],
+        mode: 'edit',
       },
     });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const body = {
+          nome: result.habit.nome,
+          meta: result.habit.meta,
+          unidade: result.habit.unidade,
+          icone: result.icon,
+          cor: result.color,
+        };
+        this.habitoService.editHabitos(habitoSelected[0].id, body).subscribe({
+          next: () => {
+            this.snackBar.openFromComponent(CustomSnackbar, {
+              data: {
+                message: 'Hábito alterado com sucesso!',
+                icon: 'check_circle',
+              },
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success'],
+            });
+            this.loadHabitos();
+          },
+        });
+      }
+    });
+  }
+
+  updatesCards() {
+    this.listCards = [
+      {
+        description: 'Progresso',
+        complement: this.progress + '%',
+        icon: 'assets/png/icon-progress.png',
+      },
+      {
+        description: 'Hábitos Completos',
+        complement: '0/' + this.totalHabitos,
+        icon: 'assets/png/icon-complete.png',
+      },
+      { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
+    ];
+  }
+
+  getHabitosCompletadoHoje() {
+    const listHabito = this.listHabitos;
+    const listHistorico = this.listHistorico;
+    const newList = listHabito.map((h) => {
+      const registro = listHistorico.find((r) => r.habito.id === h.id);
+
+      return {
+        ...h,
+        concluidoHoje: registro?.status ?? false,
+        valorAtual: registro?.valorAtual ?? 0,
+      };
+    });
+
+    this.listHabitos = newList;
   }
 
   changeDate(days: number) {
@@ -131,13 +224,10 @@ export class HabtsPage implements OnInit {
     this.selectedDate = new Date();
   }
 
-  showHistory() {
-    this.showHistoryFlag = !this.showHistoryFlag;
-  }
-
   onHabitChanged(event: { index: number; current: number }) {
     this.listHabitos[event.index].current = event.current;
     this.recalculateProgress();
+    this.habitCompleted();
   }
 
   recalculateProgress() {
@@ -155,8 +245,37 @@ export class HabtsPage implements OnInit {
     this.restante = 100 - progress;
   }
 
+  habitCompleted() {
+    const habitoComplet = this.listHabitos.find((h) => h.current === h.meta);
+    const body = {
+      habitoId: habitoComplet?.id,
+      status: true,
+      valorAtual: habitoComplet?.current,
+    };
+    if (habitoComplet) {
+      this.historicoService.postHistorico(body).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.habitoCompletado = true;
+        },
+        error: (erro) => {
+          this.snackBar.openFromComponent(CustomSnackbar, {
+            data: {
+              message: 'Hábito ja completado na data de hoje!',
+              icon: 'error_outline',
+            },
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error'],
+          });
+        },
+      });
+    }
+  }
+
   openAddHabitModal() {
-    const dialogRef = this.dialog.open(AddHabitModal, {
+    const dialogRef = this.dialog.open(HabitModal, {
       data: {
         // You can pass data to the modal here if needed
       },
@@ -174,6 +293,14 @@ export class HabtsPage implements OnInit {
         };
         this.addHabit(newHabit);
       }
+    });
+  }
+
+  openHistoryModal() {
+    const dialogRef = this.dialog.open(History, {
+      data: {
+        // You can pass data to the modal here if needed
+      },
     });
   }
 

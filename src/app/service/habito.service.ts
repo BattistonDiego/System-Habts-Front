@@ -24,4 +24,8 @@ export class HabitoService {
 
     //I could do like this - return this.http.delete<any>(this.baseUrl + '/' + id);
   }
+
+  editHabitos(id: number, body: Partial<Habito>) {
+    return this.http.put<Habito>(`${this.baseUrl}/${id}`, body);
+  }
 }

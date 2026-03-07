@@ -1,0 +1,178 @@
+.historico-container {
+  width: 560px;
+  height: 465px;
+  background-color: #1f2937;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+
+  .cabecalho {
+    display: flex;
+    outline: 1px solid #9ca3af2e;
+    outline-offset: 25px;
+
+    img {
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+    }
+
+    .info {
+      .title {
+        font-size: 17px;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      .description {
+        font-size: 12px;
+        margin: 0;
+        color: #9ca3af;
+      }
+    }
+
+    button {
+      margin-left: auto;
+
+      mat-icon {
+        color: #bbb;
+      }
+    }
+  }
+
+  .details {
+    margin-top: 60px;
+    display: flex;
+    gap: 10px;
+
+    .campo-data {
+      width: 100%;
+
+      input,
+      mat-label {
+        color: white;
+      }
+    }
+
+    .filter {
+      width: 130px;
+      height: 56px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #ffffff61;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .clear {
+      width: 130px;
+      height: 56px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid #ffffff61;
+
+      button {
+        width: 40px;
+      }
+
+      span {
+        font-size: 12px;
+        color: #fff;
+      }
+    }
+  }
+
+  .data-selected {
+    width: 100%;
+    height: 61px;
+    background: linear-gradient(90deg, #1e3a8a 0%, #312e81 100%);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    img {
+      width: 36px;
+      height: 36px;
+      background-color: #1f2937;
+      border-radius: 50%;
+    }
+
+    .info-data,
+    .progress {
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+
+      .selected,
+      .progress-text {
+        color: #9ca3af;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .habito {
+    background-color: #111827;
+    height: 60px;
+    border-radius: 8px;
+    margin: 10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 8px;
+
+    .icon {
+      width: 35px;
+      height: 35px;
+    }
+
+    .progress-bar {
+      width: 385px;
+    }
+
+    .meta {
+      color: #fff;
+    }
+
+    .icon-success {
+      width: 20px;
+      height: 20px;
+    }
+
+    .title {
+      color: #fff;
+    }
+  }
+
+  .container-image {
+    width: 100%;
+    flex: 1;
+    background: linear-gradient(90deg, #1e3a8a 0%, #312e81 100%);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    span {
+      font-size: 15px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  }
+}

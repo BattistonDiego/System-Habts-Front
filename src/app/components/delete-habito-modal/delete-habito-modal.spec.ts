@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddHabitModal } from './add-habit-modal';
+import { DeleteHabitoModal } from './delete-habito-modal';
 
-describe('AddHabitModal', () => {
-  let component: AddHabitModal;
-  let fixture: ComponentFixture<AddHabitModal>;
+describe('DeleteHabitoModal', () => {
+  let component: DeleteHabitoModal;
+  let fixture: ComponentFixture<DeleteHabitoModal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddHabitModal]
+      imports: [DeleteHabitoModal]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddHabitModal);
+    fixture = TestBed.createComponent(DeleteHabitoModal);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
