@@ -14,7 +14,7 @@ import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar
 import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-habito-modal';
 import { HistoricoService } from '../../service/historico.service';
 import { AuthenticationService } from '../../service/authentication.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-habts-page',
@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
     CardHorizont,
     History,
     MatSnackBarModule,
+    RouterLink,
   ],
   templateUrl: './habts-page.html',
   styleUrl: './habts-page.scss',
