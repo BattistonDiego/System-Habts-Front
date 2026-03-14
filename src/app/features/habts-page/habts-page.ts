@@ -54,10 +54,7 @@ export class HabtsPage implements OnInit {
 
   ngOnInit() {
     this.loadHabitos();
-
     const usuario = this.getUsuario();
-
-    console.log(usuario);
   }
 
   loadHabitos() {

@@ -18,7 +18,7 @@
     font-size: 24px;
     font-weight: bold;
     color: white;
-    margin: 25px 0 9px 0;
+    margin: 19px 0 7px 0;
   }
 
   p {
@@ -26,9 +26,80 @@
   }
 }
 
+.background {
+  height: 731px;
+}
+
 .conteudo {
   width: 832px;
-  height: 731px;
+  height: 620px;
   background-color: #1f2937;
-  border-radius: 16px;
+  border-radius: 16px 16px 0px 0px;
+  border: 1px solid #2d3348;
+}
+
+main {
+  padding: 32px;
+
+  .tittle-form {
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #44474e7d;
+  }
+}
+
+.buttons {
+  width: 100%;
+  padding-top: 20px;
+  padding-right: 32px;
+  height: 81px;
+  border: 1px solid #2d3348;
+  border-radius: 0px 0px 16px 16px;
+}
+button.cancel {
+  width: 100px;
+  height: 40px;
+  border-radius: 12px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+button.cancel:hover {
+  background-color: #3a4057e0;
+  color: #fff;
+}
+
+button.create {
+  width: 148px;
+  height: 40px;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 12px;
+  justify-content: center;
+  background-color: #3b82f6;
+}
+button.create:hover {
+  background-color: #2473f5;
+}
+
+.row {
+  label {
+    color: #9ca3af;
+    font-size: 12px;
+  }
+
+  input {
+    height: 50px;
+    background-color: #2d3348;
+    border: 1px solid #6b728059;
+    color: #fff;
+  }
+
+  input::placeholder {
+    color: #fff;
+  }
 }
