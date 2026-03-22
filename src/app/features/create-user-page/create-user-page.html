@@ -16,68 +16,106 @@
         Informações Pessoais
       </div>
 
-      <div class="row mt-4">
-        <div class="col-12">
-          <label for="nome" class="form-label">Nome Completo</label>
-          <input
-            type="text"
-            id="nome"
-            class="form-control"
-            placeholder="Nome completo do usúario"
-          />
-        </div>
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-6">
-          <label for="email" class="form-label">E-mail</label>
-          <input type="email" id="email" class="form-control" placeholder="email@exemplo.com" />
+      <form action="" [formGroup]="form">
+        <div class="row mt-4">
+          <div class="col-12">
+            <label for="nome" class="form-label">Nome Completo</label>
+            <input
+              type="text"
+              id="nome"
+              class="form-control"
+              formControlName="nome"
+              placeholder="Nome completo do usúario"
+            />
+          </div>
         </div>
 
-        <div class="col-6">
-          <label for="telefone" class="form-label">Telefone</label>
-          <input type="text" id="telefone" class="form-control" placeholder="(00) 00000-0000" />
-        </div>
-      </div>
+        <div class="row mt-4">
+          <div class="col-6">
+            <label for="email" class="form-label">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="email@exemplo.com"
+            />
+          </div>
 
-      <div class="tittle-form mt-4">
-        <img src="assets/png/icon-security.png" alt="" />
-        Segurança
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-6">
-          <label for="senha" class="form-label">Senha</label>
-          <input type="password" id="senha" class="form-control" placeholder="••••••••" />
-        </div>
-
-        <div class="col-6">
-          <label for="confirmarSenha" class="form-label">Confirmar senha</label>
-          <input type="password" id="confirmarSenha" class="form-control" placeholder="••••••••" />
-        </div>
-      </div>
-
-      <div class="tittle-form mt-4">
-        <img src="assets/png/icon-settings.png" alt="" />
-        Configurações
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-6">
-          <label for="senha" class="form-label">Senha</label>
-          <input type="password" id="senha" class="form-control" placeholder="••••••••" />
+          <div class="col-6">
+            <label for="telefone" class="form-label">Telefone</label>
+            <input
+              type="text"
+              id="telefone"
+              class="form-control"
+              formControlName="telefone"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
         </div>
 
-        <div class="col-6">
-          <label for="confirmarSenha" class="form-label">Confirmar senha</label>
-          <input type="password" id="confirmarSenha" class="form-control" placeholder="••••••••" />
+        <div class="tittle-form mt-4">
+          <img src="assets/png/icon-security.png" alt="" />
+          Segurança
         </div>
-      </div>
+
+        <div class="row mt-4">
+          <div class="col-6">
+            <label for="senha" class="form-label">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              class="form-control"
+              formControlName="senha"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <div class="col-6">
+            <label for="confirmarSenha" class="form-label">Confirmar senha</label>
+            <input
+              type="password"
+              id="confirmarSenha"
+              class="form-control"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+        <div class="tittle-form mt-4">
+          <img src="assets/png/icon-settings.png" alt="" />
+          Configurações
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-6">
+            <span>Status da conta</span>
+            <mat-button-toggle-group
+              class="status"
+              formControlName="status"
+              [ngClass]="{
+                ativo: form.get('status')?.value === 'ativo',
+                inativo: form.get('status')?.value === 'inativo',
+              }"
+            >
+              <mat-button-toggle value="ativo">Ativo</mat-button-toggle>
+              <mat-button-toggle value="inativo">Inativo</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="col-6">
+            <span>Perfil de acesso</span>
+            <mat-button-toggle-group class="perfil" formControlName="perfil">
+              <mat-button-toggle value="user">Usuário</mat-button-toggle>
+              <mat-button-toggle value="admin">Administrador</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
+      </form>
     </main>
     <div class="buttons">
       <div class="col d-flex justify-content-end gap-2">
         <button class="btn cancel">Cancelar</button>
-        <button class="btn create d-flex gap-2 align-items-center">
+        <button (click)="showdata()" class="btn create d-flex gap-2 align-items-center">
           <img src="assets/png/icon-create-user.png" alt="" />Criar usuário
         </button>
       </div>

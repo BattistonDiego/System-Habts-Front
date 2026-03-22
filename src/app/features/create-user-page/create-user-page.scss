@@ -87,7 +87,8 @@ button.create:hover {
 }
 
 .row {
-  label {
+  label,
+  span {
     color: #9ca3af;
     font-size: 12px;
   }
@@ -102,4 +103,35 @@ button.create:hover {
   input::placeholder {
     color: #fff;
   }
+}
+
+.mat-button-toggle-group {
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 12px;
+
+  background-color: #2d3348;
+}
+
+::ng-deep .mat-button-toggle-appearance-standard {
+  width: 50%;
+}
+
+.ativo ::ng-deep .mat-button-toggle-checked {
+  background-color: #22c55e; /* verde */
+  color: white;
+}
+
+.inativo ::ng-deep .mat-button-toggle-checked {
+  background-color: #9ca3af; /* cinza */
+  color: white;
+}
+
+.perfil ::ng-deep .mat-button-toggle-checked {
+  background-color: #3b82f6; /* verde */
+  color: white;
+}
+
+::ng-deep .mat-button-toggle:not(.mat-button-toggle-checked) {
+  color: white;
 }
