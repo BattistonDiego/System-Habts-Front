@@ -15,6 +15,7 @@ import { DeleteHabitoModal } from '../../components/delete-habito-modal/delete-h
 import { HistoricoService } from '../../service/historico.service';
 import { AuthenticationService } from '../../service/authentication.service';
 import { Router, RouterLink } from '@angular/router';
+import { UsuarioService } from '../../service/usuario.service';
 
 @Component({
   selector: 'app-habts-page',
@@ -37,6 +38,7 @@ export class HabtsPage implements OnInit {
   progress = 0;
   restante = 100;
   habitoCompletado: boolean = false;
+  usuarioId!: number | null;
 
   constructor(
     private router: Router,
@@ -44,6 +46,7 @@ export class HabtsPage implements OnInit {
     private habitoService: HabitoService,
     private historicoService: HistoricoService,
     private authService: AuthenticationService,
+    private usuarioService: UsuarioService,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -53,8 +56,17 @@ export class HabtsPage implements OnInit {
   listHistorico: any[] = [];
 
   ngOnInit() {
-    this.loadHabitos();
-    const usuario = this.getUsuario();
+    this.getUserLogged();
+  }
+
+  getUserLogged() {
+    this.usuarioService.getUserLogged().subscribe({
+      next: (res) => {
+        this.usuarioId = res.id;
+
+        this.loadHabitos();
+      },
+    });
   }
 
   loadHabitos() {
@@ -63,6 +75,7 @@ export class HabtsPage implements OnInit {
         ...h,
         current: 0,
       }));
+
       this.totalHabitos = habitos.length;
       this.updatesCards();
       this.loadHistrorico();
@@ -105,7 +118,7 @@ export class HabtsPage implements OnInit {
       error: () => {
         this.snackBar.openFromComponent(CustomSnackbar, {
           data: {
-            message: 'Hábito adicionado com sucesso!',
+            message: 'Error Interno!',
             icon: 'check_circle',
           },
           duration: 3000,
@@ -281,14 +294,15 @@ export class HabtsPage implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        const newHabit: Habito = {
-          id: result.habit.id,
+        const newHabit: any = {
+          usuarioId: this.usuarioId,
           nome: result.habit.nome,
           meta: result.habit.meta,
           unidade: result.habit.unidade,
           icone: result.icon,
           cor: result.color,
         };
+        console.log(newHabit);
         this.addHabit(newHabit);
       }
     });
@@ -305,21 +319,5 @@ export class HabtsPage implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
-  }
-
-  getUsuario(): any {
-    const user: Usuario = {
-      nome: 'Diego',
-      email: 'Diego@gmail.com',
-      idade: 22,
-      nacionalidade: 'Brazil',
-    };
-
-    const obj = {
-      ...user,
-      ativo: true,
-    };
-
-    return obj;
   }
 }
