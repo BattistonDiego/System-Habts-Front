@@ -1,26 +1,91 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+
+  background-color: #1a1f2e;
+  border-bottom: 1px solid #2d3348;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 80px;
+
+  .cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    h2 {
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 0;
+    }
+  }
+
+  .changer-pages {
+    display: flex;
+    gap: 10px;
+
+    .habito,
+    .user {
+      width: 97px;
+      height: 37px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      color: #ffff;
+    }
+
+    .habito:hover,
+    .user:hover {
+      background-color: #252a3a;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    color: white;
+    gap: 20px;
+
+    img {
+      color: #ffff;
+    }
+    .logout {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 12px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .hello {
+      font-size: 12px;
+    }
+  }
+}
+
 .conteudo {
   width: 1000px;
-  height: 900px;
+  height: 870px;
 
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 77px;
   overflow-y: auto;
+  margin-top: 55px;
 
   .my-progress {
-    .cabecalho {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-
-      h2 {
-        font-size: 24px;
-        font-weight: bold;
-        color: white;
-      }
-    }
-
     p {
       color: #9ca3af;
       font-size: 12px;
@@ -38,17 +103,8 @@
     cursor: pointer;
   }
 
-  .logout {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    font-size: 12px;
-    color: #ffffff;
-    cursor: pointer;
-  }
-
   .date-container {
-    background-color: #374151;
+    background-color: #1a1f2e;
     display: flex;
     justify-content: space-between;
     height: 136px;

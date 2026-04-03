@@ -16,6 +16,7 @@ import { HistoricoService } from '../../service/historico.service';
 import { AuthenticationService } from '../../service/authentication.service';
 import { Router, RouterLink } from '@angular/router';
 import { UsuarioService } from '../../service/usuario.service';
+import { User } from '../../interface/user.model';
 
 @Component({
   selector: 'app-habts-page',
@@ -39,6 +40,7 @@ export class HabtsPage implements OnInit {
   restante = 100;
   habitoCompletado: boolean = false;
   usuarioId!: number | null;
+  usuario!: User;
 
   constructor(
     private router: Router,
@@ -62,6 +64,7 @@ export class HabtsPage implements OnInit {
   getUserLogged() {
     this.usuarioService.getUserLogged().subscribe({
       next: (res) => {
+        this.usuario = res;
         this.usuarioId = res.id;
 
         this.loadHabitos();
@@ -314,6 +317,10 @@ export class HabtsPage implements OnInit {
         // You can pass data to the modal here if needed
       },
     });
+  }
+
+  isAdmin(): boolean {
+    return this.usuario?.perfil === 'ADMINISTRADOR';
   }
 
   logout() {
