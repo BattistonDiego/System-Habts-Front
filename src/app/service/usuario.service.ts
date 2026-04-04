@@ -19,4 +19,8 @@ export class UsuarioService {
   getUserLogged(): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/' + 'me');
   }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.baseUrl);
+  }
 }

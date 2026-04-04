@@ -8,6 +8,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const token = localStorage.getItem('token');
 
+  // 🚨 IGNORA LOGIN
+  if (req.url.includes('/login')) {
+    return next(req);
+  }
+
   const authReq = req.clone({
     setHeaders: {
       Authorization: `Bearer ${token}`,
