@@ -35,7 +35,7 @@ export class History {
   constructor(
     private dialogRef: MatDialogRef<History>,
     private historicoService: HistoricoService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   listHistorico: any[] = [];
