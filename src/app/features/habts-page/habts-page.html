@@ -1,14 +1,33 @@
 <div class="conteudo">
-  <div class="my-progress">
-    <div style="display: flex; justify-content: space-between">
-      <div class="cabecalho">
-        <img src="assets/icon-title.svg" alt="teste" />
-        <h2>Meu progresso</h2>
+  <header>
+    <div class="cabecalho">
+      <img src="assets/icon-title.svg" alt="" />
+      <h2>Meu Progresso</h2>
+      <div *ngIf="isAdmin()">
+        <img src="assets/png/icon-admin.png" alt="" />
       </div>
+    </div>
+    <div class="changer-pages">
+      <div class="habito">
+        <img src="assets/png/icon-habitos.png" alt="" />
+        Hábitos
+      </div>
+      <div class="user">
+        <img src="assets/png/icon-users.png" alt="" />
+        Usúarios
+      </div>
+    </div>
+    <div class="actions">
+      <div class="hello"><span style="color: #9ca3af">Olá</span> {{ usuario?.nome }}</div>
       <div (click)="logout()" class="logout">
         <img src="assets/svg/icon-logout.svg" alt="" />
         Sair
       </div>
+    </div>
+  </header>
+  <div class="my-progress">
+    <div style="display: flex; justify-content: space-between">
+      <button routerLink="/create-user">Create</button>
     </div>
     <p>Acompanhe seus hábitos diários e alcance suas metas</p>
   </div>

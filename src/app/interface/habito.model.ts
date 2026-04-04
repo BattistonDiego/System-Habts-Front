@@ -1,5 +1,8 @@
+import { User } from './user.model';
+
 export interface Habito {
   id: number;
+  usuario: User;
   nome: string;
   meta: number;
   unidade?: string;

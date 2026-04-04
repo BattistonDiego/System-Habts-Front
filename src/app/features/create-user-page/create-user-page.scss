@@ -1,0 +1,141 @@
+.tittle {
+  height: 100px;
+  width: 831px;
+  margin-bottom: 8px;
+
+  .button-back {
+    background-color: transparent;
+    border: none;
+    color: #3b82f6;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 19px 0 7px 0;
+  }
+
+  p {
+    color: #9ca3af;
+  }
+}
+
+.background {
+  height: 731px;
+}
+
+.conteudo {
+  width: 832px;
+  height: 620px;
+  background-color: #1a1f2e;
+  border-radius: 16px 16px 0px 0px;
+  border: 1px solid #2d3348;
+}
+
+main {
+  padding: 32px;
+
+  .tittle-form {
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #44474e7d;
+  }
+}
+
+.buttons {
+  width: 100%;
+  padding-top: 20px;
+  padding-right: 32px;
+  height: 81px;
+  border: 1px solid #2d3348;
+  border-radius: 0px 0px 16px 16px;
+}
+button.cancel {
+  width: 100px;
+  height: 40px;
+  border-radius: 12px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+button.cancel:hover {
+  background-color: #3a4057e0;
+  color: #fff;
+}
+
+button.create {
+  width: 148px;
+  height: 40px;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 12px;
+  justify-content: center;
+  background-color: #3b82f6;
+}
+button.create:hover {
+  background-color: #2473f5;
+}
+
+.row {
+  label,
+  span {
+    color: #9ca3af;
+    font-size: 12px;
+  }
+
+  input {
+    height: 50px;
+    background-color: #2d3348;
+    border: 1px solid #6b728059;
+    color: #fff;
+  }
+
+  input::placeholder {
+    color: #fff;
+  }
+}
+
+.mat-button-toggle-group {
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 12px;
+
+  background-color: #2d3348;
+}
+
+::ng-deep .mat-button-toggle-appearance-standard {
+  width: 50%;
+}
+
+.ativo ::ng-deep .mat-button-toggle-checked {
+  background-color: #22c55e; /* verde */
+  color: white;
+}
+
+.inativo ::ng-deep .mat-button-toggle-checked {
+  background-color: #9ca3af; /* cinza */
+  color: white;
+}
+
+.perfil ::ng-deep .mat-button-toggle-checked {
+  background-color: #3b82f6; /* verde */
+  color: white;
+}
+
+::ng-deep .mat-button-toggle:not(.mat-button-toggle-checked) {
+  color: white;
+}
+
+small {
+  color: red;
+}
