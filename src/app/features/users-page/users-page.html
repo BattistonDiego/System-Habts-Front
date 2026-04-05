@@ -1,4 +1,27 @@
 <div class="conteudo">
+  <div class="tittle">
+    <button class="button-back" routerLink="/habits">
+      <img src="assets/png/icon-back.png" alt="" />
+      Voltar para Hábitos
+    </button>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2>Usúarios</h2>
+        <p>Gerencie seus usuários e acompanhe o status.</p>
+      </div>
+
+      <button class="create-user" routerLink="/create-user">
+        <img src="assets/png/icon-plus.png" alt="" />Criar Usuário
+      </button>
+    </div>
+  </div>
+
+  <div class="infos">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
   <table mat-table [dataSource]="dataSource">
     <!-- Nome -->
     <ng-container matColumnDef="nome">
@@ -32,8 +55,11 @@
 
     <!-- acoes -->
     <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Açoes</th>
-      <td mat-cell *matCellDef="let element">{{ element.acoes }}</td>
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td class="actions" mat-cell *matCellDef="let element">
+        <img src="assets/png/icon-edit.png" alt="Editar" />
+        <img src="assets/png/icon-delete-user.png" alt="" />
+      </td>
     </ng-container>
 
     <!-- Header -->

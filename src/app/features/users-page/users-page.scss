@@ -1,6 +1,63 @@
 div.conteudo {
   width: 1000px;
 }
+
+.tittle {
+  height: 100px;
+
+  margin-bottom: 8px;
+
+  .button-back {
+    background-color: transparent;
+    border: none;
+    color: #3b82f6;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin: 19px 0 7px 0;
+  }
+
+  p {
+    color: #9ca3af;
+  }
+
+  button.create-user {
+    width: 150px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: #3b82f6;
+    border: none;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+
+    img {
+      margin-right: 7px;
+    }
+  }
+}
+
+.infos {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  div {
+    width: 32%;
+    height: 107px;
+    background-color: #1a1f2e;
+    border-radius: 4px;
+  }
+}
+
 table {
   width: 100%;
   background-color: #1a1f2e;
@@ -19,4 +76,14 @@ td {
 
 .name {
   color: #ffff;
+}
+
+.actions {
+  img:first-child {
+    margin-right: 10px;
+  }
+
+  img {
+    cursor: pointer;
+  }
 }

@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { User } from '../../interface/user.model';
 import { UsuarioService } from '../../service/usuario.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-users-page',
-  imports: [MatTableModule],
+  imports: [MatTableModule, RouterLink],
   templateUrl: './users-page.html',
   styleUrl: './users-page.scss',
 })
