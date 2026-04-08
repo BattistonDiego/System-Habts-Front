@@ -18,54 +18,94 @@
   </div>
 
   <div class="infos">
-    <div></div>
-    <div></div>
-    <div></div>
+    <div class="details">
+      <img src="assets/png/icon-total-users.png" alt="" />
+      <div>
+        <span>Total de Usuários:</span>
+        <span>{{ totalElements }}</span>
+      </div>
+    </div>
+    <div class="details">
+      <img src="assets/png/icon-active-users.png" alt="" />
+      <div>
+        <span>Ativos:</span>
+        <span>{{ activeUsers }}</span>
+      </div>
+    </div>
+    <div class="details">
+      <img src="assets/png/icon-inactive-users.png" alt="" />
+      <div>
+        <span>Inativos:</span>
+        <span>{{ inactiveUsers }}</span>
+      </div>
+    </div>
   </div>
-  <table mat-table [dataSource]="dataSource">
-    <!-- Nome -->
-    <ng-container matColumnDef="nome">
-      <th mat-header-cell *matHeaderCellDef>Nome</th>
-      <td class="name" mat-cell *matCellDef="let element">{{ element.nome }}</td>
-    </ng-container>
 
-    <!-- Email -->
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-    </ng-container>
+  <div class="filter">
+    <input type="text" placeholder="Buscar por nome ou e-mail..." />
 
-    <!-- Telefone -->
-    <ng-container matColumnDef="telefone">
-      <th mat-header-cell *matHeaderCellDef>Telefone</th>
-      <td mat-cell *matCellDef="let element">{{ element.telefone }}</td>
-    </ng-container>
+    <div>
+      <mat-button-toggle-group [(ngModel)]="filtro">
+        <mat-button-toggle value="todos">Todos</mat-button-toggle>
+        <mat-button-toggle value="ativos">Ativos</mat-button-toggle>
+        <mat-button-toggle value="inativos">Inativos</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
 
-    <!-- status -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let element">{{ element.status }}</td>
-    </ng-container>
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td class="name" mat-cell *matCellDef="let element">{{ element.nome }}</td>
+      </ng-container>
 
-    <!-- perfil -->
-    <ng-container matColumnDef="perfil">
-      <th mat-header-cell *matHeaderCellDef>Perfil</th>
-      <td mat-cell *matCellDef="let element">{{ element.perfil }}</td>
-    </ng-container>
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+      </ng-container>
 
-    <!-- acoes -->
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td class="actions" mat-cell *matCellDef="let element">
-        <img src="assets/png/icon-edit.png" alt="Editar" />
-        <img src="assets/png/icon-delete-user.png" alt="" />
-      </td>
-    </ng-container>
+      <!-- Telefone -->
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let element">{{ element.telefone }}</td>
+      </ng-container>
 
-    <!-- Header -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+      </ng-container>
 
-    <!-- Linhas -->
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+      <!-- perfil -->
+      <ng-container matColumnDef="perfil">
+        <th mat-header-cell *matHeaderCellDef>Perfil</th>
+        <td mat-cell *matCellDef="let element">{{ element.perfil }}</td>
+      </ng-container>
+
+      <!-- acoes -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td class="actions" mat-cell *matCellDef="let element">
+          <img src="assets/png/icon-edit.png" alt="Editar" />
+          <img src="assets/png/icon-delete-user.png" alt="" />
+        </td>
+      </ng-container>
+
+      <!-- Header -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <!-- Linhas -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="sizePage"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
 </div>

@@ -8,8 +8,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const token = localStorage.getItem('token');
 
-  console.log(req);
-
   // 🚨 IGNORA LOGIN
   if (req.url.includes('/login')) {
     return next(req);

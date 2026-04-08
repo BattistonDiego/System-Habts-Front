@@ -20,7 +20,13 @@ export class UsuarioService {
     return this.http.get<any>(this.baseUrl + '/' + 'me');
   }
 
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+  getAllUsers(page: number, size: number): Observable<any> {
+    const params = new HttpParams().set('page', page).set('size', size);
+
+    return this.http.get<any>(this.baseUrl, { params });
+  }
+
+  getResume(): Observable<any> {
+    return this.http.get<any>(this.baseUrl + '/resume');
   }
 }
