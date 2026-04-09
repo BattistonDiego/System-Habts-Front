@@ -10,10 +10,14 @@ import { MatSortModule } from '@angular/material/sort';
 
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginatorIntl } from '../../core/paginator/custom-paginator';
+import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteUserModal } from '../../components/modals/delete-user-modal/delete-user-modal';
 
 @Component({
   selector: 'app-users-page',
   imports: [
+    CommonModule,
     MatTableModule,
     RouterLink,
     MatButtonToggleModule,
@@ -32,6 +36,11 @@ export class UsersPage implements OnInit {
 
   totalElements = 0;
   sizePage = 8;
+
+  textoBusca: string = '';
+
+  isList = true;
+  globalListDefault: User[] = [];
 
   columns = [];
   displayedColumns: string[] = ['nome', 'email', 'telefone', 'status', 'perfil', 'acoes'];
@@ -54,8 +63,12 @@ export class UsersPage implements OnInit {
       status: 'ATIVO',
     },
   ];
+  pageatual: number = 0;
 
-  constructor(private userService: UsuarioService) {}
+  constructor(
+    private userService: UsuarioService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers(0, this.sizePage);
@@ -71,12 +84,42 @@ export class UsersPage implements OnInit {
     this.userService.getAllUsers(pageIndex, pageSize).subscribe({
       next: (res) => {
         this.dataSource = res.content;
+        this.globalListDefault = res.content;
         this.totalElements = res.totalElements;
+
+        this.filterList();
       },
     });
   }
 
   onPageChange(event: PageEvent) {
+    this.pageatual = event.pageIndex;
     this.loadUsers(event.pageIndex, event.pageSize);
+  }
+
+  filterList(event?: Event) {
+    if (event) {
+      this.textoBusca = (event.target as HTMLInputElement).value.toLowerCase().trim();
+    }
+
+    this.dataSource = this.globalListDefault.filter((user) => {
+      const passaStatus = this.filtro === 'todos' || user.status === this.filtro;
+      const passaTexto = user.nome.toLowerCase().includes(this.textoBusca);
+      return passaStatus && passaTexto;
+    });
+
+    this.isList = this.dataSource.length > 0;
+  }
+
+  inativeUser(user: User) {
+    const dialogRef = this.dialog.open(DeleteUserModal, {});
+
+    dialogRef.afterClosed().subscribe((res: User) => {
+      if (res) {
+        this.userService.putInativeUser(user).subscribe(() => {
+          this.loadUsers(this.pageatual, this.sizePage);
+        });
+      }
+    });
   }
 }

@@ -29,4 +29,8 @@ export class UsuarioService {
   getResume(): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/resume');
   }
+
+  putInativeUser(user: User): Observable<any> {
+    return this.http.put(this.baseUrl, user);
+  }
 }

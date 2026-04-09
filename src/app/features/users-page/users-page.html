@@ -42,19 +42,19 @@
   </div>
 
   <div class="filter">
-    <input type="text" placeholder="Buscar por nome ou e-mail..." />
+    <input type="text" placeholder="Buscar por nome ou e-mail..." (input)="filterList($event)" />
 
     <div>
-      <mat-button-toggle-group [(ngModel)]="filtro">
+      <mat-button-toggle-group [(ngModel)]="filtro" (click)="filterList()">
         <mat-button-toggle value="todos">Todos</mat-button-toggle>
-        <mat-button-toggle value="ativos">Ativos</mat-button-toggle>
-        <mat-button-toggle value="inativos">Inativos</mat-button-toggle>
+        <mat-button-toggle value="ATIVO">Ativos</mat-button-toggle>
+        <mat-button-toggle value="INATIVO">Inativos</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </div>
 
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" *ngIf="isList">
       <!-- Nome -->
       <ng-container matColumnDef="nome">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
@@ -90,7 +90,7 @@
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td class="actions" mat-cell *matCellDef="let element">
           <img src="assets/png/icon-edit.png" alt="Editar" />
-          <img src="assets/png/icon-delete-user.png" alt="" />
+          <img src="assets/png/icon-delete-user.png" alt="" (click)="inativeUser(element)" />
         </td>
       </ng-container>
 
@@ -100,7 +100,9 @@
       <!-- Linhas -->
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+    <div *ngIf="!isList" style="color: red">Não tem nada</div>
   </div>
+
   <mat-paginator
     [length]="totalElements"
     [pageSize]="sizePage"

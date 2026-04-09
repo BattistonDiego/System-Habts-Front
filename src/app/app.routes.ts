@@ -5,6 +5,7 @@ import { authGuard } from './service/auth-guard';
 import { loginGuard } from './service/login-guard';
 import { CreateUserPage } from './features/create-user-page/create-user-page';
 import { UsersPage } from './features/users-page/users-page';
+import { Testes } from './components/testes/testes';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -12,4 +13,5 @@ export const routes: Routes = [
   { path: 'habits', component: HabtsPage, canActivate: [authGuard] },
   { path: 'create-user', component: CreateUserPage },
   { path: 'users', component: UsersPage },
+  { path: 'testes', component: Testes },
 ];

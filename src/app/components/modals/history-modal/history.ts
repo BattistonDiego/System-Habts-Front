@@ -8,10 +8,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { HistoricoService } from '../../service/historico.service';
+import { HistoricoService } from '../../../service/historico.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CustomSnackbar } from '../custom-snackbar/custom-snackbar';
+import { CustomSnackbar } from '../../custom-snackbar/custom-snackbar';
 
 @Component({
   selector: 'app-history',
