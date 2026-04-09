@@ -26,11 +26,21 @@ export class UsuarioService {
     return this.http.get<any>(this.baseUrl, { params });
   }
 
+  getUserById(id: number) {
+    const params = new HttpParams().set('id', id);
+
+    return this.http.get<any>(this.baseUrl + '/byId', { params });
+  }
+
   getResume(): Observable<any> {
     return this.http.get<any>(this.baseUrl + '/resume');
   }
 
   putInativeUser(user: User): Observable<any> {
     return this.http.put(this.baseUrl, user);
+  }
+
+  updateUser(id: number, user: User): Observable<any> {
+    return this.http.put<User>(`${this.baseUrl}/${id}`, user);
   }
 }

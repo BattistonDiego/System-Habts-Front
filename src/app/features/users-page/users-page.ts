@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { User } from '../../interface/user.model';
 import { UsuarioService } from '../../service/usuario.service';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -30,7 +30,7 @@ import { DeleteUserModal } from '../../components/modals/delete-user-modal/delet
   styleUrl: './users-page.scss',
 })
 export class UsersPage implements OnInit {
-  filtro = 'todos';
+  filtro = 'ATIVO';
   inactiveUsers = 0;
   activeUsers = 0;
 
@@ -68,6 +68,8 @@ export class UsersPage implements OnInit {
   constructor(
     private userService: UsuarioService,
     private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -90,11 +92,6 @@ export class UsersPage implements OnInit {
         this.filterList();
       },
     });
-  }
-
-  onPageChange(event: PageEvent) {
-    this.pageatual = event.pageIndex;
-    this.loadUsers(event.pageIndex, event.pageSize);
   }
 
   filterList(event?: Event) {
@@ -121,5 +118,14 @@ export class UsersPage implements OnInit {
         });
       }
     });
+  }
+
+  editUser(user: User) {
+    this.router.navigate(['/users/edit', user.id]);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageatual = event.pageIndex;
+    this.loadUsers(event.pageIndex, event.pageSize);
   }
 }

@@ -89,7 +89,7 @@
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td class="actions" mat-cell *matCellDef="let element">
-          <img src="assets/png/icon-edit.png" alt="Editar" />
+          <img src="assets/png/icon-edit.png" alt="Editar" (click)="editUser(element)" />
           <img src="assets/png/icon-delete-user.png" alt="" (click)="inativeUser(element)" />
         </td>
       </ng-container>

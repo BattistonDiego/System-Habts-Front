@@ -13,5 +13,9 @@ export const routes: Routes = [
   { path: 'habits', component: HabtsPage, canActivate: [authGuard] },
   { path: 'create-user', component: CreateUserPage },
   { path: 'users', component: UsersPage },
+  {
+    path: 'users/edit/:id',
+    component: CreateUserPage,
+  },
   { path: 'testes', component: Testes },
 ];
