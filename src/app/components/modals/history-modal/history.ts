@@ -54,6 +54,7 @@ export class History {
 
   filter() {
     const valor = this.dataSelecionada.value;
+
     if (!valor) {
       console.warn('Nenhuma data selecionada!');
       return;
@@ -79,7 +80,7 @@ export class History {
       return;
     }
 
-    const data = this.dataSelecionada.value!.toISOString().split('T')[0];
+    const data = this.dataSelecionada.value!.toLocaleDateString('sv-SE');
 
     this.historicoService.getListHistoricoByDate(data).subscribe({
       next: (res) => {

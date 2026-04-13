@@ -66,7 +66,7 @@ export class HabtsPage implements OnInit {
       next: (res) => {
         this.usuario = res;
         this.usuarioId = res.id;
-
+        localStorage.setItem('perfil', res.perfil);
         this.loadHabitos();
       },
     });
@@ -80,8 +80,8 @@ export class HabtsPage implements OnInit {
       }));
 
       this.totalHabitos = habitos.length;
-      this.updatesCards();
       this.loadHistrorico();
+      this.updatesCards();
     });
   }
 
@@ -99,7 +99,25 @@ export class HabtsPage implements OnInit {
       if (habitosComRegistro.length > 0) {
         this.getHabitosCompletadoHoje();
       }
+
+      this.recalculateProgress();
     });
+  }
+
+  updatesCards() {
+    this.listCards = [
+      {
+        description: 'Progresso',
+        complement: this.progress + '%',
+        icon: 'assets/png/icon-progress.png',
+      },
+      {
+        description: 'Hábitos Completos',
+        complement: '0/' + this.totalHabitos,
+        icon: 'assets/png/icon-complete.png',
+      },
+      { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
+    ];
   }
 
   addHabit(habit: Habito) {
@@ -196,27 +214,13 @@ export class HabtsPage implements OnInit {
     });
   }
 
-  updatesCards() {
-    this.listCards = [
-      {
-        description: 'Progresso',
-        complement: this.progress + '%',
-        icon: 'assets/png/icon-progress.png',
-      },
-      {
-        description: 'Hábitos Completos',
-        complement: '0/' + this.totalHabitos,
-        icon: 'assets/png/icon-complete.png',
-      },
-      { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
-    ];
-  }
-
   getHabitosCompletadoHoje() {
     const listHabito = this.listHabitos;
     const listHistorico = this.listHistorico;
     const newList = listHabito.map((h) => {
       const registro = listHistorico.find((r) => r.habito.id === h.id);
+
+      console.log(registro);
 
       return {
         ...h,
@@ -226,6 +230,7 @@ export class HabtsPage implements OnInit {
     });
 
     this.listHabitos = newList;
+    console.log(newList);
   }
 
   changeDate(days: number) {
@@ -245,7 +250,7 @@ export class HabtsPage implements OnInit {
   }
 
   recalculateProgress() {
-    const completed = this.listHabitos.filter((h) => h.current! >= h.meta).length;
+    const completed = this.listHistorico.length;
     this.completedHabitsCount = completed;
 
     const progress = Math.round((completed / this.listHabitos.length) * 100);
@@ -269,7 +274,6 @@ export class HabtsPage implements OnInit {
     if (habitoComplet) {
       this.historicoService.postHistorico(body).subscribe({
         next: (res) => {
-          console.log(res);
           this.habitoCompletado = true;
         },
         error: (erro) => {
@@ -305,7 +309,6 @@ export class HabtsPage implements OnInit {
           icone: result.icon,
           cor: result.color,
         };
-        console.log(newHabit);
         this.addHabit(newHabit);
       }
     });

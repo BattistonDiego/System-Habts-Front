@@ -6,13 +6,14 @@ import { loginGuard } from './service/login-guard';
 import { CreateUserPage } from './features/create-user-page/create-user-page';
 import { UsersPage } from './features/users-page/users-page';
 import { Testes } from './components/testes/testes';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginPage, canActivate: [loginGuard] },
   { path: 'habits', component: HabtsPage, canActivate: [authGuard] },
+  { path: 'users', component: UsersPage, canActivate: [adminGuard] },
   { path: 'create-user', component: CreateUserPage },
-  { path: 'users', component: UsersPage },
   {
     path: 'users/edit/:id',
     component: CreateUserPage,

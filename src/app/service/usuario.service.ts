@@ -43,4 +43,8 @@ export class UsuarioService {
   updateUser(id: number, user: User): Observable<any> {
     return this.http.put<User>(`${this.baseUrl}/${id}`, user);
   }
+
+  getUserFromLocalStorage(): any {
+    return localStorage.getItem('perfil');
+  }
 }

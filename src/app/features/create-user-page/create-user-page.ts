@@ -11,6 +11,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { User } from '../../interface/user.model';
 import { UsuarioService } from '../../service/usuario.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 
 @Component({
   selector: 'app-create-user-page',
@@ -29,6 +31,7 @@ export class CreateUserPage implements OnInit {
     private fb: FormBuilder,
     private userService: UsuarioService,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -70,11 +73,14 @@ export class CreateUserPage implements OnInit {
         status: this.form.get('status')?.value.toUpperCase(),
         perfil: this.form.get('perfil')?.value.toUpperCase(),
       };
-      this.userService.updateUser(this.idUser, user).subscribe();
+      this.userService.updateUser(this.idUser, user).subscribe({
+        next: () => this.messageSuccess('Usuário atualizado com sucesso'),
+      });
     } else {
       const usuario = this.showdata();
       this.userService.postUser(usuario).subscribe({
         next: () => {
+          this.messageSuccess('Usuário criado com sucesso');
           this.form.reset();
         },
       });
@@ -88,5 +94,18 @@ export class CreateUserPage implements OnInit {
       perfil: this.form.get('perfil')?.value.toUpperCase(),
     };
     return form;
+  }
+
+  messageSuccess(message: string) {
+    this.snackBar.openFromComponent(CustomSnackbar, {
+      data: {
+        message: message,
+        icon: 'check_circle',
+      },
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['snackbar-success'],
+    });
   }
 }
