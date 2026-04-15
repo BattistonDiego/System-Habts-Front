@@ -109,7 +109,9 @@ export class UsersPage implements OnInit {
   }
 
   inativeUser(user: User) {
-    const dialogRef = this.dialog.open(DeleteUserModal, {});
+    const dialogRef = this.dialog.open(DeleteUserModal, {
+      data: { nome: user.nome, email: user.email },
+    });
 
     dialogRef.afterClosed().subscribe((res: User) => {
       if (res) {

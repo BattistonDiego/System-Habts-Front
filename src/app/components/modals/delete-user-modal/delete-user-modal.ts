@@ -9,7 +9,10 @@ import { User } from '../../../interface/user.model';
   styleUrl: './delete-user-modal.scss',
 })
 export class DeleteUserModal {
-  constructor(private dialogRef: MatDialogRef<DeleteUserModal>) {}
+  constructor(
+    private dialogRef: MatDialogRef<DeleteUserModal>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
 
   closeModal() {
     this.dialogRef.close();
