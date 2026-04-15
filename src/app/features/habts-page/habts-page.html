@@ -80,6 +80,12 @@
 
   <footer>
     <h3>Continue assim! 💪</h3>
-    <span>Você está a {{ restante }}% de completar todas as suas metas de hoje.</span>
+    <span>
+      {{
+        restante === 0
+          ? 'Parabéns! Você completou todas as suas metas de hoje!'
+          : 'Você está a ' + restante + '% de completar todas as suas metas de hoje.'
+      }}
+    </span>
   </footer>
 </div>

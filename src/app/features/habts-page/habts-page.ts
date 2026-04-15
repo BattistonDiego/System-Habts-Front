@@ -214,13 +214,21 @@ export class HabtsPage implements OnInit {
     });
   }
 
+  changeDate(days: number) {
+    const newDate = new Date(this.selectedDate);
+    newDate.setDate(this.selectedDate.getDate() + days);
+    this.selectedDate = newDate;
+  }
+
+  goToToday() {
+    this.selectedDate = new Date();
+  }
+
   getHabitosCompletadoHoje() {
     const listHabito = this.listHabitos;
     const listHistorico = this.listHistorico;
     const newList = listHabito.map((h) => {
       const registro = listHistorico.find((r) => r.habito.id === h.id);
-
-      console.log(registro);
 
       return {
         ...h,
@@ -233,35 +241,14 @@ export class HabtsPage implements OnInit {
     console.log(newList);
   }
 
-  changeDate(days: number) {
-    const newDate = new Date(this.selectedDate);
-    newDate.setDate(this.selectedDate.getDate() + days);
-    this.selectedDate = newDate;
-  }
-
-  goToToday() {
-    this.selectedDate = new Date();
-  }
-
   onHabitChanged(event: { index: number; current: number }) {
     this.listHabitos[event.index].current = event.current;
-    this.recalculateProgress();
-    this.habitCompleted();
-  }
 
-  recalculateProgress() {
-    const completed = this.listHistorico.length;
-    this.completedHabitsCount = completed;
+    const habito = this.listHabitos[event.index];
 
-    const progress = Math.round((completed / this.listHabitos.length) * 100);
-
-    const progressCard = this.listCards.find((c) => c.description === 'Progresso');
-    if (progressCard) progressCard.complement = `${progress}%`;
-
-    const habitsCard = this.listCards.find((c) => c.description === 'Hábitos Completos');
-    if (habitsCard) habitsCard.complement = `${completed}/${this.listHabitos.length}`;
-
-    this.restante = 100 - progress;
+    if (this.listHabitos[event.index].current === this.listHabitos[event.index].meta) {
+      this.habitCompleted();
+    }
   }
 
   habitCompleted() {
@@ -275,6 +262,13 @@ export class HabtsPage implements OnInit {
       this.historicoService.postHistorico(body).subscribe({
         next: (res) => {
           this.habitoCompletado = true;
+
+          const index = this.listHabitos.findIndex((h) => h.id === habitoComplet.id);
+          if (index !== -1) {
+            this.listHabitos[index].concluidoHoje = true;
+          }
+
+          this.recalculateProgress();
         },
         error: (erro) => {
           this.snackBar.openFromComponent(CustomSnackbar, {
@@ -290,6 +284,22 @@ export class HabtsPage implements OnInit {
         },
       });
     }
+  }
+
+  recalculateProgress() {
+    const completed = this.listHabitos.filter((h) => h.concluidoHoje === true).length;
+
+    this.completedHabitsCount = completed;
+
+    const progress = Math.round((completed / this.listHabitos.length) * 100);
+
+    const progressCard = this.listCards.find((c) => c.description === 'Progresso');
+    if (progressCard) progressCard.complement = `${progress}%`;
+
+    const habitsCard = this.listCards.find((c) => c.description === 'Hábitos Completos');
+    if (habitsCard) habitsCard.complement = `${completed}/${this.listHabitos.length}`;
+
+    this.restante = 100 - progress;
   }
 
   openAddHabitModal() {
