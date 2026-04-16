@@ -26,4 +26,8 @@ export class HistoricoService {
 
     return this.http.get<any>(`${this.baseUrl}/data`, { params });
   }
+
+  getStreak(habitoId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/streak/` + habitoId);
+  }
 }

@@ -41,6 +41,7 @@ export class HabtsPage implements OnInit {
   habitoCompletado: boolean = false;
   usuarioId!: number | null;
   usuario!: User;
+  streak: number = 0;
 
   constructor(
     private router: Router,
@@ -80,7 +81,9 @@ export class HabtsPage implements OnInit {
       }));
 
       this.totalHabitos = habitos.length;
+
       this.loadHistrorico();
+
       this.updatesCards();
     });
   }
@@ -101,6 +104,11 @@ export class HabtsPage implements OnInit {
       }
 
       this.recalculateProgress();
+
+      if (this.listHabitos.length > 0) {
+        console.log('aaaaaaaaaaa');
+        this.getConsecutivesDay(this.listHabitos[0].id);
+      }
     });
   }
 
@@ -116,7 +124,11 @@ export class HabtsPage implements OnInit {
         complement: '0/' + this.totalHabitos,
         icon: 'assets/png/icon-complete.png',
       },
-      { description: 'Sequência', complement: '3 Dias', icon: 'assets/png/icon-sequence.png' },
+      {
+        description: 'Sequência',
+        complement: this.streak + ' Dias',
+        icon: 'assets/png/icon-sequence.png',
+      },
     ];
   }
 
@@ -238,7 +250,6 @@ export class HabtsPage implements OnInit {
     });
 
     this.listHabitos = newList;
-    console.log(newList);
   }
 
   onHabitChanged(event: { index: number; current: number }) {
@@ -269,6 +280,7 @@ export class HabtsPage implements OnInit {
           }
 
           this.recalculateProgress();
+          this.getConsecutivesDay(this.listHabitos[0].id);
         },
         error: (erro) => {
           this.snackBar.openFromComponent(CustomSnackbar, {
@@ -291,7 +303,7 @@ export class HabtsPage implements OnInit {
 
     this.completedHabitsCount = completed;
 
-    const progress = Math.round((completed / this.listHabitos.length) * 100);
+    const progress = completed === 0 ? 0 : Math.round((completed / this.listHabitos.length) * 100);
 
     const progressCard = this.listCards.find((c) => c.description === 'Progresso');
     if (progressCard) progressCard.complement = `${progress}%`;
@@ -322,6 +334,23 @@ export class HabtsPage implements OnInit {
         this.addHabit(newHabit);
       }
     });
+  }
+
+  getConsecutivesDay(habitoId: number) {
+    this.historicoService.getStreak(habitoId).subscribe({
+      next: (res) => {
+        this.streak = res;
+        this.updateCardsAfterStreak();
+      },
+    });
+  }
+
+  updateCardsAfterStreak() {
+    const streakCard = this.listCards.find((c) => c.description === 'Sequência');
+
+    if (streakCard) {
+      streakCard.complement = this.streak + ' Dias';
+    }
   }
 
   openHistoryModal() {
