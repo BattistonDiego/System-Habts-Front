@@ -20,8 +20,12 @@ export class UsuarioService {
     return this.http.get<any>(this.baseUrl + '/' + 'me');
   }
 
-  getAllUsers(page: number, size: number): Observable<any> {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAllUsers(page: number, size: number, status?: string): Observable<any> {
+    let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+
+    if (status) {
+      params = params.set('status', status);
+    }
 
     return this.http.get<any>(this.baseUrl, { params });
   }

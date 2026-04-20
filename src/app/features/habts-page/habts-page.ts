@@ -106,7 +106,6 @@ export class HabtsPage implements OnInit {
       this.recalculateProgress();
 
       if (this.listHabitos.length > 0) {
-        console.log('aaaaaaaaaaa');
         this.getConsecutivesDay(this.listHabitos[0].id);
       }
     });
