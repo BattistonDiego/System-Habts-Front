@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { CreateHabito, Habito } from '../../interface/habito.model';
+import { CreateHabito, Habito } from '../../../interface/habito.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -45,7 +45,7 @@ export class HabitModal implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<HabitModal>
+    private dialogRef: MatDialogRef<HabitModal>,
   ) {}
 
   ngOnInit() {

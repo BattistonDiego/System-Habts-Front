@@ -1,12 +1,13 @@
 <div class="container-fluid">
   <div class="tittle">
-    <button class="button-back" routerLink="/habits">
+    <button class="button-back" routerLink="/users">
       <img src="assets/png/icon-back.png" alt="" />
       Voltar para lista
     </button>
 
-    <h2>Criar Usúario</h2>
-    <p>Preencha os dados para cadastrar um novo usuário no sistema.</p>
+    <h2>{{ isEdit ? 'Atualizar Usuário' : 'Criar Usúario' }}</h2>
+    <p *ngIf="!isEdit">Preencha os dados para cadastrar um novo usuário no sistema.</p>
+    <p *ngIf="isEdit">Preencha os dados para atualizar o usuário.</p>
   </div>
 
   <div class="background">
@@ -121,7 +122,9 @@
       <div class="col d-flex justify-content-end gap-2">
         <button class="btn cancel">Cancelar</button>
         <button (click)="createUser()" class="btn create d-flex gap-2 align-items-center">
-          <img src="assets/png/icon-create-user.png" alt="" />Criar usuário
+          <img src="assets/png/icon-create-user.png" alt="" />{{
+            isEdit ? 'Atualizar Usuário' : 'Criar Usuário'
+          }}
         </button>
       </div>
     </div>

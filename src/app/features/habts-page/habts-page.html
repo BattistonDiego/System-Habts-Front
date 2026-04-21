@@ -2,7 +2,7 @@
   <header>
     <div class="cabecalho">
       <img src="assets/icon-title.svg" alt="" />
-      <h2>Meu Progresso</h2>
+      <h2 routerLink="/testes">Meu Progresso</h2>
       <div *ngIf="isAdmin()">
         <img src="assets/png/icon-admin.png" alt="" />
       </div>
@@ -12,7 +12,7 @@
         <img src="assets/png/icon-habitos.png" alt="" />
         Hábitos
       </div>
-      <div class="user">
+      <div class="user" routerLink="/users">
         <img src="assets/png/icon-users.png" alt="" />
         Usúarios
       </div>
@@ -25,12 +25,6 @@
       </div>
     </div>
   </header>
-  <div class="my-progress">
-    <div style="display: flex; justify-content: space-between">
-      <button routerLink="/create-user">Create</button>
-    </div>
-    <p>Acompanhe seus hábitos diários e alcance suas metas</p>
-  </div>
 
   <div class="date-container">
     <button mat-icon-button (click)="changeDate(-1)">
@@ -86,6 +80,12 @@
 
   <footer>
     <h3>Continue assim! 💪</h3>
-    <span>Você está a {{ restante }}% de completar todas as suas metas de hoje.</span>
+    <span>
+      {{
+        restante === 0
+          ? 'Parabéns! Você completou todas as suas metas de hoje!'
+          : 'Você está a ' + restante + '% de completar todas as suas metas de hoje.'
+      }}
+    </span>
   </footer>
 </div>
