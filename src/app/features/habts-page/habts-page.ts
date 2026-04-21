@@ -20,6 +20,7 @@ import { User } from '../../interface/user.model';
 
 @Component({
   selector: 'app-habts-page',
+  standalone: true,
   imports: [
     MatIconModule,
     MatButtonModule,
