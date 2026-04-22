@@ -1,10 +1,16 @@
 div.conteudo {
   width: 1000px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-width: 100vw;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
 }
 
 .tittle {
   height: 100px;
-
   margin-bottom: 8px;
 
   .button-back {
@@ -29,6 +35,14 @@ div.conteudo {
     color: #9ca3af;
   }
 
+  .d-flex {
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 12px;
+    }
+  }
+
   button.create-user {
     width: 150px;
     height: 35px;
@@ -42,6 +56,15 @@ div.conteudo {
     img {
       margin-right: 7px;
     }
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    height: auto;
+    margin-bottom: 16px;
   }
 }
 
@@ -50,6 +73,11 @@ div.conteudo {
   justify-content: space-between;
   margin-bottom: 30px;
 
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .details {
     width: 32%;
     height: 106px;
@@ -57,12 +85,16 @@ div.conteudo {
     justify-content: normal;
     align-items: center;
     gap: 15px;
-
     border: 1px solid #2d3348;
     padding-left: 23px;
     color: #fff;
     background-color: #1a1f2e;
     border-radius: 10px;
+
+    @media (max-width: 600px) {
+      width: 100%;
+      height: 80px;
+    }
 
     div {
       display: flex;
@@ -88,6 +120,11 @@ div.conteudo {
   padding: 15px;
   border-radius: 8px 8px 0px 0px;
 
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   input {
     width: 300px;
     background-color: #2d3348;
@@ -95,8 +132,11 @@ div.conteudo {
     border-radius: 8px;
     color: #fff;
     padding: 8px;
-
     outline: none;
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
   }
 
   input::placeholder {
@@ -107,39 +147,66 @@ div.conteudo {
     background-color: #252a3a;
     border-radius: 12px;
     border: none;
+
+    @media (max-width: 600px) {
+      width: 100%;
+      display: flex;
+
+      .mat-button-toggle {
+        flex: 1;
+        text-align: center;
+      }
+    }
   }
 
   .mat-button-toggle {
-    color: #9ca3af; /* cor dos não selecionados */
+    color: #9ca3af;
     border: none !important;
   }
 
   .mat-button-toggle-checked {
     color: white;
-    background-color: #3b82f6; /* ou sua cor */
+    background-color: #3b82f6;
     border-radius: 8px;
   }
 }
 
+// Tabela — esconde colunas menos importantes no mobile
 .table-container {
   height: 473px;
   overflow-y: auto;
+  overflow-x: auto; // permite scroll horizontal no mobile
+
+  @media (max-width: 600px) {
+    height: auto;
+  }
 }
 
 table {
   width: 100%;
   background-color: #1a1f2e;
+  min-width: 600px; // força scroll horizontal antes de quebrar
 }
 
 th {
   color: #9ca3af;
   font-size: 12px;
   background-color: #151925 !important;
+
+  @media (max-width: 600px) {
+    font-size: 11px;
+    padding: 8px 4px !important;
+  }
 }
 
 td {
   color: #9ca3af;
   font-size: 12px;
+
+  @media (max-width: 600px) {
+    font-size: 11px;
+    padding: 8px 4px !important;
+  }
 }
 
 .name {
@@ -150,7 +217,6 @@ td {
   img:first-child {
     margin-right: 10px;
   }
-
   img {
     cursor: pointer;
   }
@@ -160,8 +226,21 @@ td {
   justify-content: space-between !important;
   background-color: #151925 !important;
   color: #9ca3af;
+
+  @media (max-width: 600px) {
+    display: none !important;
+  }
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-select {
   color: #fff;
+}
+@media (max-width: 600px) {
+  .mat-column-email,
+  .mat-column-telefone,
+  .mat-column-perfil,
+  ::ng-deep .mat-mdc-paginator-page-size,
+  ::ng-deep .mat-mdc-paginator-range-label {
+    display: none;
+  }
 }

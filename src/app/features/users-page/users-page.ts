@@ -43,11 +43,14 @@ export class UsersPage implements OnInit {
   isList = true;
   globalListDefault: User[] = [];
 
-  columns = [];
-  displayedColumns: string[] = ['nome', 'email', 'telefone', 'status', 'perfil', 'acoes'];
-
   dataSource: User[] = [];
   pageatual: number = 0;
+
+  columns = [];
+  isMobile = window.innerWidth <= 600;
+  displayedColumns = this.isMobile
+    ? ['nome', 'status', 'acoes']
+    : ['nome', 'email', 'telefone', 'status', 'perfil', 'acoes'];
 
   private buscaSubject = new Subject<string>();
 
@@ -85,6 +88,7 @@ export class UsersPage implements OnInit {
         this.dataSource = res.content;
         this.globalListDefault = res.content;
         this.totalElements = res.totalElements;
+        this.isList = this.dataSource.length > 0;
       },
     });
   }
@@ -101,8 +105,6 @@ export class UsersPage implements OnInit {
         this.loadUsers(0, this.sizePage, this.filtro);
       }
     }
-
-    this.isList = this.dataSource.length > 0;
   }
 
   onPageChange(event: PageEvent) {

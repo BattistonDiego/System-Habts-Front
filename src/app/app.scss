@@ -7,9 +7,14 @@ body {
 
 .principal {
   width: 100%;
-  height: 100vh; /* ocupa toda a altura da tela */
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #0f1219;
+
+  @media (max-width: 1024px) {
+    align-items: flex-start; // no mobile começa do topo
+    padding: 20px 0;
+  }
 }
