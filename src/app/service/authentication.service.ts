@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private baseUrl = 'https://system-habts-back-1.onrender.com';
+  private baseUrl = `${environment.apiUrl}/habitos`;
 
   constructor(private http: HttpClient) {}
 

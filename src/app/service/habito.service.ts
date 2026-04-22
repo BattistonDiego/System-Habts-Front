@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateHabito, Habito } from '../interface/habito.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HabitoService {
-  private baseUrl = 'http://localhost:8080/habitos';
+  private baseUrl = `${environment.apiUrl}/habitos`;
 
   constructor(private http: HttpClient) {}
 
