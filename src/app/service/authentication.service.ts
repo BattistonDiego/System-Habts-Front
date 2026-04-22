@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private baseUrl = 'http://localhost:8080/habitos';
+  private baseUrl = 'https://system-habts-back-1.onrender.com';
 
   constructor(private http: HttpClient) {}
 
