@@ -175,17 +175,21 @@ div.conteudo {
 .table-container {
   height: 473px;
   overflow-y: auto;
-  overflow-x: auto; // permite scroll horizontal no mobile
 
   @media (max-width: 600px) {
     height: auto;
+    overflow-x: hidden;
   }
 }
 
 table {
   width: 100%;
   background-color: #1a1f2e;
-  min-width: 600px; // força scroll horizontal antes de quebrar
+
+  @media (max-width: 600px) {
+    min-width: unset;
+    table-layout: fixed;
+  }
 }
 
 th {
@@ -242,5 +246,50 @@ td {
   ::ng-deep .mat-mdc-paginator-page-size,
   ::ng-deep .mat-mdc-paginator-range-label {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .mat-column-nome {
+    width: 40%;
+  }
+  .mat-column-status {
+    width: 30%;
+  }
+  .mat-column-acoes {
+    width: 30%;
+  }
+}
+
+@media (max-width: 600px) {
+  th,
+  td {
+    padding: 8px 4px !important;
+    font-size: 11px !important;
+    padding-left: 16px !important;
+  }
+
+  .mat-column-nome {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mat-column-status {
+    max-width: 70px;
+  }
+
+  .mat-column-acoes {
+    max-width: 60px;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+
+    img:first-child {
+      margin-right: 6px;
+    }
   }
 }

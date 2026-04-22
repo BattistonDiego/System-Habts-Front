@@ -7,7 +7,9 @@
         <img src="assets/png/icon-admin.png" alt="" />
       </div>
     </div>
-    <div class="changer-pages">
+
+    <!-- Menu desktop -->
+    <div class="changer-pages desktop-only">
       <div class="habito">
         <img src="assets/png/icon-habitos.png" alt="" />
         Hábitos
@@ -17,13 +19,31 @@
         Usúarios
       </div>
     </div>
-    <div class="actions">
+
+    <!-- Menu desktop -->
+    <div class="actions desktop-only">
       <div class="hello"><span style="color: #9ca3af">Olá</span> {{ usuario?.nome }}</div>
       <div (click)="logout()" class="logout">
         <img src="assets/svg/icon-logout.svg" alt="" />
         Sair
       </div>
     </div>
+
+    <!-- Menu mobile -->
+    <button class="hamburger mobile-only" [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Menu mobile -->
+    <mat-menu #mobileMenu="matMenu">
+      <div class="mobile-menu-header" mat-menu-item disabled>
+        <span style="color: #9ca3af">Olá</span>&nbsp;{{ usuario?.nome }}
+      </div>
+      <button mat-menu-item routerLink="/habits"><mat-icon>track_changes</mat-icon>Hábitos</button>
+      <button mat-menu-item routerLink="/users"><mat-icon>people</mat-icon>Usúarios</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Sair</button>
+    </mat-menu>
   </header>
 
   <div class="date-container">
