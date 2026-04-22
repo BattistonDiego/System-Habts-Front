@@ -18,6 +18,9 @@ import { Router, RouterLink } from '@angular/router';
 import { UsuarioService } from '../../service/usuario.service';
 import { User } from '../../interface/user.model';
 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+
 @Component({
   selector: 'app-habts-page',
   standalone: true,
@@ -30,6 +33,8 @@ import { User } from '../../interface/user.model';
     History,
     MatSnackBarModule,
     RouterLink,
+    MatMenuModule,
+    MatDividerModule,
   ],
   templateUrl: './habts-page.html',
   styleUrl: './habts-page.scss',

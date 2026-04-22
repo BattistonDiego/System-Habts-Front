@@ -1,18 +1,54 @@
+.desktop-only {
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+}
+
+.mobile-only {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+// Estilo do mat-menu
+::ng-deep .mat-mdc-menu-panel {
+  background-color: #1a1f2e !important;
+  border: 1px solid #2d3348;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-menu-item .mat-icon {
+  color: #9ca3af !important;
+  margin-right: 8px;
+}
+
 header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 50px;
-
   background-color: #1a1f2e;
   border-bottom: 1px solid #2d3348;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 0 80px;
+  z-index: 100;
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
 
   .cabecalho {
     display: flex;
@@ -31,6 +67,10 @@ header {
     display: flex;
     gap: 10px;
 
+    @media (max-width: 480px) {
+      gap: 4px;
+    }
+
     .habito,
     .user {
       width: 97px;
@@ -43,6 +83,17 @@ header {
       cursor: pointer;
       font-size: 12px;
       color: #ffff;
+
+      @media (max-width: 480px) {
+        width: auto;
+        padding: 0 8px;
+        font-size: 11px;
+
+        // esconde o texto, mostra só ícone no mobile muito pequeno
+        span {
+          display: none;
+        }
+      }
     }
 
     .habito:hover,
@@ -57,9 +108,14 @@ header {
     color: white;
     gap: 20px;
 
+    @media (max-width: 480px) {
+      gap: 10px;
+    }
+
     img {
       color: #ffff;
     }
+
     .logout {
       display: flex;
       gap: 6px;
@@ -67,10 +123,20 @@ header {
       font-size: 12px;
       color: #ffffff;
       cursor: pointer;
+
+      @media (max-width: 480px) {
+        span {
+          display: none;
+        } // mostra só ícone
+      }
     }
 
     .hello {
       font-size: 12px;
+
+      @media (max-width: 480px) {
+        display: none; // esconde "Olá Diego" no mobile pequeno
+      }
     }
   }
 }
@@ -78,12 +144,21 @@ header {
 .conteudo {
   width: 1000px;
   height: 870px;
-
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 77px;
   overflow-y: auto;
   margin-top: 55px;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding: 20px 16px;
+    height: auto;
+    min-height: calc(100vh - 55px);
+    border-radius: 0;
+  }
 
   .my-progress {
     p {
@@ -101,6 +176,10 @@ header {
     color: white;
     font-size: 12px;
     cursor: pointer;
+
+    @media (max-width: 480px) {
+      width: 100%;
+    }
   }
 
   .date-container {
@@ -111,6 +190,12 @@ header {
     border-radius: 12px;
     padding: 20px;
     border: 1px solid #2d3348;
+
+    @media (max-width: 480px) {
+      height: auto;
+      padding: 12px;
+      gap: 4px;
+    }
 
     .date-display {
       display: flex;
@@ -125,6 +210,10 @@ header {
         span {
           font-weight: 500;
           color: white;
+
+          @media (max-width: 480px) {
+            font-size: 13px;
+          }
         }
       }
 
@@ -134,7 +223,6 @@ header {
         display: block;
         color: #4a90e2;
         cursor: pointer;
-
         margin-bottom: 15px;
         margin-top: 3px;
         font-size: 12px;
@@ -151,6 +239,11 @@ header {
         border-radius: 8px;
         cursor: pointer;
 
+        @media (max-width: 480px) {
+          width: 120px;
+          height: 32px;
+        }
+
         span {
           font-size: 12px;
           color: white;
@@ -162,6 +255,12 @@ header {
   .cards {
     display: flex;
     gap: 15px;
+    margin-top: 16px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 10px;
+    }
   }
 
   .habts {
@@ -171,6 +270,15 @@ header {
       font-weight: 800;
       margin-bottom: 17px;
       color: white;
+    }
+
+    // botão + título lado a lado no mobile
+    > div {
+      @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start !important;
+      }
     }
   }
 
@@ -188,6 +296,14 @@ header {
     justify-content: center;
     gap: 5px;
     padding-left: 20px;
+    margin-top: 20px;
+
+    @media (max-width: 480px) {
+      height: auto;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
 
     h3 {
       font-weight: 500;
@@ -198,13 +314,5 @@ header {
       color: #bfdbfe;
       font-size: 12px;
     }
-  }
-}
-
-@media (max-width: 630px) {
-  /* CSS para celular pequeno */
-
-  .date-container {
-    width: 512px;
   }
 }
