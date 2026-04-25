@@ -8,13 +8,15 @@
     <form action="" [formGroup]="loginForm">
       <div class="field" style="margin-bottom: 27px">
         <label for="email">E-mail</label>
-        <input
-          formControlName="email"
-          type="text"
-          name=""
-          id="email"
-          placeholder="Digite seu e-mail..."
-        />
+        <div class="input-wrapper">
+          <lucide-icon name="mail" [size]="18" class="input-icon" />
+          <input
+            formControlName="email"
+            type="text"
+            id="email"
+            placeholder="Digite seu e-mail..."
+          />
+        </div>
       </div>
 
       <div class="field">
@@ -22,13 +24,15 @@
           <label for="password">Password</label>
           <span>Esqueceu a senha?</span>
         </div>
-        <input
-          formControlName="senha"
-          type="password"
-          name=""
-          id="password"
-          placeholder="Digite sua senha..."
-        />
+        <div class="input-wrapper">
+          <lucide-icon name="lock" [size]="18" class="input-icon" />
+          <input
+            formControlName="senha"
+            type="password"
+            id="password"
+            placeholder="Digite sua senha..."
+          />
+        </div>
       </div>
 
       <div class="check">

@@ -4,10 +4,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from '../../service/authentication.service';
+import { LucideAngularModule, LUCIDE_ICONS, LucideIconProvider } from 'lucide-angular';
+import { User, Mail, Lock } from 'lucide-angular';
 
 @Component({
   selector: 'app-login-page',
-  imports: [MatCheckboxModule, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [
+    MatCheckboxModule,
+    ɵInternalFormsSharedModule,
+    ReactiveFormsModule,
+    LucideAngularModule,
+  ],
+  providers: [
+    { provide: LUCIDE_ICONS, useValue: new LucideIconProvider({ User, Mail, Lock }), multi: true },
+  ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })
