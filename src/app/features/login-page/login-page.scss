@@ -1,14 +1,13 @@
 .conteudo {
   width: 448px;
   height: 677px;
-  background-color: 0f1219;
+  background-color: #0f1219; // faltava o # aqui
 
   @media (max-width: 500px) {
     width: 370px;
     display: flex;
     flex-direction: column;
     align-items: center;
-
     box-sizing: border-box;
   }
 
@@ -16,6 +15,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
     h1 {
       font-weight: bold;
       color: #fff;
@@ -31,10 +31,10 @@
   .form {
     height: 415px;
     margin-top: 15px;
-    border-radius: 16px;
-    background-color: #252a3a;
     padding: 30px;
+    border-radius: 16px;
     border: 1px solid #6b727f4a;
+    background-color: #252a3a;
 
     @media (max-width: 500px) {
       width: 100%;
@@ -46,33 +46,33 @@
       flex-direction: column;
       color: #fff;
 
-      .forgot-password {
-        @media (max-width: 500px) {
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-
       label {
         color: #9ca3af;
         font-size: 12px;
-
         margin-right: 220px;
 
         @media (max-width: 500px) {
-          margin-right: 0px;
+          margin-right: 0;
         }
       }
 
       input {
         height: 50px;
-        border-radius: 12px;
-        background-color: #2d3348;
-        border: none;
-        outline: none;
-        padding: 15px;
-        color: #cccccc;
+        width: 100%;
         margin-top: 9px;
+        padding-left: 40px;
+        border: none;
+        border-radius: 12px;
+        outline: none;
+        background-color: #2d3348;
+        color: #cccccc;
+      }
+
+      .forgot-password {
+        @media (max-width: 500px) {
+          display: flex;
+          justify-content: space-between;
+        }
       }
 
       span {
@@ -82,20 +82,33 @@
       }
     }
 
+    .input-wrapper {
+      position: relative;
+
+      .input-icon {
+        position: absolute;
+        top: 57%;
+        left: 12px;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none;
+      }
+    }
+
     .check {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       margin: 15px 0;
       color: #9ca3af;
       font-size: 12px;
-      display: flex;
-      gap: 5px;
-      align-items: center;
     }
 
     button {
-      height: 48px;
       width: 100%;
-      border-radius: 12px;
+      height: 48px;
       border: none;
+      border-radius: 12px;
       background-color: #3b82f6;
       color: #fff;
       cursor: pointer;
@@ -103,10 +116,7 @@
   }
 }
 
-::ng-deep.mat-mdc-checkbox .mdc-checkbox__ripple {
-  display: none;
-}
-
-::ng-deep.mat-mdc-checkbox .mat-mdc-checkbox-touch-target {
+::ng-deep .mat-mdc-checkbox .mdc-checkbox__ripple,
+::ng-deep .mat-mdc-checkbox .mat-mdc-checkbox-touch-target {
   display: none;
 }
