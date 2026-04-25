@@ -263,23 +263,22 @@ export class HabtsPage implements OnInit {
     const habito = this.listHabitos[event.index];
 
     if (this.listHabitos[event.index].current === this.listHabitos[event.index].meta) {
-      this.habitCompleted();
+      this.habitCompleted(habito);
     }
   }
 
-  habitCompleted() {
-    const habitoComplet = this.listHabitos.find((h) => h.current === h.meta);
+  habitCompleted(habito: Habito) {
     const body = {
-      habitoId: habitoComplet?.id,
+      habitoId: habito?.id,
       status: true,
-      valorAtual: habitoComplet?.current,
+      valorAtual: habito?.current,
     };
-    if (habitoComplet) {
+    if (habito) {
       this.historicoService.postHistorico(body).subscribe({
         next: (res) => {
           this.habitoCompletado = true;
 
-          const index = this.listHabitos.findIndex((h) => h.id === habitoComplet.id);
+          const index = this.listHabitos.findIndex((h) => h.id === habito.id);
           if (index !== -1) {
             this.listHabitos[index].concluidoHoje = true;
           }

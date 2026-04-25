@@ -14,7 +14,7 @@
         <img src="assets/png/icon-habitos.png" alt="" />
         Hábitos
       </div>
-      <div class="user" routerLink="/users">
+      <div class="user" *ngIf="isAdmin()" routerLink="/users">
         <img src="assets/png/icon-users.png" alt="" />
         Usúarios
       </div>
