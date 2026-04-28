@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './components/loading/loading';
 
 @Component({
@@ -10,4 +10,13 @@ import { LoadingComponent } from './components/loading/loading';
 })
 export class App {
   protected readonly title = signal('mfe-habitos-front');
+  currentRoute = '';
+
+  constructor(private router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.url;
+      }
+    });
+  }
 }

@@ -74,6 +74,7 @@ export class HabtsPage implements OnInit {
         this.usuario = res;
         this.usuarioId = res.id;
         localStorage.setItem('perfil', res.perfil);
+        localStorage.setItem('usuario', JSON.stringify(res));
         this.loadHabitos();
       },
     });

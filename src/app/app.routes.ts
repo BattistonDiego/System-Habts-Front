@@ -22,6 +22,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/users-page/users-page').then((c) => c.UsersPage),
   },
   {
+    path: 'dashboard',
+    // canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./features/dashboard-page/dashboard-page').then((c) => c.DashboardPage),
+  },
+  {
     path: 'create-user',
     loadComponent: () =>
       import('./features/create-user-page/create-user-page').then((c) => c.CreateUserPage),
