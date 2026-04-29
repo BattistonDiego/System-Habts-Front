@@ -8,18 +8,16 @@ import { History } from '../../components/modals/history-modal/history';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/modals/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
-import { Habito, Usuario } from '../../interface/habito.model';
+import { Habito } from '../../interface/habito.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/modals/delete-habito-modal/delete-habito-modal';
 import { HistoricoService } from '../../service/historico.service';
 import { AuthenticationService } from '../../service/authentication.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { UsuarioService } from '../../service/usuario.service';
 import { User } from '../../interface/user.model';
-
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
+import { UserStateService } from '../../service/user-state.service';
 
 @Component({
   selector: 'app-habts-page',
@@ -32,9 +30,6 @@ import { MatDividerModule } from '@angular/material/divider';
     CardHorizont,
     History,
     MatSnackBarModule,
-    RouterLink,
-    MatMenuModule,
-    MatDividerModule,
   ],
   templateUrl: './habts-page.html',
   styleUrl: './habts-page.scss',
@@ -57,6 +52,7 @@ export class HabtsPage implements OnInit {
     private authService: AuthenticationService,
     private usuarioService: UsuarioService,
     private snackBar: MatSnackBar,
+    private userStateService: UserStateService,
   ) {}
 
   listCards: any[] = [];
@@ -75,6 +71,7 @@ export class HabtsPage implements OnInit {
         this.usuarioId = res.id;
         localStorage.setItem('perfil', res.perfil);
         localStorage.setItem('usuario', JSON.stringify(res));
+        this.userStateService.setUsuario(res);
         this.loadHabitos();
       },
     });
@@ -364,14 +361,5 @@ export class HabtsPage implements OnInit {
         // You can pass data to the modal here if needed
       },
     });
-  }
-
-  isAdmin(): boolean {
-    return this.usuario?.perfil === 'ADMINISTRADOR';
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

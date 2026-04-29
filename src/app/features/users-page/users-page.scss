@@ -1,5 +1,6 @@
 div.conteudo {
   width: 1000px;
+  margin-top: 60px;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -173,7 +174,7 @@ div.conteudo {
 
 // Tabela — esconde colunas menos importantes no mobile
 .table-container {
-  height: 473px;
+  height: 423px;
   overflow-y: auto;
 
   @media (max-width: 600px) {

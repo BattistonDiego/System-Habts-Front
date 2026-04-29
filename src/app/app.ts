@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './components/loading/loading';
+import { Header } from './components/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoadingComponent],
+  imports: [RouterOutlet, LoadingComponent, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

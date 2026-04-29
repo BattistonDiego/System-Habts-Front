@@ -1,6 +1,14 @@
+.conteudo {
+  width: 832px;
+  margin-top: 60px;
+  padding: 0 16px;
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+}
+
 .tittle {
-  height: 100px;
-  width: 831px;
+  width: 100%;
   margin-bottom: 8px;
 
   .button-back {
@@ -19,6 +27,10 @@
     font-weight: bold;
     color: white;
     margin: 19px 0 7px 0;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
   }
 
   p {
@@ -27,19 +39,23 @@
 }
 
 .background {
-  height: 731px;
+  width: 100%;
 }
 
-.conteudo {
-  width: 832px;
-  height: 620px;
+.content {
+  width: 100%;
+
   background-color: #1a1f2e;
-  border-radius: 16px 16px 0px 0px;
+  border-radius: 16px 16px 0 0;
   border: 1px solid #2d3348;
 }
 
 main {
   padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 
   .tittle-form {
     color: #fff;
@@ -55,22 +71,29 @@ main {
 
 .buttons {
   width: 100%;
-  padding-top: 20px;
-  padding-right: 32px;
+  padding: 20px 32px 0;
   height: 81px;
   border: 1px solid #2d3348;
-  border-radius: 0px 0px 16px 16px;
+  border-radius: 0 0 16px 16px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px 0;
+    height: auto;
+    padding-bottom: 16px;
+  }
 }
+
 button.cancel {
   width: 100px;
   height: 40px;
   border-radius: 12px;
   color: #9ca3af;
   font-size: 12px;
-}
-button.cancel:hover {
-  background-color: #3a4057e0;
-  color: #fff;
+
+  &:hover {
+    background-color: #3a4057e0;
+    color: #fff;
+  }
 }
 
 button.create {
@@ -81,9 +104,14 @@ button.create {
   border-radius: 12px;
   justify-content: center;
   background-color: #3b82f6;
-}
-button.create:hover {
-  background-color: #2473f5;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+
+  &:hover {
+    background-color: #2473f5;
+  }
 }
 
 .row {
@@ -98,10 +126,10 @@ button.create:hover {
     background-color: #2d3348;
     border: 1px solid #6b728059;
     color: #fff;
-  }
 
-  input::placeholder {
-    color: #fff;
+    &::placeholder {
+      color: #fff;
+    }
   }
 }
 
@@ -109,7 +137,6 @@ button.create:hover {
   width: 100%;
   margin-top: 12px;
   border-radius: 12px;
-
   background-color: #2d3348;
 }
 
@@ -118,22 +145,53 @@ button.create:hover {
 }
 
 .ativo ::ng-deep .mat-button-toggle-checked {
-  background-color: #22c55e; /* verde */
+  background-color: #22c55e;
   color: white;
 }
 
 .inativo ::ng-deep .mat-button-toggle-checked {
-  background-color: #9ca3af; /* cinza */
+  background-color: #9ca3af;
   color: white;
 }
 
 .perfil ::ng-deep .mat-button-toggle-checked {
-  background-color: #3b82f6; /* verde */
+  background-color: #3b82f6;
   color: white;
 }
 
 ::ng-deep .mat-button-toggle:not(.mat-button-toggle-checked) {
   color: white;
+}
+
+::ng-deep .mat-button-toggle-label-content {
+  font-size: 15px;
+
+  @media (max-width: 1024px) {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 600px) {
+  ::ng-deep
+    .mat-button-toggle-checked
+    .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+    padding-left: 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  ::ng-deep .mat-pseudo-checkbox {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .mat-button-toggle-label-content {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 small {
