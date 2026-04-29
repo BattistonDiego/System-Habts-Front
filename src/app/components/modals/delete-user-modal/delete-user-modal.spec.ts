@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteUserModal } from './delete-user-modal';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('DeleteUserModal', () => {
   let component: DeleteUserModal;
@@ -8,9 +9,12 @@ describe('DeleteUserModal', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteUserModal]
-    })
-    .compileComponents();
+      imports: [DeleteUserModal],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DeleteUserModal);
     component = fixture.componentInstance;
