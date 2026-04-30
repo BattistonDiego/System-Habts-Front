@@ -31,4 +31,8 @@ export class HistoricoService {
   getStreak(habitoId: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/streak/` + habitoId);
   }
+
+  getResumoSemanal(usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/resumo-semanal/${usuarioId}`);
+  }
 }

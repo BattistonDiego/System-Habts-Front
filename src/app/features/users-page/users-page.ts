@@ -83,6 +83,7 @@ export class UsersPage implements OnInit {
   }
 
   loadUsers(pageIndex: number, pageSize: number, status?: string) {
+    console.log('userService:', this.userService);
     this.userService.getAllUsers(pageIndex, pageSize, status).subscribe({
       next: (res) => {
         this.dataSource = res.content;
