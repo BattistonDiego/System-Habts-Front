@@ -12,10 +12,14 @@
   </div>
   <div class="infos">
     <!-- colocar o component card aqui -->
-    <div class="card"></div>
-    <div class="card"></div>
-    <div class="card"></div>
-    <div class="card"></div>
+    <app-card
+      *ngFor="let card of listCards"
+      [description]="card.description"
+      [complement]="card.complement"
+      [icon]="card.icon"
+      width="260px"
+      height="99px"
+    ></app-card>
   </div>
   <section class="details">
     <div class="habitos"></div>

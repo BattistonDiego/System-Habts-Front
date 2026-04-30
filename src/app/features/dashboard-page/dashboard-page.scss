@@ -60,7 +60,8 @@
 
   .infos {
     display: flex;
-    gap: 8px;
+    justify-content: space-between;
+
     margin-bottom: 32px;
 
     .card {

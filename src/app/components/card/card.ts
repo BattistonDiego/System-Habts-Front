@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,4 +12,6 @@ export class Card {
   @Input() complement!: string;
   @Input() icon!: string;
   @Input() habtsCompleted = 0;
+  @Input() width: string = '272px'; // valor padrão
+  @Input() height: string = '107px'; // valor padrão
 }
