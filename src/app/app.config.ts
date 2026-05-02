@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 import { routes } from './app.routes';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';

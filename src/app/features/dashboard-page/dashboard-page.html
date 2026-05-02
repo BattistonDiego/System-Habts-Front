@@ -22,8 +22,22 @@
     ></app-card>
   </div>
   <section class="details">
-    <div class="habitos"></div>
-    <div class="desempenho"></div>
+    <div class="habitos">
+      <h2>Hábitos por dia</h2>
+      <canvas baseChart [data]="barChartData" [type]="'bar'" [options]="barChartOptions"> </canvas>
+    </div>
+    <div class="desempenho">
+      <h2>Desempenho</h2>
+      <div class="chart-container">
+        <canvas
+          baseChart
+          [data]="doughnutData"
+          [type]="'doughnut'"
+          [options]="doughnutOptions"
+        ></canvas>
+        <div class="chart-label">{{ progress }}%</div>
+      </div>
+    </div>
   </section>
   <section class="atividades-recentes"></section>
 </div>
