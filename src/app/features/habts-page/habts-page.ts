@@ -13,8 +13,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/modals/delete-habito-modal/delete-habito-modal';
 import { HistoricoService } from '../../service/historico.service';
-import { AuthenticationService } from '../../service/authentication.service';
-import { Router } from '@angular/router';
 import { UsuarioService } from '../../service/usuario.service';
 import { User } from '../../interface/user.model';
 import { UserStateService } from '../../service/user-state.service';
@@ -45,11 +43,9 @@ export class HabtsPage implements OnInit {
   streak: number = 0;
 
   constructor(
-    private router: Router,
     private dialog: MatDialog,
     private habitoService: HabitoService,
     private historicoService: HistoricoService,
-    private authService: AuthenticationService,
     private usuarioService: UsuarioService,
     private snackBar: MatSnackBar,
     private userStateService: UserStateService,
