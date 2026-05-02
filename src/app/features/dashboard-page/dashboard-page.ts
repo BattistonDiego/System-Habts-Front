@@ -99,11 +99,14 @@ export class DashboardPage implements OnInit {
 
   loadResumoSemanal(userId: number) {
     this.historicoService.getResumoSemanal(userId).subscribe((res) => {
+      const dias = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const mapaQuantidade = new Map(res.map((r) => [r.dia.trim(), r.quantidade]));
+
       this.barChartData = {
-        labels: res.map((r) => r.dia),
+        labels: dias,
         datasets: [
           {
-            data: res.map((r) => r.quantidade),
+            data: dias.map((d) => mapaQuantidade.get(d) ?? 0),
             label: 'Hábitos concluídos',
             backgroundColor: '#3b82f6',
           },
