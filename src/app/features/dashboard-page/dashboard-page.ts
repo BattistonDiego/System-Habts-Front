@@ -19,6 +19,9 @@ export class DashboardPage implements OnInit {
   usuario!: User;
 
   progress = 0;
+  quantidadeHabitos = 0;
+  habitoscount = 0;
+  bestSequencia: number = 0;
 
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
@@ -39,6 +42,11 @@ export class DashboardPage implements OnInit {
       description: 'Sequência',
       complement: 0 + ' Dias',
       icon: 'assets/png/icon-sequence.png',
+    },
+    {
+      description: 'Total de Hábitos',
+      complement: 0 + '',
+      icon: 'assets/png/icon-hab.png',
     },
   ];
 
@@ -91,10 +99,10 @@ export class DashboardPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('entramos no dash');
     this.usuario = JSON.parse(localStorage.getItem('usuario')!);
     this.loadResumoSemanal(this.usuario.id);
     this.loadHabitos();
+    this.loadMelhorSequencia();
   }
 
   loadResumoSemanal(userId: number) {
@@ -121,6 +129,7 @@ export class DashboardPage implements OnInit {
         ...h,
         current: 0,
       }));
+      this.quantidadeHabitos = habitos.length;
 
       this.loadHabitosCompletadosHoje();
 
@@ -133,9 +142,9 @@ export class DashboardPage implements OnInit {
 
     this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
       const completed = res.length;
+      this.habitoscount = completed;
 
       if (res.length > 0) {
-        console.log('entrmaos no if pra calcular o progresso');
         this.progress =
           completed === 0 ? 0 : Math.round((completed / this.listHabitos.length) * 100);
 
@@ -151,6 +160,38 @@ export class DashboardPage implements OnInit {
           ],
         };
       }
+      this.updateCards();
+    });
+  }
+
+  updateCards() {
+    this.listCards = [
+      {
+        description: 'Total de Hábitos',
+        complement: this.quantidadeHabitos.toString(),
+        icon: 'assets/png/icon-hab.png',
+      },
+      {
+        description: 'Progresso',
+        complement: this.progress + '%',
+        icon: 'assets/png/icon-progress.png',
+      },
+      {
+        description: 'Hábitos Completos',
+        complement: this.habitoscount + '/' + this.quantidadeHabitos,
+        icon: 'assets/png/icon-complete.png',
+      },
+      {
+        description: 'Melhor Sequência',
+        complement: this.bestSequencia + ' Dias',
+        icon: 'assets/png/icon-sequence.png',
+      },
+    ];
+  }
+
+  loadMelhorSequencia() {
+    this.historicoService.getMelhorSequencia(this.usuario.id).subscribe({
+      next: (res) => (this.bestSequencia = res),
     });
   }
 }
