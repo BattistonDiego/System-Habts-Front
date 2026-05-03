@@ -35,4 +35,8 @@ export class HistoricoService {
   getResumoSemanal(usuarioId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/resumo-semanal/${usuarioId}`);
   }
+
+  getMelhorSequencia(usuarioId: number): Observable<any> {
+    return this.http.get<any[]>(`${this.baseUrl}/melhor-sequencia/${usuarioId}`);
+  }
 }
