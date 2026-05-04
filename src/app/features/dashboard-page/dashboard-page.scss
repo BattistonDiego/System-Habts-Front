@@ -78,8 +78,6 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
       margin-bottom: 32px;
-
-      grid-template-columns: repeat(2, 1fr); // mantém 2 colunas mesmo no mobile
     }
   }
 
@@ -144,6 +142,47 @@
           color: #fff;
           font-size: 16px;
           font-weight: bold;
+        }
+      }
+
+      .desempenho-cards {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+
+        .desempenho-card {
+          flex: 1;
+          background-color: #2d3348;
+          border-radius: 10px;
+          padding: 12px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+
+          .icon {
+            &.yellow {
+              color: #f59e0b;
+            }
+            &.blue {
+              color: #3b82f6;
+            }
+            &.green {
+              color: #22c55e;
+            }
+          }
+
+          .valor {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+          }
+
+          .label {
+            font-size: 10px;
+            color: #9ca3af;
+            text-align: center;
+          }
         }
       }
     }

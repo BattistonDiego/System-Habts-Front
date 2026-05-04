@@ -1,17 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { Habito, Usuario } from '../../interface/habito.model';
+import { Habito } from '../../interface/habito.model';
 import { RouterLink } from '@angular/router';
 import { Card } from '../../components/card/card';
 import { CommonModule } from '@angular/common';
 import { HistoricoService } from '../../service/historico.service';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartType } from 'chart.js';
+import { ChartData } from 'chart.js';
 import { User } from '../../interface/user.model';
 import { HabitoService } from '../../service/habito.service';
+import { LUCIDE_ICONS, LucideAngularModule, LucideIconProvider } from 'lucide-angular';
+import { Zap, Target, Award } from 'lucide-angular';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [RouterLink, Card, CommonModule, BaseChartDirective],
+  imports: [RouterLink, Card, CommonModule, BaseChartDirective, LucideAngularModule],
+  providers: [
+    {
+      provide: LUCIDE_ICONS,
+      useValue: new LucideIconProvider({ Zap, Target, Award }),
+      multi: true,
+    },
+  ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
 })
@@ -22,6 +31,9 @@ export class DashboardPage implements OnInit {
   quantidadeHabitos = 0;
   habitoscount = 0;
   bestSequencia: number = 0;
+  qntdEsteMes: number = 0;
+  mediaHabitosCompletados: number = 0;
+  streak: number = 0;
 
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
@@ -39,7 +51,7 @@ export class DashboardPage implements OnInit {
       icon: 'assets/png/icon-complete.png',
     },
     {
-      description: 'Sequência',
+      description: 'Sequência Atual',
       complement: 0 + ' Dias',
       icon: 'assets/png/icon-sequence.png',
     },
@@ -103,6 +115,8 @@ export class DashboardPage implements OnInit {
     this.loadResumoSemanal(this.usuario.id);
     this.loadHabitos();
     this.loadMelhorSequencia();
+    this.loadQntdHabEsteMes();
+    this.loadMediaHabitosCompletados();
   }
 
   loadResumoSemanal(userId: number) {
@@ -132,6 +146,9 @@ export class DashboardPage implements OnInit {
       this.quantidadeHabitos = habitos.length;
 
       this.loadHabitosCompletadosHoje();
+
+      const habitoId = habitos.filter((h) => h.id === 1)[0].id;
+      this.getConsecutivesDay(habitoId);
 
       this.totalHabitos = habitos.length;
     });
@@ -182,8 +199,8 @@ export class DashboardPage implements OnInit {
         icon: 'assets/png/icon-complete.png',
       },
       {
-        description: 'Melhor Sequência',
-        complement: this.bestSequencia + ' Dias',
+        description: 'Sequência Atual',
+        complement: this.streak + ' Dias',
         icon: 'assets/png/icon-sequence.png',
       },
     ];
@@ -192,6 +209,44 @@ export class DashboardPage implements OnInit {
   loadMelhorSequencia() {
     this.historicoService.getMelhorSequencia(this.usuario.id).subscribe({
       next: (res) => (this.bestSequencia = res),
+    });
+  }
+
+  loadQntdHabEsteMes() {
+    this.historicoService.getqntdHabitosEsteMes(this.usuario.id).subscribe({
+      next: (res) => (this.qntdEsteMes = res),
+    });
+  }
+
+  loadMediaHabitosCompletados() {
+    this.historicoService.getMediaHabitoCompletado(this.usuario.id).subscribe({
+      next: (res) => (this.mediaHabitosCompletados = res),
+    });
+  }
+
+  getConsecutivesDay(habitoId: number) {
+    this.historicoService.getStreak(habitoId).subscribe({
+      next: (res) => {
+        this.streak = res;
+        this.updateCardsAfterStreak();
+      },
+    });
+  }
+
+  updateCardsAfterStreak() {
+    const streakCard = this.listCards.find((c) => c.description === 'Sequência Atual');
+
+    if (streakCard) {
+      streakCard.complement = this.streak + ' Dias';
+    }
+  }
+
+  getDataFormatada(): string {
+    const hoje = new Date();
+    return hoje.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
     });
   }
 }
