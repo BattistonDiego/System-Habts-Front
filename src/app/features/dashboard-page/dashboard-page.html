@@ -7,7 +7,7 @@
     <div class="logo">{{ usuario.nome.charAt(0) }}</div>
     <div class="message">
       <span>Good morning, Diego</span>
-      <p>Hoje é segunda-feira, 27 de abri</p>
+      <p>Hoje é {{ getDataFormatada() }}</p>
     </div>
   </div>
   <div class="infos">
@@ -36,6 +36,23 @@
           [options]="doughnutOptions"
         ></canvas>
         <div class="chart-label">{{ progress }}%</div>
+      </div>
+      <div class="desempenho-cards">
+        <div class="desempenho-card">
+          <lucide-icon name="zap" [size]="18" class="icon yellow"></lucide-icon>
+          <span class="valor">{{ bestSequencia }}</span>
+          <span class="label">Melhor Seq.</span>
+        </div>
+        <div class="desempenho-card">
+          <lucide-icon name="target" [size]="18" class="icon blue"></lucide-icon>
+          <span class="valor">{{ qntdEsteMes }}</span>
+          <span class="label">Este Mês</span>
+        </div>
+        <div class="desempenho-card">
+          <lucide-icon name="award" [size]="18" class="icon green"></lucide-icon>
+          <span class="valor">{{ mediaHabitosCompletados }}%</span>
+          <span class="label">Taxa Média</span>
+        </div>
       </div>
     </div>
   </section>
