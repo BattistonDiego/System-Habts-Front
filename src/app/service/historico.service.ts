@@ -36,8 +36,8 @@ export class HistoricoService {
     return this.http.get<any[]>(`${this.baseUrl}/resumo-semanal/${usuarioId}`);
   }
 
-  getMelhorSequencia(usuarioId: number): Observable<any> {
-    return this.http.get<any[]>(`${this.baseUrl}/melhor-sequencia/${usuarioId}`);
+  getMelhorSequencia(usuarioId: number, habitoId: number): Observable<any> {
+    return this.http.get<any[]>(`${this.baseUrl}/melhor-sequencia/${usuarioId}/${habitoId}`);
   }
 
   getqntdHabitosEsteMes(usuarioId: number): Observable<any> {

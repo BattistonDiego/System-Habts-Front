@@ -114,7 +114,6 @@ export class DashboardPage implements OnInit {
     this.usuario = JSON.parse(localStorage.getItem('usuario')!);
     this.loadResumoSemanal(this.usuario.id);
     this.loadHabitos();
-    this.loadMelhorSequencia();
     this.loadQntdHabEsteMes();
     this.loadMediaHabitosCompletados();
   }
@@ -144,6 +143,7 @@ export class DashboardPage implements OnInit {
         current: 0,
       }));
       this.quantidadeHabitos = habitos.length;
+      this.loadMelhorSequencia();
 
       this.loadHabitosCompletadosHoje();
 
@@ -207,7 +207,8 @@ export class DashboardPage implements OnInit {
   }
 
   loadMelhorSequencia() {
-    this.historicoService.getMelhorSequencia(this.usuario.id).subscribe({
+    const firstHabitoId = this.listHabitos[0].id;
+    this.historicoService.getMelhorSequencia(this.usuario.id, firstHabitoId).subscribe({
       next: (res) => (this.bestSequencia = res),
     });
   }
