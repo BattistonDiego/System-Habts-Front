@@ -94,7 +94,6 @@ export class HabtsPage implements OnInit {
     this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
       this.listHistorico = res;
 
-      // ver pra que serve esse some
       const habitosComRegistro = this.listHabitos.filter((h) =>
         this.listHistorico.some((r) => r.habito.id === h.id),
       );
@@ -207,7 +206,11 @@ export class HabtsPage implements OnInit {
           cor: result.color,
         };
         this.habitoService.editHabitos(habitoSelected[0].id, body).subscribe({
-          next: () => {
+          next: (res) => {
+            const index = this.listHabitos.findIndex((h) => h.id === res.id);
+            if (index !== -1) {
+              this.listHabitos[index] = res;
+            }
             this.snackBar.openFromComponent(CustomSnackbar, {
               data: {
                 message: 'Hábito alterado com sucesso!',
@@ -218,7 +221,7 @@ export class HabtsPage implements OnInit {
               verticalPosition: 'top',
               panelClass: ['snackbar-success'],
             });
-            this.loadHabitos();
+            // this.loadHabitos();
           },
         });
       }
