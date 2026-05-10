@@ -147,7 +147,7 @@ export class DashboardPage implements OnInit {
 
       this.loadHabitosCompletadosHoje();
 
-      const habitoId = habitos.filter((h) => h.id === 1)[0].id;
+      const habitoId = habitos[0].id;
       this.getConsecutivesDay(habitoId);
 
       this.totalHabitos = habitos.length;
