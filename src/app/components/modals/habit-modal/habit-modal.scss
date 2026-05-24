@@ -100,4 +100,10 @@
     background: #4a90e2;
     font-weight: 600;
   }
+
+  button.add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: gray;
+  }
 }
