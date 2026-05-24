@@ -17,6 +17,7 @@
     </div>
     <div class="icon-list">
       <button
+        type="button"
         *ngFor="let ic of icons"
         mat-icon-button
         [class.selected]="selectedIcon === ic.src"
@@ -52,7 +53,13 @@
 
   <div class="actions">
     <button mat-button class="cancel" (click)="close()">Cancelar</button>
-    <button mat-flat-button color="primary" class="add" (click)="addHabit()">
+    <button
+      [disabled]="habitoForm.invalid"
+      mat-flat-button
+      color="primary"
+      class="add"
+      (click)="addHabit()"
+    >
       {{ data.mode === 'edit' ? 'Salvar' : 'Adicionar' }}
     </button>
   </div>
