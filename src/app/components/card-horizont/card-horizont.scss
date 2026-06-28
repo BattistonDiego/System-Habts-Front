@@ -59,6 +59,10 @@
     display: flex;
     padding-top: 6px;
 
+    @media (max-width: 480px) {
+      display: block;
+    }
+
     img {
       cursor: pointer;
     }
