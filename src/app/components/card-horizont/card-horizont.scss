@@ -56,10 +56,69 @@
   }
 
   .buttons {
+    display: flex;
     padding-top: 6px;
 
     img {
       cursor: pointer;
+    }
+
+    .stats-wrapper {
+      width: 25px;
+      position: relative;
+      cursor: pointer;
+      padding-top: 10px;
+      padding-left: 7px;
+    }
+
+    .stats-popover {
+      position: absolute;
+      width: 288px;
+
+      background-color: #1e2333;
+      top: 100%;
+      right: 0;
+      z-index: 100;
+      padding: 10px;
+      z-index: 11;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 10;
+    }
+    .stat-tittle {
+      font-size: 11px;
+      color: #7a8499;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .stat-card {
+      background: #171b26;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #7a8499;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
     }
   }
 

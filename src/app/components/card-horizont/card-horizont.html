@@ -23,6 +23,41 @@
     <div class="buttons">
       <img src="assets/png/icon-delete.png" alt="" (click)="deleteHabit(habito.id)" />
       <img src="assets/svg/icon-update.svg" alt="" (click)="updateHabit(habito.id)" />
+
+      <div class="backdrop" *ngIf="showStats" (click)="closeStats()"></div>
+
+      <!-- ícone que abre o popover -->
+      <div class="stats-wrapper" (click)="onMouseEnter()">
+        <mat-icon>bar_chart</mat-icon>
+
+        <!-- popover -->
+        <div class="stats-popover" *ngIf="showStats">
+          <span class="stat-tittle"
+            >Estátistica desde de {{ estatisticaHistorico?.inicio | date: 'dd/MM/yyyy' }}</span
+          >
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Sequência atual</span>
+              <span class="stat-value">{{ estatisticaHistorico?.sequenciaAtual }}</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Melhor sequência</span>
+              <span class="stat-value">{{ estatisticaHistorico?.melhorSequencia }}</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Taxa de conclusão</span>
+              <span class="stat-value">{{ estatisticaHistorico?.taxaConclusao + '%' }}</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Total registrado</span>
+              <span class="stat-value">{{ estatisticaHistorico?.totalRegistro }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
