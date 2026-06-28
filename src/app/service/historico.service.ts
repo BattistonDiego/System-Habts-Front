@@ -47,4 +47,8 @@ export class HistoricoService {
   getMediaHabitoCompletado(usuarioId: number): Observable<any> {
     return this.http.get<any[]>(`${this.baseUrl}/taxa-media/${usuarioId}`);
   }
+
+  getEstatisticas(habitoId: number): Observable<any> {
+    return this.http.get<any[]>(`${this.baseUrl}/${habitoId}/estatisticas`);
+  }
 }
