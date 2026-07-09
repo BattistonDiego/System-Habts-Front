@@ -55,5 +55,28 @@
       </div>
     </div>
   </section>
-  <section class="atividades-recentes"></section>
+  <section class="atividades-recentes">
+    <div class="card-atividade">
+      <h2>Atividade recente</h2>
+      <div class="calendar">
+        <div class="labels-dias">
+          <span></span>
+          <span>Seg</span>
+          <span></span>
+          <span>Qua</span>
+          <span></span>
+          <span>Sex</span>
+          <span></span>
+        </div>
+        <div class="semana" *ngFor="let semana of semanas">
+          <div
+            *ngFor="let dia of semana"
+            class="dia"
+            [style.background]="dia.qntd === -1 ? 'transparent' : getColor(dia.qntd)"
+            [title]="formatarData(dia.data)"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

@@ -51,4 +51,8 @@ export class HistoricoService {
   getEstatisticas(habitoId: number): Observable<any> {
     return this.http.get<any[]>(`${this.baseUrl}/${habitoId}/estatisticas`);
   }
+
+  getAtividades(): Observable<any> {
+    return this.http.get<any[]>(`${this.baseUrl}/atividade`);
+  }
 }
