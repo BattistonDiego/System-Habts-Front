@@ -189,9 +189,81 @@
   }
 
   .atividades-recentes {
-    height: 300px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    padding: 1rem;
     width: 100%;
-    background-color: #1a1f2e;
-    border-radius: 8px;
+    box-sizing: border-box;
+    justify-content: space-between;
+
+    .card-atividade {
+      background: #0f1117;
+      border: 1px solid #2a3050;
+      border-radius: 12px;
+      padding: 1.25rem;
+      width: 100%;
+
+      h2 {
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        color: #fff;
+      }
+
+      .calendar {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        justify-content: space-between;
+
+        @media (max-width: 768px) {
+          gap: 2px;
+        }
+      }
+    }
+
+    .semana {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      @media (max-width: 768px) {
+        gap: 2px;
+      }
+    }
+
+    .dia {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      flex-shrink: 0;
+
+      @media (max-width: 768px) {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+      }
+    }
+
+    .labels-dias {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      justify-content: space-around;
+
+      span {
+        font-size: 10px;
+        color: #fff;
+        height: 14px;
+        line-height: 14px;
+
+        @media (max-width: 768px) {
+          font-size: 8px;
+          height: 9px;
+          line-height: 9px;
+        }
+      }
+    }
   }
 }
