@@ -52,6 +52,8 @@ describe('Header', () => {
     userStateService.getUsuario.and.returnValue(of(usuario));
     fixture.detectChanges();
 
-    expect(component.usuario).toEqual(usuario);
+    let emittedUser: User | null | undefined;
+    component.usuario$.subscribe((user) => (emittedUser = user));
+    expect(emittedUser).toEqual(usuario);
   });
 });

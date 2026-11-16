@@ -9,6 +9,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { UsuarioService } from '../../service/usuario.service';
 import { HistoricoService } from '../../service/historico.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('HabtsPage', () => {
   let component: HabtsPage;
@@ -17,11 +19,17 @@ describe('HabtsPage', () => {
   let habitService: jasmine.SpyObj<HabitoService>;
   let usuarioService: jasmine.SpyObj<UsuarioService>;
   let historicoService: jasmine.SpyObj<HistoricoService>;
+  let dialog: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
-    habitService = jasmine.createSpyObj('HabitoService', ['getHabitos']);
+    habitService = jasmine.createSpyObj('HabitoService', ['getHabitos', 'editHabitos']);
     usuarioService = jasmine.createSpyObj('UsuarioService', ['getUserLogged']);
-    historicoService = jasmine.createSpyObj('HistoricoService', ['getListHistoricoByDate']);
+    historicoService = jasmine.createSpyObj('HistoricoService', [
+      'getListHistoricoByDate',
+      'postHistorico',
+      'getStreak',
+    ]);
+    dialog = jasmine.createSpyObj('MatDialog', ['open']);
 
     await TestBed.configureTestingModule({
       imports: [HabtsPage],
@@ -32,6 +40,8 @@ describe('HabtsPage', () => {
         { provide: HabitoService, useValue: habitService },
         { provide: UsuarioService, useValue: usuarioService },
         { provide: HistoricoService, useValue: historicoService },
+        { provide: MatDialog, useValue: dialog },
+        { provide: MatSnackBar, useValue: jasmine.createSpyObj('MatSnackBar', ['openFromComponent']) },
       ],
     }).compileComponents();
 
@@ -64,13 +74,13 @@ describe('HabtsPage', () => {
         cor: '#2196F3',
         current: 1200,
         concluidoHoje: false,
-        valorAtual: 1200,
       },
     ];
     const usuario = { id: 1, nome: 'Diego', perfil: 'ADMINISTRADOR' };
     usuarioService.getUserLogged.and.returnValue(of(usuario));
     habitService.getHabitos.and.returnValue(of(habitos));
     historicoService.getListHistoricoByDate.and.returnValue(of([]));
+    historicoService.getStreak.and.returnValue(of(0));
 
     // Act
     fixture.detectChanges(); // dispara o ngOnInit
@@ -92,4 +102,123 @@ describe('HabtsPage', () => {
     // Assert
     expect(component.listHabitos).toEqual([]);
   });
+
+  it('mantém concluído ao editar o nome', () => {
+    const habit = makeHabit(true);
+    loadHabit(habit, true);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: 'Estudar Java e Spring', meta: 1, unidade: 'vez' },
+      icon: habit.icone,
+      color: habit.cor,
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Estudar Java e Spring', concluidoHoje: false }));
+
+    component.updateHabit(habit.id);
+
+    expect(component.listHabitos[0].nome).toBe('Estudar Java e Spring');
+    expect(component.listHabitos[0].concluidoHoje).toBeTrue();
+    expect(historicoService.postHistorico).not.toHaveBeenCalled();
+  });
+
+  it('mantém concluído ao editar a meta interna', () => {
+    const habit = makeHabit(true);
+    loadHabit(habit, true);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: habit.nome, meta: 5, unidade: 'vezes' },
+      icon: habit.icone,
+      color: habit.cor,
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, concluidoHoje: false }));
+
+    component.updateHabit(habit.id);
+
+    expect(component.listHabitos[0].concluidoHoje).toBeTrue();
+    expect(historicoService.postHistorico).not.toHaveBeenCalled();
+  });
+
+  it('mantém concluído ao editar ícone e cor', () => {
+    const habit = makeHabit(true);
+    loadHabit(habit, true);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: habit.nome, meta: 1, unidade: 'vez' },
+      icon: 'code',
+      color: '#FACC15',
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({
+      ...habit,
+      icone: 'code',
+      cor: '#FACC15',
+      concluidoHoje: false,
+    }));
+
+    component.updateHabit(habit.id);
+
+    expect(component.listHabitos[0].concluidoHoje).toBeTrue();
+    expect(component.listHabitos[0].icone).toBe('code');
+    expect(component.listHabitos[0].cor).toBe('#FACC15');
+  });
+
+  it('mantém não concluído ao editar um hábito não concluído', () => {
+    const habit = makeHabit(false);
+    loadHabit(habit, false);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: 'Hábito atualizado', meta: 1, unidade: 'vez' },
+      icon: habit.icone,
+      color: habit.cor,
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Hábito atualizado' }));
+
+    component.updateHabit(habit.id);
+
+    expect(component.listHabitos[0].concluidoHoje).toBeFalse();
+    expect(historicoService.postHistorico).not.toHaveBeenCalled();
+  });
+
+  it('recarrega a conclusão do histórico após editar o hábito', () => {
+    const habit = makeHabit(true);
+    loadHabit(habit, true);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: 'Hábito após edição', meta: 1, unidade: 'vez' },
+      icon: habit.icone,
+      color: habit.cor,
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Hábito após edição', concluidoHoje: false }));
+    habitService.getHabitos.and.returnValue(of([{ ...habit, concluidoHoje: false }]));
+    historicoService.getListHistoricoByDate.and.returnValue(of([
+      { id: 9, habitoId: habit.id, data: '2026-11-16', concluido: true },
+    ]));
+
+    component.updateHabit(habit.id);
+    component.recarregarDados();
+
+    expect(component.listHabitos[0].concluidoHoje).toBeTrue();
+  });
+
+  function makeHabit(concluido: boolean): Habito {
+    return {
+      id: 8,
+      nome: 'Estudar Java',
+      meta: 1,
+      unidade: 'vez',
+      icone: 'code',
+      cor: '#FACC15',
+      current: concluido ? 1 : 0,
+      concluidoHoje: concluido,
+    };
+  }
+
+  function loadHabit(habit: Habito, concluido: boolean) {
+    const usuario = { id: 1, nome: 'Diego', perfil: 'ADMINISTRADOR' };
+    usuarioService.getUserLogged.and.returnValue(of(usuario));
+    habitService.getHabitos.and.returnValue(of([habit]));
+    historicoService.getListHistoricoByDate.and.returnValue(of(concluido
+      ? [{ id: 1, habitoId: habit.id, data: '2026-11-16', concluido: true }]
+      : []));
+    historicoService.getStreak.and.returnValue(of(0));
+    fixture.detectChanges();
+  }
+
+  function dialogResult(result: any) {
+    return { afterClosed: () => of(result) };
+  }
 });

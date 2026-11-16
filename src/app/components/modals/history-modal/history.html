@@ -50,16 +50,27 @@
       </div>
     </div>
 
-    <div class="habito" *ngFor="let item of listHistorico">
-      <img class="icon" [src]="item.habito.icone" alt="" />
+    <div
+      class="habito"
+      *ngFor="let item of listHistorico"
+      [class.completed]="item.concluido === true"
+      [style.--habit-color]="getHabitColor(item.habito)">
+      <div class="history-habit-icon" [style.--habit-color]="getHabitColor(item.habito)">
+        <span
+          *ngIf="isImageIcon(item.habito)"
+          class="history-icon-mask"
+          [style.--habit-icon-mask]="'url(' + getHabitIcon(item.habito) + ')'"
+          aria-hidden="true"></span>
+        <mat-icon *ngIf="!isImageIcon(item.habito)">{{ getHabitIconName(item.habito) }}</mat-icon>
+      </div>
       <div class="progress-bar">
         <span class="title">{{ item.habito.nome }}</span>
-        <mat-progress-bar [value]="(item.valorAtual / item.meta) * 100" mode="determinate">
+        <mat-progress-bar [value]="item.concluido === true ? 100 : 0" mode="determinate">
         </mat-progress-bar>
       </div>
       <div style="display: flex; gap: 3px">
-        <span class="meta">{{ item.valorAtual }}/{{ item.meta }}</span>
-        <img class="icon-success" src="assets/png/icon-success-history.png" alt="" />
+        <span class="meta">{{ item.concluido === true ? 'Concluído' : 'Não concluído' }}</span>
+        <img *ngIf="item.concluido === true" class="icon-success" src="assets/png/icon-success-history.png" alt="" />
       </div>
     </div>
   </div>

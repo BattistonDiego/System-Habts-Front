@@ -145,6 +145,8 @@ export class DashboardPage implements OnInit {
     this.habitoService.getHabitos().subscribe((habitos) => {
       this.listHabitos = habitos.map((h) => ({
         ...h,
+        meta: 1,
+        unidade: 'vez',
         current: 0,
       }));
       this.quantidadeHabitos = habitos.length;
@@ -152,8 +154,9 @@ export class DashboardPage implements OnInit {
 
       this.loadHabitosCompletadosHoje();
 
-      const habitoId = habitos[0].id;
-      this.getConsecutivesDay(habitoId);
+      if (habitos.length > 0) {
+        this.getConsecutivesDay(habitos[0].id);
+      }
 
       this.totalHabitos = habitos.length;
     });
@@ -163,25 +166,24 @@ export class DashboardPage implements OnInit {
     const hoje = new Date().toISOString().split('T')[0];
 
     this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
-      const completed = res.length;
+      const completed = (res ?? []).filter((registro: any) => registro.concluido === true).length;
       this.habitoscount = completed;
 
-      if (res.length > 0) {
-        this.progress =
-          completed === 0 ? 0 : Math.round((completed / this.listHabitos.length) * 100);
+      this.progress = this.listHabitos.length
+        ? Math.round((completed / this.listHabitos.length) * 100)
+        : 0;
 
-        const restante = 100 - this.progress;
+      const restante = 100 - this.progress;
 
-        this.doughnutData = {
-          datasets: [
-            {
-              data: [this.progress, restante],
-              backgroundColor: ['#3b82f6', '#2d3348'],
-              borderWidth: 0,
-            },
-          ],
-        };
-      }
+      this.doughnutData = {
+        datasets: [
+          {
+            data: [this.progress, restante],
+            backgroundColor: ['#3b82f6', '#2d3348'],
+            borderWidth: 0,
+          },
+        ],
+      };
       this.updateCards();
     });
   }
@@ -212,6 +214,7 @@ export class DashboardPage implements OnInit {
   }
 
   loadMelhorSequencia() {
+    if (!this.listHabitos.length) return;
     const firstHabitoId = this.listHabitos[0].id;
     this.historicoService.getMelhorSequencia(this.usuario.id, firstHabitoId).subscribe({
       next: (res) => (this.bestSequencia = res),

@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/modals/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
 import { Habito } from '../../interface/habito.model';
+import { HistoricoRegistro } from '../../interface/historico.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/modals/delete-habito-modal/delete-habito-modal';
@@ -55,7 +56,11 @@ export class HabtsPage implements OnInit {
   listCards: any[] = [];
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
-  listHistorico: any[] = [];
+  listHistorico: HistoricoRegistro[] = [];
+
+  get habitosConcluidos(): number {
+    return this.listHabitos.filter((habito) => habito.concluidoHoje === true).length;
+  }
 
   ngOnInit() {
     this.carregarDadosIniciais();
@@ -76,6 +81,8 @@ export class HabtsPage implements OnInit {
         switchMap((habitos) => {
           this.listHabitos = habitos.map((h) => ({
             ...h,
+            meta: 1,
+            unidade: 'vez',
             current: 0,
           }));
 
@@ -87,15 +94,8 @@ export class HabtsPage implements OnInit {
         }),
       )
       .subscribe((historico) => {
-        this.listHistorico = historico;
-
-        const habitosComRegistro = this.listHabitos.filter((h) =>
-          this.listHistorico.some((r) => r.habito.id === h.id),
-        );
-
-        if (habitosComRegistro.length > 0) {
-          this.getHabitosCompletadoHoje();
-        }
+        this.listHistorico = historico ?? [];
+        this.getHabitosCompletadoHoje();
 
         this.recalculateProgress();
 
@@ -112,6 +112,8 @@ export class HabtsPage implements OnInit {
         switchMap((habitos) => {
           this.listHabitos = habitos.map((h) => ({
             ...h,
+            meta: 1,
+            unidade: 'vez',
             current: 0,
           }));
 
@@ -122,15 +124,8 @@ export class HabtsPage implements OnInit {
         }),
       )
       .subscribe((res) => {
-        this.listHistorico = res;
-
-        const habitosComRegistro = this.listHabitos.filter((h) =>
-          this.listHistorico.some((r) => r.habito.id === h.id),
-        );
-
-        if (habitosComRegistro.length > 0) {
-          this.getHabitosCompletadoHoje();
-        }
+        this.listHistorico = res ?? [];
+        this.getHabitosCompletadoHoje();
 
         this.recalculateProgress();
 
@@ -161,6 +156,7 @@ export class HabtsPage implements OnInit {
   }
 
   addHabit(habit: Habito) {
+    console.log(habit);
     this.habitoService.postHabitos(habit).subscribe({
       next: () => {
         this.snackBar.openFromComponent(CustomSnackbar, {
@@ -218,10 +214,12 @@ export class HabtsPage implements OnInit {
   }
 
   updateHabit(id: number) {
-    const habitoSelected = this.listHabitos.filter((h) => h.id === id);
+    const habitoSelected = this.listHabitos.find((h) => h.id === id);
+    if (!habitoSelected) return;
+
     const dialogRef = this.dialog.open(HabitModal, {
       data: {
-        habitSelected: habitoSelected[0],
+        habitSelected: habitoSelected,
         mode: 'edit',
       },
     });
@@ -235,11 +233,17 @@ export class HabtsPage implements OnInit {
           icone: result.icon,
           cor: result.color,
         };
-        this.habitoService.editHabitos(habitoSelected[0].id, body).subscribe({
+        this.habitoService.editHabitos(habitoSelected.id, body).subscribe({
           next: (res) => {
             const index = this.listHabitos.findIndex((h) => h.id === res.id);
             if (index !== -1) {
-              this.listHabitos[index] = res;
+              const habitBeforeEdit = this.listHabitos[index];
+              this.listHabitos[index] = {
+                ...habitBeforeEdit,
+                ...res,
+                current: habitBeforeEdit.current,
+                concluidoHoje: habitBeforeEdit.concluidoHoje,
+              };
             }
             this.snackBar.openFromComponent(CustomSnackbar, {
               data: {
@@ -272,12 +276,13 @@ export class HabtsPage implements OnInit {
     const listHabito = this.listHabitos;
     const listHistorico = this.listHistorico;
     const newList = listHabito.map((h) => {
-      const registro = listHistorico.find((r) => r.habito.id === h.id);
+      const registro = listHistorico.find((historico) => historico.habitoId === h.id);
+      const concluido = registro?.concluido === true;
 
       return {
         ...h,
-        concluidoHoje: registro?.status ?? false,
-        valorAtual: registro?.valorAtual ?? 0,
+        concluidoHoje: concluido,
+        current: concluido ? h.meta : 0,
       };
     });
 
@@ -297,8 +302,7 @@ export class HabtsPage implements OnInit {
   habitCompleted(habito: Habito) {
     const body = {
       habitoId: habito?.id,
-      status: true,
-      valorAtual: habito?.current,
+      concluido: true,
     };
     if (habito) {
       this.historicoService.postHistorico(body).subscribe({
