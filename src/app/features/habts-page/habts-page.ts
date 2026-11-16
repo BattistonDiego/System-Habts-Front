@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/modals/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
 import { Habito } from '../../interface/habito.model';
+import { HistoricoRegistro } from '../../interface/historico.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../components/custom-snackbar/custom-snackbar';
 import { DeleteHabitoModal } from '../../components/modals/delete-habito-modal/delete-habito-modal';
@@ -16,6 +17,7 @@ import { HistoricoService } from '../../service/historico.service';
 import { UsuarioService } from '../../service/usuario.service';
 import { User } from '../../interface/user.model';
 import { UserStateService } from '../../service/user-state.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-habts-page',
@@ -54,60 +56,83 @@ export class HabtsPage implements OnInit {
   listCards: any[] = [];
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
-  listHistorico: any[] = [];
+  listHistorico: HistoricoRegistro[] = [];
+
+  get habitosConcluidos(): number {
+    return this.listHabitos.filter((habito) => habito.concluidoHoje === true).length;
+  }
 
   ngOnInit() {
-    this.getUserLogged();
+    this.carregarDadosIniciais();
   }
 
-  getUserLogged() {
-    this.usuarioService.getUserLogged().subscribe({
-      next: (res) => {
-        this.usuario = res;
-        this.usuarioId = res.id;
-        localStorage.setItem('perfil', res.perfil);
-        localStorage.setItem('usuario', JSON.stringify(res));
-        this.userStateService.setUsuario(res);
-        this.loadHabitos();
-      },
-    });
-  }
+  carregarDadosIniciais() {
+    this.usuarioService
+      .getUserLogged()
+      .pipe(
+        switchMap((res) => {
+          this.usuario = res;
+          this.usuarioId = res.id;
+          localStorage.setItem('perfil', res.perfil);
+          localStorage.setItem('usuario', JSON.stringify(res));
+          this.userStateService.setUsuario(res);
+          return this.habitoService.getHabitos();
+        }),
+        switchMap((habitos) => {
+          this.listHabitos = habitos.map((h) => ({
+            ...h,
+            meta: 1,
+            unidade: 'vez',
+            current: 0,
+          }));
 
-  loadHabitos() {
-    this.habitoService.getHabitos().subscribe((habitos) => {
-      this.listHabitos = habitos.map((h) => ({
-        ...h,
-        current: 0,
-      }));
+          this.totalHabitos = habitos.length;
 
-      this.totalHabitos = habitos.length;
-
-      this.loadHistrorico();
-
-      this.updatesCards();
-    });
-  }
-
-  loadHistrorico() {
-    const hoje = new Date().toISOString().split('T')[0];
-
-    this.historicoService.getListHistoricoByDate(hoje).subscribe((res) => {
-      this.listHistorico = res;
-
-      const habitosComRegistro = this.listHabitos.filter((h) =>
-        this.listHistorico.some((r) => r.habito.id === h.id),
-      );
-
-      if (habitosComRegistro.length > 0) {
+          this.updatesCards();
+          const hoje = new Date().toISOString().split('T')[0];
+          return this.historicoService.getListHistoricoByDate(hoje);
+        }),
+      )
+      .subscribe((historico) => {
+        this.listHistorico = historico ?? [];
         this.getHabitosCompletadoHoje();
-      }
 
-      this.recalculateProgress();
+        this.recalculateProgress();
 
-      if (this.listHabitos.length > 0) {
-        this.getConsecutivesDay(this.listHabitos[0].id);
-      }
-    });
+        if (this.listHabitos.length > 0) {
+          this.getConsecutivesDay(this.listHabitos[0].id);
+        }
+      });
+  }
+
+  recarregarDados() {
+    this.habitoService
+      .getHabitos()
+      .pipe(
+        switchMap((habitos) => {
+          this.listHabitos = habitos.map((h) => ({
+            ...h,
+            meta: 1,
+            unidade: 'vez',
+            current: 0,
+          }));
+
+          this.totalHabitos = habitos.length;
+          this.updatesCards();
+          const hoje = new Date().toISOString().split('T')[0];
+          return this.historicoService.getListHistoricoByDate(hoje);
+        }),
+      )
+      .subscribe((res) => {
+        this.listHistorico = res ?? [];
+        this.getHabitosCompletadoHoje();
+
+        this.recalculateProgress();
+
+        if (this.listHabitos.length > 0) {
+          this.getConsecutivesDay(this.listHabitos[0].id);
+        }
+      });
   }
 
   updatesCards() {
@@ -131,6 +156,7 @@ export class HabtsPage implements OnInit {
   }
 
   addHabit(habit: Habito) {
+    console.log(habit);
     this.habitoService.postHabitos(habit).subscribe({
       next: () => {
         this.snackBar.openFromComponent(CustomSnackbar, {
@@ -144,7 +170,7 @@ export class HabtsPage implements OnInit {
           panelClass: ['snackbar-success'],
         });
 
-        this.loadHabitos();
+        this.recarregarDados();
       },
       error: () => {
         this.snackBar.openFromComponent(CustomSnackbar, {
@@ -180,7 +206,7 @@ export class HabtsPage implements OnInit {
               verticalPosition: 'top',
               panelClass: ['snackbar-error'],
             });
-            this.loadHabitos();
+            this.recarregarDados();
           },
         });
       }
@@ -188,10 +214,12 @@ export class HabtsPage implements OnInit {
   }
 
   updateHabit(id: number) {
-    const habitoSelected = this.listHabitos.filter((h) => h.id === id);
+    const habitoSelected = this.listHabitos.find((h) => h.id === id);
+    if (!habitoSelected) return;
+
     const dialogRef = this.dialog.open(HabitModal, {
       data: {
-        habitSelected: habitoSelected[0],
+        habitSelected: habitoSelected,
         mode: 'edit',
       },
     });
@@ -205,11 +233,17 @@ export class HabtsPage implements OnInit {
           icone: result.icon,
           cor: result.color,
         };
-        this.habitoService.editHabitos(habitoSelected[0].id, body).subscribe({
+        this.habitoService.editHabitos(habitoSelected.id, body).subscribe({
           next: (res) => {
             const index = this.listHabitos.findIndex((h) => h.id === res.id);
             if (index !== -1) {
-              this.listHabitos[index] = res;
+              const habitBeforeEdit = this.listHabitos[index];
+              this.listHabitos[index] = {
+                ...habitBeforeEdit,
+                ...res,
+                current: habitBeforeEdit.current,
+                concluidoHoje: habitBeforeEdit.concluidoHoje,
+              };
             }
             this.snackBar.openFromComponent(CustomSnackbar, {
               data: {
@@ -242,12 +276,13 @@ export class HabtsPage implements OnInit {
     const listHabito = this.listHabitos;
     const listHistorico = this.listHistorico;
     const newList = listHabito.map((h) => {
-      const registro = listHistorico.find((r) => r.habito.id === h.id);
+      const registro = listHistorico.find((historico) => historico.habitoId === h.id);
+      const concluido = registro?.concluido === true;
 
       return {
         ...h,
-        concluidoHoje: registro?.status ?? false,
-        valorAtual: registro?.valorAtual ?? 0,
+        concluidoHoje: concluido,
+        current: concluido ? h.meta : 0,
       };
     });
 
@@ -259,7 +294,7 @@ export class HabtsPage implements OnInit {
 
     const habito = this.listHabitos[event.index];
 
-    if (this.listHabitos[event.index].current === this.listHabitos[event.index].meta) {
+    if (habito.current === habito.meta) {
       this.habitCompleted(habito);
     }
   }
@@ -267,8 +302,7 @@ export class HabtsPage implements OnInit {
   habitCompleted(habito: Habito) {
     const body = {
       habitoId: habito?.id,
-      status: true,
-      valorAtual: habito?.current,
+      concluido: true,
     };
     if (habito) {
       this.historicoService.postHistorico(body).subscribe({

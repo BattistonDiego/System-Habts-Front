@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateHabito, Habito } from '../interface/habito.model';
+import { HistoricoRegistro } from '../interface/historico.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class HistoricoService {
 
   constructor(private http: HttpClient) {}
 
-  postHistorico(body: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, body);
+  postHistorico(body: Pick<HistoricoRegistro, 'habitoId' | 'concluido'>): Observable<HistoricoRegistro> {
+    return this.http.post<HistoricoRegistro>(this.baseUrl, body);
   }
 
   getListHistorico(): Observable<any> {
@@ -22,10 +22,10 @@ export class HistoricoService {
 
   //http://localhost:8080/historico/data?date=2025-11-26
 
-  getListHistoricoByDate(date: string): Observable<any> {
+  getListHistoricoByDate(date: string): Observable<HistoricoRegistro[]> {
     const params = new HttpParams().set('date', date);
 
-    return this.http.get<any>(`${this.baseUrl}/data`, { params });
+    return this.http.get<HistoricoRegistro[]>(`${this.baseUrl}/data`, { params });
   }
 
   getStreak(habitoId: number): Observable<any> {

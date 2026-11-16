@@ -1,74 +1,46 @@
-<mat-card class="habit-card">
-  <div class="container">
-    <div class="left">
-      <img [src]="habito.icone" alt="" [style.background]="habito.cor" />
-      <div class="text">
-        <div class="title">{{ habito.nome }}</div>
-        <div class="meta">Meta: {{ habito.meta }} {{ habito.unidade }}</div>
-      </div>
+<mat-card class="habit-card" [class.completed]="isCompleted" [style.--habit-color]="habitColor">
+  <div class="habit-main">
+    <div class="habit-icon">
+      <span *ngIf="isImageIcon" class="habit-icon-mask" [style.--habit-icon-mask]="'url(' + iconValue + ')'" aria-hidden="true"></span>
+      <mat-icon *ngIf="!isImageIcon">{{ iconName }}</mat-icon>
+    </div>
+    <div class="habit-copy">
+      <div class="title">{{ habito.nome }}</div>
+      <div class="meta">{{ getHabitDisplayMeta(habito) }}</div>
     </div>
 
-    <div class="right">
-      <button mat-icon-button (click)="decrease()">
-        <mat-icon>remove</mat-icon>
-      </button>
-
-      <span class="counter">{{ current }}/{{ habito.meta }}</span>
-
-      <button mat-icon-button color="primary" (click)="increase()">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-
-    <div class="buttons">
-      <img src="assets/png/icon-delete.png" alt="" (click)="deleteHabit(habito.id)" />
-      <img src="assets/svg/icon-update.svg" alt="" (click)="updateHabit(habito.id)" />
-
-      <div class="backdrop" *ngIf="showStats" (click)="closeStats()"></div>
-
-      <!-- ícone que abre o popover -->
-      <div class="stats-wrapper" (click)="onMouseEnter()">
+    <div class="secondary-actions" aria-label="Ações do hábito">
+      <button mat-icon-button type="button" aria-label="Ver estatísticas" (click)="onMouseEnter()">
         <mat-icon>bar_chart</mat-icon>
-
-        <!-- popover -->
-        <div class="stats-popover" *ngIf="showStats">
-          <span class="stat-tittle"
-            >Estátistica desde de {{ estatisticaHistorico?.inicio | date: 'dd/MM/yyyy' }}</span
-          >
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-label">Sequência atual</span>
-              <span class="stat-value">{{ estatisticaHistorico?.sequenciaAtual }}</span>
-            </div>
-
-            <div class="stat-card">
-              <span class="stat-label">Melhor sequência</span>
-              <span class="stat-value">{{ estatisticaHistorico?.melhorSequencia }}</span>
-            </div>
-
-            <div class="stat-card">
-              <span class="stat-label">Taxa de conclusão</span>
-              <span class="stat-value">{{ estatisticaHistorico?.taxaConclusao + '%' }}</span>
-            </div>
-
-            <div class="stat-card">
-              <span class="stat-label">Total registrado</span>
-              <span class="stat-value">{{ estatisticaHistorico?.totalRegistro }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      </button>
+      <button mat-icon-button type="button" aria-label="Editar hábito" (click)="updateHabit(habito.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button type="button" aria-label="Excluir hábito" (click)="deleteHabit(habito.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
+
+    <div class="divider"></div>
+    <button
+      class="completion-check"
+      type="button"
+      [class.checked]="isCompleted"
+      [attr.aria-pressed]="isCompleted"
+      [attr.aria-label]="isCompleted ? 'Hábito concluído' : 'Concluir hábito'"
+      (click)="completeHabit()">
+      <mat-icon *ngIf="isCompleted">check</mat-icon>
+    </button>
   </div>
 
-  <mat-progress-bar
-    [value]="(current / habito.meta) * 100"
-    mode="determinate"
-    [ngClass]="{ 'completed-bar': current === habito.meta }"
-  >
-  </mat-progress-bar>
-
-  <div class="meta" *ngIf="current === habito.meta" [ngClass]="'completed-text'">
-    <img src="assets/png/icon-goal-success.png" alt="" /> Meta concluída!
+  <div class="stats-popover" *ngIf="showStats">
+    <button class="stats-close" mat-icon-button aria-label="Fechar estatísticas" (click)="closeStats()"><mat-icon>close</mat-icon></button>
+    <span class="stat-title">Estatísticas desde {{ estatisticaHistorico?.inicio | date: 'dd/MM/yyyy' }}</span>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-label">Sequência atual</span><span class="stat-value">{{ estatisticaHistorico?.sequenciaAtual }}</span></div>
+      <div class="stat-card"><span class="stat-label">Melhor sequência</span><span class="stat-value">{{ estatisticaHistorico?.melhorSequencia }}</span></div>
+      <div class="stat-card"><span class="stat-label">Taxa de conclusão</span><span class="stat-value">{{ estatisticaHistorico?.taxaConclusao + '%' }}</span></div>
+      <div class="stat-card"><span class="stat-label">Total registrado</span><span class="stat-value">{{ estatisticaHistorico?.totalRegistro }}</span></div>
+    </div>
   </div>
 </mat-card>

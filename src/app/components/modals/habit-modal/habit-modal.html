@@ -1,66 +1,90 @@
-<div class="container-modal">
-  <div class="header">
-    <h2>Novo Hábito</h2>
-    <button mat-icon-button (click)="close()">
+<div class="container-modal" [style.--habit-color]="habitPreview.color">
+  <header class="header">
+    <div
+      class="preview-icon"
+      [style.color]="habitPreview.color"
+      [style.border-color]="habitPreview.color"
+    >
+      <mat-icon>{{ iconName }}</mat-icon>
+    </div>
+    <div class="heading-copy">
+      <h2>{{ data?.mode === 'edit' ? 'Editar hábito' : 'Novo hábito' }}</h2>
+      <p>{{ habitPreview.name || 'Defina um hábito simples para repetir todo dia' }}</p>
+    </div>
+    <button mat-icon-button type="button" aria-label="Fechar" (click)="close()">
       <mat-icon>close</mat-icon>
     </button>
-  </div>
+  </header>
 
-  <form [formGroup]="habitoForm">
-    <mat-form-field appearance="fill" class="full">
-      <mat-label>Nome do Hábito</mat-label>
-      <input matInput placeholder="Ex: Beber Água" formControlName="nome" />
-    </mat-form-field>
-
-    <div style="margin-bottom: 5px">
-      <label class="label">Ícone</label>
+  <form [formGroup]="habitoForm" (ngSubmit)="addHabit()">
+    <div class="field-group">
+      <label for="habit-name">Nome do hábito <span>*</span></label>
+      <input
+        id="habit-name"
+        class="text-input"
+        formControlName="nome"
+        placeholder="Ex.: Beber água"
+        autocomplete="off"
+      />
     </div>
-    <div class="icon-list">
+
+    <section class="field-group icon-section">
+      <label>Ícone</label>
+      <div class="icon-list">
+        <button
+          type="button"
+          *ngFor="let ic of icons"
+          class="icon-choice"
+          [class.selected]="habitPreview.icon === ic.value"
+          [attr.aria-label]="ic.label"
+          [attr.aria-pressed]="habitPreview.icon === ic.value"
+          (click)="selectIcon(ic.value)"
+        >
+          <mat-icon>{{ ic.name }}</mat-icon>
+        </button>
+      </div>
+    </section>
+
+    <div class="field-group target-section">
+      <label for="habit-target">Meta <span>*</span></label>
+      <input
+        id="habit-target"
+        class="text-input"
+        formControlName="target"
+        placeholder="Meta: Beber 2 litros de água"
+      />
+      <small>Descreva livremente, ex.: “Ler 20 páginas”.</small>
+    </div>
+
+    <section class="field-group color-section">
+      <label>Cor</label>
+      <div class="color-list">
+        <button
+          type="button"
+          *ngFor="let color of colors"
+          class="color-choice"
+          [style.background-color]="color"
+          [class.selected]="habitPreview.color === color"
+          [attr.aria-label]="'Selecionar cor ' + color"
+          [attr.aria-pressed]="habitPreview.color === color"
+          (click)="selectColor(color)"
+        >
+          <mat-icon *ngIf="habitPreview.color === color">check</mat-icon>
+        </button>
+      </div>
+    </section>
+
+    <footer class="actions">
+      <button mat-button type="button" class="cancel" (click)="close()">Cancelar</button>
       <button
-        type="button"
-        *ngFor="let ic of icons"
-        mat-icon-button
-        [class.selected]="selectedIcon === ic.src"
-        (click)="selectedIcon = ic.src"
+        (click)="addHabit()"
+        mat-flat-button
+        type="submit"
+        class="add"
+        [disabled]="habitoForm.invalid"
       >
-        <mat-icon>{{ ic.name }}</mat-icon>
+        {{ data?.mode === 'edit' ? 'Salvar' : 'Adicionar' }}
       </button>
-    </div>
-
-    <div class="row">
-      <mat-form-field appearance="fill">
-        <mat-label>Meta</mat-label>
-        <input matInput type="number" placeholder="1" formControlName="meta" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Unidade</mat-label>
-        <input matInput placeholder="Ex: copos" formControlName="unidade" />
-      </mat-form-field>
-    </div>
-
-    <label class="label">Cor</label>
-    <div class="color-list">
-      <div
-        *ngFor="let c of colors"
-        class="color"
-        [style.background]="c"
-        [class.selected]="selectedColor === c"
-        (click)="selectedColor = c"
-      ></div>
-    </div>
+    </footer>
   </form>
-
-  <div class="actions">
-    <button mat-button class="cancel" (click)="close()">Cancelar</button>
-    <button
-      [disabled]="habitoForm.invalid"
-      mat-flat-button
-      color="primary"
-      class="add"
-      (click)="addHabit()"
-    >
-      {{ data.mode === 'edit' ? 'Salvar' : 'Adicionar' }}
-    </button>
-  </div>
 </div>

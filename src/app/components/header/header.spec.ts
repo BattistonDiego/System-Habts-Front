@@ -41,6 +41,7 @@ describe('Header', () => {
 
   it('deve setar o usuario quando getUsuario emitir', () => {
     const usuario: User = {
+      id: 1,
       nome: 'Diego Battiston',
       email: 'diego@email.com',
       telefone: '11999999999',
@@ -51,6 +52,8 @@ describe('Header', () => {
     userStateService.getUsuario.and.returnValue(of(usuario));
     fixture.detectChanges();
 
-    expect(component.usuario).toEqual(usuario);
+    let emittedUser: User | null | undefined;
+    component.usuario$.subscribe((user) => (emittedUser = user));
+    expect(emittedUser).toEqual(usuario);
   });
 });

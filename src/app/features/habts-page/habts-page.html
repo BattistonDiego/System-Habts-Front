@@ -32,9 +32,12 @@
   </div>
 
   <div class="habts">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
-      <h3>Hábitos de Hoje</h3>
-      <button class="add" (click)="openAddHabitModal()">Adicionar Hábito</button>
+    <div class="habits-heading">
+      <div class="heading-copy">
+        <h3>Hábitos de Hoje</h3>
+        <span>{{ habitosConcluidos }} de {{ listHabitos.length }} concluídos</span>
+      </div>
+      <button class="add" (click)="openAddHabitModal()"><mat-icon>add</mat-icon>Adicionar hábito</button>
     </div>
 
     <div class="cards-horizontal">
@@ -44,8 +47,7 @@
         (habitChanged)="onHabitChanged($event)"
         (habitDelete)="deleteHabit($event, habito)"
         (habitUpdate)="updateHabit($event)"
-        [habitoCompleted]="habitoCompletado"
-        [current]="habito.valorAtual ?? 0"
+        [current]="habito.current ?? 0"
         [habito]="habito"
       ></app-card-horizont>
     </div>

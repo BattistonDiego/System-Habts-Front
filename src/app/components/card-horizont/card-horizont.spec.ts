@@ -28,7 +28,6 @@ describe('CardHorizont', () => {
       icone: 'water_drop',
       current: 0,
       concluidoHoje: false,
-      valorAtual: 0,
       usuario: {
         id: 1,
         nome: 'Diego',

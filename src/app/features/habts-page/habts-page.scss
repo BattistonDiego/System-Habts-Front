@@ -25,14 +25,23 @@
   }
 
   .add {
-    width: 120px;
-    height: 35px;
-    border-radius: 8px;
+    min-width: 167px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 16px;
+    border-radius: 12px;
     background-color: #3b82f6;
     border: none;
     color: white;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 200ms ease, transform 200ms ease;
+    mat-icon { width: 18px; height: 18px; font-size: 18px; }
+    &:hover { transform: translateY(-1px); background-color: #2563eb; }
 
     @media (max-width: 480px) {
       width: 100%;
@@ -123,19 +132,15 @@
   .habts {
     margin-top: 32px;
 
-    h3 {
-      font-weight: 800;
-      margin-bottom: 17px;
-      color: white;
-    }
+    .habits-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .heading-copy h3 { margin: 0 0 4px; color: #f8fafc; font-size: 26px; font-weight: 700; line-height: 1.2; }
+    .heading-copy span { color: #94a3b8; font-size: 14px; }
+    .cards-horizontal { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 
-    // botão + título lado a lado no mobile
-    > div {
-      @media (max-width: 480px) {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start !important;
-      }
+    @media (max-width: 480px) {
+      .habits-heading { align-items: flex-start; }
+      .heading-copy h3 { font-size: 22px; }
+      .add { width: auto; min-width: 0; padding: 0 12px; font-size: 12px; }
     }
   }
 

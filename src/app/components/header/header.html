@@ -1,8 +1,8 @@
-<header>
+<header *ngIf="usuario$ | async as usuario">
   <div class="cabecalho">
     <img src="assets/icon-title.svg" alt="" />
     <h2 routerLink="/testes">Meu Progresso</h2>
-    <div *ngIf="isAdmin()">
+    <div *ngIf="usuario.perfil === 'ADMINISTRADOR'">
       <img src="assets/png/icon-admin.png" alt="" />
     </div>
   </div>
@@ -13,7 +13,7 @@
       <img src="assets/png/icon-habitos.png" alt="" />
       Dashboard
     </div>
-    <div class="user" *ngIf="isAdmin()" routerLink="/users">
+    <div class="user" *ngIf="usuario.perfil === 'ADMINISTRADOR'" routerLink="/users">
       <img src="assets/png/icon-users.png" alt="" />
       Usúarios
     </div>
@@ -21,7 +21,7 @@
 
   <!-- Menu desktop -->
   <div class="actions desktop-only">
-    <div class="hello"><span style="color: #9ca3af">Olá</span> {{ usuario?.nome }}</div>
+    <div class="hello"><span style="color: #9ca3af">Olá</span> {{ usuario.nome }}</div>
     <div (click)="logout()" class="logout">
       <img src="assets/svg/icon-logout.svg" alt="" />
       Sair
@@ -36,7 +36,7 @@
   <!-- Menu mobile -->
   <mat-menu #mobileMenu="matMenu">
     <div class="mobile-menu-header" mat-menu-item disabled>
-      <span style="color: #9ca3af">Olá</span>&nbsp;{{ usuario?.nome }}
+      <span style="color: #9ca3af">Olá</span>&nbsp;{{ usuario.nome }}
     </div>
     <button mat-menu-item routerLink="/habits"><mat-icon>track_changes</mat-icon>Hábitos</button>
     <button mat-menu-item routerLink="/users"><mat-icon>people</mat-icon>Usúarios</button>

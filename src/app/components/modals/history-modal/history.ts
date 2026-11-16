@@ -12,6 +12,8 @@ import { HistoricoService } from '../../../service/historico.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../custom-snackbar/custom-snackbar';
+import { HabitoService } from '../../../service/habito.service';
+import { Habito } from '../../../interface/habito.model';
 
 @Component({
   selector: 'app-history',
@@ -32,9 +34,17 @@ import { CustomSnackbar } from '../../custom-snackbar/custom-snackbar';
   styleUrl: './history.scss',
 })
 export class History {
+  private readonly legacyIconNames: Record<string, string> = {
+    'assets/svg/icon-water.svg': 'water_drop',
+    'assets/png/icon-study.png': 'menu_book',
+    'assets/png/icon-workout.png': 'fitness_center',
+    'assets/svg/icon-code.svg': 'code',
+  };
+
   constructor(
     private dialogRef: MatDialogRef<History>,
     private historicoService: HistoricoService,
+    private habitoService: HabitoService,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -42,6 +52,24 @@ export class History {
   showList: boolean = false;
 
   dataSelecionada = new FormControl<Date | null>(null);
+
+  getHabitColor(habit: Habito): string {
+    return habit.color || habit.cor || '#3b82f6';
+  }
+
+  getHabitIcon(habit: Habito): string {
+    return habit.icon || habit.icone || 'water_drop';
+  }
+
+  isImageIcon(habit: Habito): boolean {
+    const icon = this.getHabitIcon(habit);
+    return /^(assets\/|https?:\/\/|data:image\/)/i.test(icon) && !Object.hasOwn(this.legacyIconNames, icon);
+  }
+
+  getHabitIconName(habit: Habito): string {
+    const icon = this.getHabitIcon(habit);
+    return this.legacyIconNames[icon] ?? icon;
+  }
 
   close() {
     this.dialogRef.close();
@@ -84,9 +112,17 @@ export class History {
 
     this.historicoService.getListHistoricoByDate(data).subscribe({
       next: (res) => {
-        this.listHistorico = res;
-
-        this.showList = this.listHistorico.length > 0;
+        this.habitoService.getHabitos().subscribe((habitos) => {
+          this.listHistorico = (res ?? []).map((registro: any) => {
+            const habitId = registro.habitoId;
+            const habito = habitos.find((item) => item.id === habitId);
+            return {
+              ...registro,
+              habito: habito ?? { id: habitId, nome: 'Hábito', icone: 'assets/svg/icon-water.svg' },
+            };
+          });
+          this.showList = this.listHistorico.length > 0;
+        });
       },
     });
   }
