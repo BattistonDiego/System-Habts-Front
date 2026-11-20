@@ -12,6 +12,7 @@ export interface Habito {
   color?: string;
   current?: number;
   concluidoHoje?: boolean;
+  descricao?: string;
 }
 
 export interface CreateHabito {

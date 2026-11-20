@@ -64,7 +64,7 @@ export class CardHorizont {
   }
 
   getHabitDisplayMeta(habit: Habito): string {
-    return `Meta: ${habit.nome}`;
+    return `Meta: ${habit.descricao}`;
   }
 
   completeHabit() {

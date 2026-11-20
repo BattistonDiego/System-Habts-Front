@@ -18,12 +18,15 @@ export class HabitoService {
       .pipe(map((habitos) => habitos.map((habito) => this.fromApi(habito))));
   }
 
-  postHabitos(body: Partial<Habito> & { usuarioId?: number; icon?: string; color?: string }): Observable<any> {
+  postHabitos(
+    body: Partial<Habito> & { usuarioId?: number; icon?: string; color?: string },
+  ): Observable<any> {
     const payload = {
       usuarioId: body.usuarioId ?? body.usuario?.id,
       nome: body.nome,
       icon: body.icon ?? body.icone,
       color: body.color ?? body.cor,
+      descricao: body.descricao ?? '',
     };
     return this.http.post<any>(this.baseUrl, payload);
   }
@@ -35,11 +38,14 @@ export class HabitoService {
   }
 
   editHabitos(id: number, body: Partial<Habito>) {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, {
-      nome: body.nome,
-      icon: body.icon ?? body.icone,
-      color: body.color ?? body.cor,
-    }).pipe(map((habito) => this.fromApi(habito)));
+    return this.http
+      .put<any>(`${this.baseUrl}/${id}`, {
+        nome: body.nome,
+        icon: body.icon ?? body.icone,
+        color: body.color ?? body.cor,
+        descricao: body.descricao,
+      })
+      .pipe(map((habito) => this.fromApi(habito)));
   }
 
   private fromApi(habito: HabitoApiResponse): Habito {

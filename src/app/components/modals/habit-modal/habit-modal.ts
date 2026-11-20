@@ -100,7 +100,7 @@ export class HabitModal implements OnInit {
     this.dialogRef.close({
       icon: this.habitPreview.icon,
       color: this.habitPreview.color,
-      habit: { nome: this.habitoForm.value.nome, meta: 1, unidade: 'vez' },
+      habit: { nome: this.habitoForm.value.nome, descricao: this.habitoForm.value.target },
     });
   }
 }
