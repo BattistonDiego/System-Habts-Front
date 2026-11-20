@@ -156,7 +156,6 @@ export class HabtsPage implements OnInit {
   }
 
   addHabit(habit: Habito) {
-    console.log(habit);
     this.habitoService.postHabitos(habit).subscribe({
       next: () => {
         this.snackBar.openFromComponent(CustomSnackbar, {
@@ -225,10 +224,11 @@ export class HabtsPage implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
       if (result) {
         const body = {
           nome: result.habit.nome,
-          meta: result.habit.meta,
+          descricao: result.habit.descricao,
           unidade: result.habit.unidade,
           icone: result.icon,
           cor: result.color,
@@ -361,8 +361,7 @@ export class HabtsPage implements OnInit {
         const newHabit: any = {
           usuarioId: this.usuarioId,
           nome: result.habit.nome,
-          meta: result.habit.meta,
-          unidade: result.habit.unidade,
+          descricao: result.habit.descricao,
           icone: result.icon,
           cor: result.color,
         };
