@@ -7,6 +7,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Habito } from '../../interface/habito.model';
 import { HistoricoService } from '../../service/historico.service';
 import { HistoricoEstatistica } from '../../interface/historico.model';
+import { corDeBorda, corDeDestaque } from '../../core/utils/cor-habito';
 
 @Component({
   selector: 'app-card-horizont',
@@ -40,6 +41,16 @@ export class CardHorizont {
 
   get habitColor(): string {
     return this.habito?.color || this.habito?.cor || '#3b82f6';
+  }
+
+  /** Ícone, tingimentos e bordas de destaque (claro quando a cor do hábito é escura). */
+  get habitAccent(): string {
+    return corDeDestaque(this.habitColor);
+  }
+
+  /** Borda do botão de check preenchido (clara quando a cor do hábito é escura). */
+  get habitBorder(): string {
+    return corDeBorda(this.habitColor);
   }
 
   get iconName(): string {

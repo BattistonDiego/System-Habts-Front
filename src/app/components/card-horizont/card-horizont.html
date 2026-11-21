@@ -1,4 +1,10 @@
-<mat-card class="habit-card" [class.completed]="isCompleted" [style.--habit-color]="habitColor">
+<mat-card
+  class="habit-card"
+  [class.completed]="isCompleted"
+  [style.--habit-color]="habitColor"
+  [style.--habit-accent]="habitAccent"
+  [style.--habit-border]="habitBorder"
+>
   <div class="habit-main">
     <div class="habit-icon">
       <span *ngIf="isImageIcon" class="habit-icon-mask" [style.--habit-icon-mask]="'url(' + iconValue + ')'" aria-hidden="true"></span>

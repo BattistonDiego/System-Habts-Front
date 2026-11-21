@@ -1,9 +1,9 @@
-<div class="container-modal" [style.--habit-color]="habitPreview.color">
+<div class="container-modal" [style.--habit-color]="corDestaque">
   <header class="header">
     <div
       class="preview-icon"
-      [style.color]="habitPreview.color"
-      [style.border-color]="habitPreview.color"
+      [style.color]="corDestaque"
+      [style.border-color]="corDestaque"
     >
       <mat-icon>{{ iconName }}</mat-icon>
     </div>
@@ -65,6 +65,7 @@
           class="color-choice"
           [style.background-color]="color"
           [class.selected]="habitPreview.color === color"
+          [class.escura]="isCorEscura(color)"
           [attr.aria-label]="'Selecionar cor ' + color"
           [attr.aria-pressed]="habitPreview.color === color"
           (click)="selectColor(color)"

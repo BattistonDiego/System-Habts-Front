@@ -108,6 +108,9 @@ form { padding: 20px 24px 0; }
   mat-icon { width: 18px; height: 18px; font-size: 18px; }
   &:hover { transform: scale(1.12); }
   &.selected { border-color: #dbeafe; box-shadow: 0 0 0 3px #3b82f6; }
+  // Cores escuras (preto): borda clara sutil para a bolinha não sumir no fundo do modal.
+  &.escura { border: 1px solid #475569; }
+  &.escura.selected { border-color: #dbeafe; }
 }
 
 .actions {

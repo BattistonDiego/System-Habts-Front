@@ -1,0 +1,284 @@
+<section class="cartao calendario" aria-labelledby="calendario-titulo">
+  <header class="cal-header">
+    <div class="cal-titulo">
+      <h2 id="calendario-titulo">Calendário de hábitos</h2>
+      <p class="cal-subtitulo" data-testid="subtitulo">{{ subtitulo() }}</p>
+    </div>
+
+    <div class="cal-nav">
+      <button
+        type="button"
+        class="btn-nav"
+        aria-label="Mês anterior"
+        data-testid="mes-anterior"
+        (click)="mesAnterior()"
+      >
+        <lucide-icon [img]="ui.anterior" [size]="16" aria-hidden="true"></lucide-icon>
+      </button>
+      <span class="cal-mes" aria-live="polite" data-testid="titulo-mes">{{ tituloMes() }}</span>
+      <button
+        type="button"
+        class="btn-nav"
+        aria-label="Próximo mês"
+        data-testid="proximo-mes"
+        [disabled]="!podeAvancar()"
+        (click)="proximoMes()"
+      >
+        <lucide-icon [img]="ui.proximo" [size]="16" aria-hidden="true"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="cal-acoes">
+      <button type="button" class="btn-hoje" data-testid="btn-hoje" (click)="irParaHoje()">
+        Hoje
+      </button>
+    </div>
+  </header>
+
+  @switch (estado()) {
+    @case ('carregando') {
+      <p class="cal-status" data-testid="carregando">Carregando calendário…</p>
+    }
+    @case ('erro') {
+      <p class="cal-status erro" role="alert">Não foi possível carregar o calendário.</p>
+    }
+    @default {
+      @if (calendario(); as cal) {
+        @if (cal.habitos.length === 0) {
+          <p class="cal-status" data-testid="sem-habitos">Nenhum hábito cadastrado ainda.</p>
+        } @else {
+          <div class="cal-grade">
+            <!-- Coluna fixa: hábitos -->
+            <div class="col-habitos">
+              <div class="cab rotulo">Hábito</div>
+              @for (habito of cal.habitos; track habito.id) {
+                <div
+                  class="linha habito"
+                  [style.--cor]="habito.cor"
+                  [style.--cor-destaque]="habito.destaque"
+                  [style.--cor-borda]="habito.borda"
+                >
+                  <span class="ponto" aria-hidden="true"></span>
+                  <span class="icone-habito" aria-hidden="true">
+                    <lucide-icon [img]="icones[habito.icone]" [size]="16"></lucide-icon>
+                  </span>
+                  <span class="nome" [title]="habito.nome">{{ habito.nome }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Área com rolagem horizontal: uma coluna por dia -->
+            <div class="area-dias" #areaDias>
+              <div class="trilha">
+                @for (coluna of cal.colunas; track coluna.data) {
+                  <div
+                    class="coluna-dia"
+                    data-testid="coluna-dia"
+                    [class.selecionada]="coluna.selecionado"
+                    [class.hoje]="coluna.hoje"
+                    [class.futura]="coluna.futuro"
+                  >
+                    <div class="cab cab-dia">
+                      <span class="dia-semana">{{ coluna.diaSemana }}</span>
+                      <span class="dia-numero">{{ coluna.dia }}</span>
+                    </div>
+                    @for (celula of coluna.celulas; track celula.habito.id) {
+                      <div class="linha">
+                        <button
+                          type="button"
+                          class="celula"
+                          data-testid="celula"
+                          [style.--cor]="celula.habito.cor"
+                          [style.--cor-destaque]="celula.habito.destaque"
+                          [style.--cor-borda]="celula.habito.borda"
+                          [class.concluida]="celula.concluido"
+                          [class.futura]="coluna.futuro"
+                          [disabled]="coluna.futuro"
+                          [attr.aria-label]="celula.ariaLabel"
+                          [attr.aria-pressed]="coluna.futuro ? null : coluna.selecionado"
+                          (click)="selecionarDia(coluna)"
+                        >
+                          @if (celula.concluido) {
+                            <svg viewBox="0 0 12 12" aria-hidden="true">
+                              <path d="M2.6 6.3 5 8.6l4.4-5" />
+                            </svg>
+                          }
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Coluna fixa: progresso -->
+            <div class="col-progresso">
+              <div class="cab rotulo">Progresso</div>
+              @for (item of cal.progresso; track item.habito.id) {
+                <div class="linha">
+                  <div
+                    class="pilula-progresso"
+                    data-testid="progresso"
+                    [style.--cor]="item.habito.cor"
+                    [style.--cor-destaque]="item.habito.destaque"
+                    [style.--cor-borda]="item.habito.borda"
+                  >
+                    <div
+                      class="anel"
+                      role="img"
+                      [attr.aria-label]="
+                        item.habito.nome +
+                        ': ' +
+                        item.percentual +
+                        '% (' +
+                        item.concluidos +
+                        ' de ' +
+                        item.elegiveis +
+                        ' dias)'
+                      "
+                    >
+                      <svg viewBox="0 0 36 36" aria-hidden="true">
+                        <circle class="anel-trilho" cx="18" cy="18" r="15" pathLength="100" />
+                        <circle
+                          class="anel-valor"
+                          [class.vazio]="item.percentual === 0"
+                          cx="18"
+                          cy="18"
+                          r="15"
+                          pathLength="100"
+                          [style.stroke-dasharray]="item.percentual + ' 100'"
+                        />
+                      </svg>
+                      <span class="anel-pct" aria-hidden="true">{{ item.percentual }}%</span>
+                    </div>
+                    <div class="pilula-texto" aria-hidden="true">
+                      <strong data-testid="progresso-contagem"
+                        >{{ item.concluidos }}/{{ item.elegiveis }}</strong
+                      >
+                      <span>dias</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <ul class="legenda" aria-label="Legenda">
+            <li>
+              <span class="amostra concluida" aria-hidden="true">
+                <svg viewBox="0 0 12 12"><path d="M2.6 6.3 5 8.6l4.4-5" /></svg>
+              </span>
+              Concluído
+            </li>
+            <li><span class="amostra nao-concluida" aria-hidden="true"></span>Não concluído</li>
+            <li><span class="amostra futura" aria-hidden="true"></span>Data futura</li>
+            <li><span class="amostra selecionada" aria-hidden="true"></span>Dia selecionado</li>
+          </ul>
+        }
+      }
+    }
+  }
+</section>
+
+@if (estado() === 'pronto' && calendario(); as cal) {
+  @if (cal.habitos.length > 0) {
+    <section class="cartao painel" data-testid="painel-dia" aria-live="polite">
+      @if (cal.resumo; as resumo) {
+        <!-- O @for por data recria o conteúdo ao trocar de dia e dispara o fade-in -->
+        @for (chave of [resumo.data]; track chave) {
+          <div class="painel-conteudo">
+            <header class="painel-header">
+              <h3 data-testid="painel-titulo">
+                Atividades de {{ resumo.dia }} de {{ resumo.nomeMes }} de {{ resumo.ano }}
+              </h3>
+              <span class="painel-dia-semana" data-testid="painel-dia-semana">
+                {{ capitalizar(resumo.diaSemana) }}{{ resumo.hoje ? ' · hoje' : '' }}
+              </span>
+            </header>
+
+            <div class="tiles">
+              <div class="tile">
+                <span class="tile-rotulo">Hábitos concluídos</span>
+                <strong class="tile-valor" data-testid="resumo-concluidos"
+                  >{{ resumo.concluidos }} de {{ resumo.total }}</strong
+                >
+              </div>
+              <div class="tile">
+                <span class="tile-rotulo">Hábitos pendentes</span>
+                <strong class="tile-valor" data-testid="resumo-pendentes">{{
+                  resumo.pendentes
+                }}</strong>
+              </div>
+              <div class="tile tile-progresso">
+                <div class="tile-linha">
+                  <span class="tile-rotulo">Progresso diário</span>
+                  <strong class="tile-valor" data-testid="resumo-percentual"
+                    >{{ resumo.percentual }}%</strong
+                  >
+                </div>
+                <div
+                  class="barra"
+                  role="progressbar"
+                  aria-label="Progresso diário"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  [attr.aria-valuenow]="resumo.percentual"
+                >
+                  <div class="barra-preenchida" [style.width.%]="resumo.percentual"></div>
+                </div>
+              </div>
+            </div>
+
+            @if (resumo.concluidos === 0) {
+              <div class="estado-vazio" data-testid="estado-vazio">
+                <lucide-icon [img]="ui.calendario" [size]="20" aria-hidden="true"></lucide-icon>
+                <p>Nenhum hábito registrado neste dia</p>
+              </div>
+            } @else {
+              <h4 class="rotulo lista-titulo">Hábitos do dia</h4>
+              <ul class="lista">
+                @for (item of resumo.itens; track item.habito.id) {
+                  <li
+                    class="item"
+                    data-testid="item-dia"
+                    [style.--cor]="item.habito.cor"
+                    [style.--cor-destaque]="item.habito.destaque"
+                    [style.--cor-borda]="item.habito.borda"
+                  >
+                    <span class="faixa" aria-hidden="true"></span>
+                    <span class="icone-habito grande" aria-hidden="true">
+                      <lucide-icon [img]="icones[item.habito.icone]" [size]="18"></lucide-icon>
+                    </span>
+                    <div class="item-texto">
+                      <strong>{{ item.habito.nome }}</strong>
+                      @if (item.habito.meta) {
+                        <span>Meta: {{ item.habito.meta }}</span>
+                      }
+                    </div>
+                    @if (item.concluido) {
+                      <span class="status concluido">
+                        <lucide-icon [img]="ui.check" [size]="14" aria-hidden="true"></lucide-icon>
+                        Concluído
+                      </span>
+                    } @else {
+                      <span class="status pendente">
+                        <lucide-icon [img]="ui.traco" [size]="14" aria-hidden="true"></lucide-icon>
+                        Não concluído
+                      </span>
+                    }
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      } @else {
+        <div class="painel-conteudo estado-vazio selecione" data-testid="selecione-dia">
+          <lucide-icon [img]="ui.calendario" [size]="20" aria-hidden="true"></lucide-icon>
+          <p><strong>Selecione um dia</strong></p>
+          <p>Clique em uma célula do calendário para ver as atividades daquele dia.</p>
+        </div>
+      }
+    </section>
+  }
+}

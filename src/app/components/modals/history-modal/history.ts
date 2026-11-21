@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../custom-snackbar/custom-snackbar';
 import { HabitoService } from '../../../service/habito.service';
 import { Habito } from '../../../interface/habito.model';
+import { corDeDestaque } from '../../../core/utils/cor-habito';
 
 @Component({
   selector: 'app-history',
@@ -53,8 +54,9 @@ export class History {
 
   dataSelecionada = new FormControl<Date | null>(null);
 
+  /** Usada só em tingimento, borda e ícone: devolve o destaque claro para cores escuras. */
   getHabitColor(habit: Habito): string {
-    return habit.color || habit.cor || '#3b82f6';
+    return corDeDestaque(habit.color || habit.cor || '#3b82f6');
   }
 
   getHabitIcon(habit: Habito): string {

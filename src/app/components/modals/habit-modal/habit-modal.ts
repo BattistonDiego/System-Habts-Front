@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Habito } from '../../../interface/habito.model';
+import { COR_PRETA, corDeDestaque, isCorEscura } from '../../../core/utils/cor-habito';
 
 @Component({
   selector: 'app-add-habit-modal',
@@ -42,11 +43,19 @@ export class HabitModal implements OnInit {
     '#EC4899',
     '#06B6D4',
     '#94A3B8',
+    COR_PRETA,
   ];
+
+  readonly isCorEscura = isCorEscura;
 
   habitPreview = { name: '', icon: 'assets/svg/icon-water.svg', color: '#3B82F6', target: '' };
   habitoForm!: FormGroup;
   habito!: Habito;
+
+  /** Cor da prévia (ícone, borda, tingimento): clara quando a cor escolhida é escura. */
+  get corDestaque(): string {
+    return corDeDestaque(this.habitPreview.color);
+  }
 
   get iconName(): string {
     return this.icons.find((icon) => icon.value === this.habitPreview.icon)?.name ?? 'water_drop';

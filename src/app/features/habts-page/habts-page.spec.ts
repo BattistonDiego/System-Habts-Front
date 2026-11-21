@@ -158,6 +158,25 @@ describe('HabtsPage', () => {
     expect(component.listHabitos[0].cor).toBe('#FACC15');
   });
 
+  it('salva a cor preta escolhida no modal de edição', () => {
+    const habit = makeHabit(false);
+    loadHabit(habit, false);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: habit.nome, descricao: 'Meditar 10 minutos' },
+      icon: 'psychology',
+      color: '#0A0A0A',
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, icone: 'psychology', cor: '#0A0A0A' }));
+
+    component.updateHabit(habit.id);
+
+    expect(habitService.editHabitos).toHaveBeenCalledWith(
+      habit.id,
+      jasmine.objectContaining({ cor: '#0A0A0A', icone: 'psychology' }),
+    );
+    expect(component.listHabitos[0].cor).toBe('#0A0A0A');
+  });
+
   it('mantém não concluído ao editar um hábito não concluído', () => {
     const habit = makeHabit(false);
     loadHabit(habit, false);

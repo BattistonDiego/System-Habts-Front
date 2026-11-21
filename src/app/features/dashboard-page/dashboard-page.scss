@@ -1,6 +1,14 @@
+// O host é item do flex `.principal`: ocupa a largura disponível até 1200px.
+:host {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 1200px;
+}
+
 .conteudo {
   width: 100%;
-  max-width: 1088px;
+  max-width: 1200px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 77px;
@@ -183,85 +191,6 @@
             color: #9ca3af;
             text-align: center;
           }
-        }
-      }
-    }
-  }
-
-  .atividades-recentes {
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: space-between;
-
-    .card-atividade {
-      background: #0f1117;
-      border: 1px solid #2a3050;
-      border-radius: 12px;
-      padding: 1.25rem;
-      width: 100%;
-
-      h2 {
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 1rem;
-        color: #fff;
-      }
-
-      .calendar {
-        display: flex;
-        flex-direction: row;
-        gap: 4px;
-        justify-content: space-between;
-
-        @media (max-width: 768px) {
-          gap: 2px;
-        }
-      }
-    }
-
-    .semana {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      @media (max-width: 768px) {
-        gap: 2px;
-      }
-    }
-
-    .dia {
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      flex-shrink: 0;
-
-      @media (max-width: 768px) {
-        width: 9px;
-        height: 9px;
-        border-radius: 2px;
-      }
-    }
-
-    .labels-dias {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      justify-content: space-around;
-
-      span {
-        font-size: 10px;
-        color: #fff;
-        height: 14px;
-        line-height: 14px;
-
-        @media (max-width: 768px) {
-          font-size: 8px;
-          height: 9px;
-          line-height: 9px;
         }
       }
     }
