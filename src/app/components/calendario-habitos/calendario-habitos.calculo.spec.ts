@@ -19,8 +19,8 @@ function resposta(parcial: Partial<CalendarioMesResponse> = {}): CalendarioMesRe
     ano: 2026,
     mes: 11,
     habitos: [
-      { id: 1, nome: 'Estudar Java', meta: 'Estudar Java por 1 hora', cor: '#3b82f6', icone: 'assets/svg/icon-code.svg' },
-      { id: 2, nome: 'Beber água', meta: 'Beber 2 litros de água', cor: null, icone: 'water_drop' },
+      { id: 1, nome: 'Estudar Java', descricao: 'Estudar Java por 1 hora', color: '#3b82f6', icon: 'assets/svg/icon-code.svg' },
+      { id: 2, nome: 'Beber água', descricao: 'Beber 2 litros de água', color: null, icon: 'water_drop' },
     ],
     conclusoes: [
       { habitoId: 1, data: '2026-11-20' },
@@ -135,8 +135,8 @@ describe('calendario-habitos.calculo', () => {
       const cal = montarCalendario(
         resposta({
           habitos: [
-            { id: 1, nome: 'Meditar', meta: null, cor: '#0A0A0A', icone: 'psychology' },
-            { id: 2, nome: 'Ler', meta: null, cor: '#22C55E', icone: 'menu_book' },
+            { id: 1, nome: 'Meditar', descricao: null, color: '#0A0A0A', icon: 'psychology' },
+            { id: 2, nome: 'Ler', descricao: null, color: '#22C55E', icon: 'menu_book' },
           ],
         }),
         HOJE,
@@ -155,7 +155,22 @@ describe('calendario-habitos.calculo', () => {
       expect(cal.habitos[0].cor).toBe('#3b82f6');
       expect(cal.habitos[1].cor).toBe(CORES_PADRAO[1]);
       expect(cal.habitos[0].icone).toBe('code');
-      expect(cal.habitos[1].icone).toBe('agua');
+      expect(cal.habitos[1].icone).toBe('water');
+    });
+
+    it('tira o prefixo "Meta:" salvo por engano na descrição', () => {
+      const cal = montarCalendario(
+        resposta({
+          habitos: [
+            { id: 1, nome: 'Idiomas', descricao: 'Meta: Estudar idiomas 1 vez', color: '#3b82f6', icon: 'translate' },
+            { id: 2, nome: 'Ler', descricao: null, color: '#22d3ee', icon: 'book' },
+          ],
+        }),
+        HOJE,
+        null,
+      );
+      expect(cal.habitos[0].descricao).toBe('Estudar idiomas 1 vez');
+      expect(cal.habitos[1].descricao).toBe('');
     });
 
     it('monta o resumo do dia selecionado', () => {
@@ -206,9 +221,11 @@ describe('calendario-habitos.calculo', () => {
       expect(proximoPeriodo({ ano: 2026, mes: 12 })).toEqual({ ano: 2027, mes: 1 });
     });
 
-    it('resolverIcone cai no ícone padrão para valores desconhecidos', () => {
-      expect(resolverIcone('assets/png/icon-study.png')).toBe('leitura');
-      expect(resolverIcone('bedtime')).toBe('sono');
+    it('resolverIcone aceita chave nova e valores antigos, e cai no padrão se desconhecido', () => {
+      expect(resolverIcone('book')).toBe('book');
+      expect(resolverIcone('assets/png/icon-study.png')).toBe('book');
+      expect(resolverIcone('bedtime')).toBe('sleep');
+      expect(resolverIcone('footprint')).toBe('walk');
       expect(resolverIcone('qualquer-coisa')).toBe('padrao');
       expect(resolverIcone(null)).toBe('padrao');
     });

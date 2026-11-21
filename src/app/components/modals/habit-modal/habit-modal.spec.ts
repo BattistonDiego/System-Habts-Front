@@ -12,6 +12,8 @@ describe('HabitModal', () => {
 
   const swatches = () => Array.from(el.querySelectorAll<HTMLButtonElement>('.color-choice'));
   const swatchPreto = () => swatches().find((b) => b.getAttribute('aria-label')?.endsWith(COR_PRETA))!;
+  const iconeSelecionado = () =>
+    el.querySelector<HTMLButtonElement>('.icon-choice.selected')?.getAttribute('aria-label');
 
   async function criar(data: unknown = {}) {
     dialogRef = jasmine.createSpyObj<MatDialogRef<HabitModal>>('MatDialogRef', ['close']);
@@ -102,6 +104,132 @@ describe('HabitModal', () => {
 
       expect(el.querySelector('h2')?.textContent).toContain('Editar hábito');
       expect(swatchPreto().getAttribute('aria-pressed')).toBe('true');
+    });
+
+    const campoMeta = () => el.querySelector<HTMLInputElement>('#habit-target')!;
+
+    it('o campo Meta mostra a descrição salva, sem prefixo e sem "1 vez"', async () => {
+      await criar({
+        mode: 'edit',
+        habitSelected: { id: 1, nome: 'Meditar', meta: 1, descricao: 'Meditar 10 minutos', icon: 'brain' },
+      });
+
+      expect(campoMeta().value).toBe('Meditar 10 minutos');
+      expect(campoMeta().value).not.toContain('Meta:');
+    });
+
+    it('registro antigo com "Meta:" salvo: o campo mostra e salva só a descrição pura', async () => {
+      await criar({
+        mode: 'edit',
+        habitSelected: { id: 2, nome: 'Idiomas', meta: 1, descricao: 'Meta: Estudar idiomas 1 vez', icon: 'translate' },
+      });
+
+      expect(campoMeta().value).toBe('Estudar idiomas 1 vez');
+
+      component.addHabit();
+      expect(dialogRef.close).toHaveBeenCalledWith(
+        jasmine.objectContaining({ habit: jasmine.objectContaining({ descricao: 'Estudar idiomas 1 vez' }) }),
+      );
+    });
+
+    it('não salva o prefixo mesmo se o usuário digitar "Meta:"', async () => {
+      await criar();
+      component.habitoForm.setValue({ nome: 'Ler', target: 'Meta: Ler 20 páginas' });
+
+      component.addHabit();
+
+      expect(dialogRef.close).toHaveBeenCalledWith(
+        jasmine.objectContaining({ habit: jasmine.objectContaining({ descricao: 'Ler 20 páginas' }) }),
+      );
+    });
+
+    it('ícone antigo (caminho de arquivo) abre selecionado e é salvo como chave nova', async () => {
+      await criar({
+        mode: 'edit',
+        habitSelected: { id: 3, nome: 'Estudar Java', meta: 1, descricao: 'Estudar', icon: 'assets/svg/icon-code.svg' },
+      });
+
+      expect(iconeSelecionado()).toBe('Programação');
+      component.addHabit();
+      expect(dialogRef.close).toHaveBeenCalledWith(jasmine.objectContaining({ icon: 'code' }));
+    });
+
+    describe('ícone desconhecido', () => {
+      const habitoComIconeEstranho = {
+        id: 4,
+        nome: 'Correr',
+        meta: 1,
+        descricao: '5 km',
+        icon: 'assets/png/icone-que-nao-existe.png',
+      };
+
+      it('não pré-seleciona nenhum ícone (nem "Água")', async () => {
+        await criar({ mode: 'edit', habitSelected: habitoComIconeEstranho });
+
+        expect(component.habitPreview.icon).toBeNull();
+        expect(el.querySelectorAll('.icon-choice.selected').length).toBe(0);
+        expect(el.querySelectorAll('.icon-choice[aria-pressed="true"]').length).toBe(0);
+      });
+
+      it('salvar sem escolher mantém o valor original do icon', async () => {
+        await criar({ mode: 'edit', habitSelected: habitoComIconeEstranho });
+
+        component.addHabit();
+
+        expect(dialogRef.close).toHaveBeenCalledWith(
+          jasmine.objectContaining({ icon: 'assets/png/icone-que-nao-existe.png' }),
+        );
+      });
+
+      it('escolher um ícone substitui o original pela chave nova', async () => {
+        await criar({ mode: 'edit', habitSelected: habitoComIconeEstranho });
+
+        el.querySelector<HTMLButtonElement>('.icon-choice[aria-label="Caminhada"]')!.click();
+        fixture.detectChanges();
+        component.addHabit();
+
+        expect(iconeSelecionado()).toBe('Caminhada');
+        expect(dialogRef.close).toHaveBeenCalledWith(jasmine.objectContaining({ icon: 'walk' }));
+      });
+
+      it('a prévia usa o ícone genérico, sem quebrar', async () => {
+        await criar({ mode: 'edit', habitSelected: habitoComIconeEstranho });
+
+        expect(el.querySelector('.preview-icon mat-icon')?.textContent?.trim()).toBe('track_changes');
+      });
+    });
+  });
+
+  describe('seletor de ícones', () => {
+    beforeEach(() => criar());
+
+    it('mostra as 8 opções com ligaduras da fonte clássica (Caminhada não fica vazia)', () => {
+      const botoes = Array.from(el.querySelectorAll<HTMLButtonElement>('.icon-choice'));
+      expect(botoes.map((b) => b.querySelector('mat-icon')?.textContent?.trim())).toEqual([
+        'water_drop',
+        'menu_book',
+        'fitness_center',
+        'code',
+        'psychology',
+        'translate',
+        'bedtime',
+        'directions_walk',
+      ]);
+      expect(botoes[7].getAttribute('aria-label')).toBe('Caminhada');
+    });
+
+    it('selecionar Caminhada salva a chave "walk"', () => {
+      el.querySelector<HTMLButtonElement>('.icon-choice[aria-label="Caminhada"]')!.click();
+      fixture.detectChanges();
+
+      expect(iconeSelecionado()).toBe('Caminhada');
+      component.addHabit();
+      expect(dialogRef.close).toHaveBeenCalledWith(jasmine.objectContaining({ icon: 'walk' }));
+    });
+
+    it('hábito novo começa com o ícone padrão "water"', () => {
+      expect(component.habitPreview.icon).toBe('water');
+      expect(iconeSelecionado()).toBe('Água');
     });
   });
 });

@@ -88,14 +88,14 @@ export class CalendarioHabitosComponent {
   });
 
   readonly icones: Record<IconeHabito, LucideIconData> = {
+    water: Droplet,
+    book: Book,
+    workout: Activity,
     code: Code,
-    agua: Droplet,
-    leitura: Book,
-    exercicio: Activity,
-    mente: Brain,
-    idiomas: Languages,
-    sono: Moon,
-    caminhada: Footprints,
+    brain: Brain,
+    translate: Languages,
+    sleep: Moon,
+    walk: Footprints,
     padrao: Target,
   };
 

@@ -8,6 +8,8 @@ import { Habito } from '../../interface/habito.model';
 import { HistoricoService } from '../../service/historico.service';
 import { HistoricoEstatistica } from '../../interface/historico.model';
 import { corDeBorda, corDeDestaque } from '../../core/utils/cor-habito';
+import { iconeMaterial } from '../../core/utils/icone-habito';
+import { textoMeta } from '../../core/utils/descricao-habito';
 
 @Component({
   selector: 'app-card-horizont',
@@ -40,7 +42,7 @@ export class CardHorizont {
   }
 
   get habitColor(): string {
-    return this.habito?.color || this.habito?.cor || '#3b82f6';
+    return this.habito?.color || '#3b82f6';
   }
 
   /** Ícone, tingimentos e bordas de destaque (claro quando a cor do hábito é escura). */
@@ -53,29 +55,14 @@ export class CardHorizont {
     return corDeBorda(this.habitColor);
   }
 
+  /** Ligadura Material do ícone (aceita a chave nova e os valores antigos). */
   get iconName(): string {
-    return this.legacyIconNames[this.iconValue] ?? (this.iconValue || 'water_drop');
+    return iconeMaterial(this.habito?.icon);
   }
 
-  get isImageIcon(): boolean {
-    const icon = this.habito?.icone ?? this.habito?.icon ?? '';
-    const isAsset = /^(assets\/|https?:\/\/|data:image\/)/i.test(icon);
-    return isAsset && !Object.hasOwn(this.legacyIconNames, icon);
-  }
-
-  private readonly legacyIconNames: Record<string, string> = {
-    'assets/svg/icon-water.svg': 'water_drop',
-    'assets/png/icon-study.png': 'menu_book',
-    'assets/png/icon-workout.png': 'fitness_center',
-    'assets/svg/icon-code.svg': 'code',
-  };
-
-  get iconValue(): string {
-    return this.habito?.icone ?? this.habito?.icon ?? '';
-  }
-
+  /** "Meta: <descrição>" sem duplicar o prefixo; vazio quando não há descrição. */
   getHabitDisplayMeta(habit: Habito): string {
-    return `Meta: ${habit.descricao}`;
+    return textoMeta(habit.descricao);
   }
 
   completeHabit() {

@@ -13,8 +13,8 @@ function respostaDoMes(ano: number, mes: number): CalendarioMesResponse {
     ano,
     mes,
     habitos: [
-      { id: 1, nome: 'Estudar Java', meta: 'Estudar Java por 1 hora', cor: '#3b82f6', icone: 'code' },
-      { id: 2, nome: 'Beber água', meta: 'Beber 2 litros de água', cor: '#22d3ee', icone: 'water_drop' },
+      { id: 1, nome: 'Estudar Java', descricao: 'Estudar Java por 1 hora', color: '#3b82f6', icon: 'code' },
+      { id: 2, nome: 'Beber água', descricao: 'Beber 2 litros de água', color: '#22d3ee', icon: 'water_drop' },
     ],
     conclusoes:
       ano === 2026 && mes === 11
@@ -159,7 +159,7 @@ describe('CalendarioHabitosComponent', () => {
       of({
         ano: 2026,
         mes: 10,
-        habitos: [{ id: 5, nome: 'Meditar', meta: 'Meditar 10 minutos', cor: '#0A0A0A', icone: 'psychology' }],
+        habitos: [{ id: 5, nome: 'Meditar', descricao: 'Meditar 10 minutos', color: '#0A0A0A', icon: 'psychology' }],
         conclusoes: [{ habitoId: 5, data: '2026-10-05' }],
       }),
     );

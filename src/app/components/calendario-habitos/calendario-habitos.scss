@@ -1,4 +1,11 @@
-// Tokens do calendário (tema escuro do dashboard)
+// Calendário de hábitos — tema escuro do dashboard.
+//
+// Escrito para caber no orçamento de 8 kB por componente (angular.json): com o encapsulamento
+// emulado, cada parte de um seletor ganha um atributo [_ngcontent-…] no CSS final. Por isso:
+// - classes únicas no lugar de seletores aninhados (`.ponto` em vez de `.habito .ponto`);
+// - a cor de texto padrão vem do :host e é herdada (só se declara quando muda);
+// - todas as regras de mobile ficam num único @media no fim do arquivo.
+
 $card: #121929;
 $card-2: #161d2e;
 $tile: #18203a;
@@ -9,29 +16,24 @@ $text-muted: #94a3b8;
 $text-label: #8b96ab;
 $primary: #3b82f6;
 $primary-strong: #2563eb;
-$radius-card: 16px;
 $radius-tile: 12px;
-
 $cell-empty-bg: #1c2436;
 $cell-empty-border: #2a3550;
-$cell-future-border: #222b3d;
 $selected-bg: rgba(59, 130, 246, 0.1);
-$selected-border: rgba(96, 165, 250, 0.5);
-$success: #10b981;
-
-$col-habitos: 210px;
-$col-progresso: 140px;
-$col-dia: 28px;
-$altura-cab: 56px;
-$altura-linha: 48px;
-
 $mobile: 760px;
+
+// Cor do hábito: `--cor` (preenchimento), `--cor-destaque` (traço/ícone), `--cor-borda`.
+$destaque: var(--cor-destaque, var(--cor));
 
 :host {
   display: block;
   min-width: 0;
   font-family: 'Inter', system-ui, sans-serif;
   color: $text;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 h2,
@@ -47,16 +49,44 @@ ul {
   list-style: none;
 }
 
-button {
-  font-family: inherit;
+h2,
+h3,
+.cal-mes,
+.dia-numero,
+.anel-pct,
+.tile-valor,
+.pilula-texto strong,
+.item-texto strong {
+  font-weight: 700;
+}
+
+.dia-semana,
+.cal-subtitulo,
+.painel-dia-semana,
+.tile-rotulo,
+.pilula-texto span,
+.item-texto span,
+.estado-vazio,
+.cal-status {
+  color: $text-muted;
+}
+
+// Blocos centralizados em flex
+.btn-nav,
+.icone-habito,
+.celula,
+.amostra,
+.anel-pct {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cartao {
   background: $card;
   border: 1px solid $border-soft;
-  border-radius: $radius-card;
+  border-radius: 16px;
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .rotulo {
@@ -67,7 +97,7 @@ button {
   color: $text-label;
 }
 
-/* ---------- Cabeçalho ---------- */
+/* Cabeçalho */
 
 .cal-header {
   display: grid;
@@ -76,30 +106,16 @@ button {
   gap: 12px;
   padding-bottom: 16px;
   border-bottom: 1px solid $border-soft;
-
-  @media (max-width: $mobile) {
-    grid-template-columns: 1fr auto;
-
-    .cal-nav {
-      grid-column: 1 / -1;
-      grid-row: 2;
-      justify-self: center;
-    }
-  }
 }
 
-.cal-titulo {
-  h2 {
-    font-size: 16px;
-    font-weight: 700;
-    color: $text;
-  }
+h2,
+.cal-mes {
+  font-size: 16px;
 }
 
 .cal-subtitulo {
   margin-top: 2px;
   font-size: 12px;
-  color: $text-muted;
 }
 
 .cal-nav {
@@ -111,25 +127,26 @@ button {
 .cal-mes {
   min-width: 150px;
   text-align: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: $text;
+}
+
+.cal-acoes {
+  justify-self: end;
+}
+
+.btn-nav,
+.btn-hoje {
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
 }
 
 .btn-nav {
   width: 36px;
   height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
   border: 1px solid $border;
   background: $card-2;
   color: $text;
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease;
 
   &:hover:not(:disabled) {
     background: $tile;
@@ -142,47 +159,35 @@ button {
   }
 }
 
-.cal-acoes {
-  justify-self: end;
-}
-
 .btn-hoje {
   padding: 7px 14px;
-  border-radius: 8px;
   border: 1px solid rgba(96, 165, 250, 0.6);
   background: rgba(59, 130, 246, 0.14);
   color: #bfdbfe;
   font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease;
 
   &:hover {
     background: rgba(59, 130, 246, 0.24);
   }
 }
 
-.btn-nav,
-.btn-hoje,
-.celula {
-  &:focus-visible {
-    outline: 2px solid #60a5fa;
-    outline-offset: 2px;
-  }
+button:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
 }
 
 .cal-status {
   padding: 32px 0;
   text-align: center;
   font-size: 13px;
-  color: $text-muted;
-
-  &.erro {
-    color: #fca5a5;
-  }
 }
 
-/* ---------- Grade ---------- */
+.erro {
+  color: #fca5a5;
+}
+
+/* Grade: hábitos | dias (rola) | progresso */
 
 .cal-grade {
   display: flex;
@@ -190,94 +195,65 @@ button {
 }
 
 .cab {
-  height: $altura-cab;
-  box-sizing: border-box;
+  height: 56px;
+  display: flex;
+  align-items: center;
 }
 
 .linha {
-  height: $altura-linha;
+  height: 48px;
   display: flex;
   align-items: center;
-  box-sizing: border-box;
 }
 
 .col-habitos {
-  flex: 0 0 $col-habitos;
-  width: $col-habitos;
+  flex: 0 0 210px;
+  width: 210px;
   padding-right: 12px;
   border-right: 1px solid $border-soft;
-  box-sizing: border-box;
+}
 
-  .cab {
-    display: flex;
-    align-items: center;
-    padding-left: 4px;
-  }
-
-  @media (max-width: $mobile) {
-    flex-basis: 138px;
-    width: 138px;
-    padding-right: 8px;
-  }
+.col-habitos .cab,
+.habito {
+  padding-left: 4px;
 }
 
 .habito {
   gap: 10px;
-  padding-left: 4px;
+}
 
-  .ponto {
-    flex: 0 0 auto;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--cor);
-    border: 1px solid var(--cor-borda, var(--cor));
-    box-sizing: border-box;
-  }
+.ponto {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cor);
+  border: 1px solid var(--cor-borda, var(--cor));
+}
 
-  .nome {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 600;
-    color: $text;
-  }
-
-  @media (max-width: $mobile) {
-    gap: 7px;
-
-    .nome {
-      font-size: 12px;
-    }
-  }
+.nome {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .icone-habito {
-  flex: 0 0 auto;
+  flex: none;
   width: 28px;
   height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 8px;
-  color: var(--cor-destaque, var(--cor));
-  background: color-mix(in srgb, var(--cor-destaque, var(--cor)) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--cor-destaque, var(--cor)) 22%, transparent);
+  color: $destaque;
+  background: color-mix(in srgb, #{$destaque} 16%, transparent);
+  border: 1px solid color-mix(in srgb, #{$destaque} 22%, transparent);
+}
 
-  &.grande {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-  }
-
-  @media (max-width: $mobile) {
-    &:not(.grande) {
-      width: 24px;
-      height: 24px;
-    }
-  }
+.grande {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
 }
 
 .area-dias {
@@ -286,21 +262,11 @@ button {
   // Sem isto, a largura max-content das 30/31 colunas sobe pelos contêineres flex
   // e alarga a página inteira; com isto, só esta área rola na horizontal.
   contain: inline-size;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto hidden;
   position: relative;
   padding-bottom: 10px;
   scrollbar-width: thin;
-  scrollbar-color: #2a3550 transparent;
-
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #2a3550;
-    border-radius: 999px;
-  }
+  scrollbar-color: $cell-empty-border transparent;
 }
 
 .trilha {
@@ -310,83 +276,68 @@ button {
 }
 
 .coluna-dia {
-  flex: 0 0 $col-dia;
-  width: $col-dia;
+  flex: 0 0 28px;
   border-radius: 10px;
-  transition: background 0.15s ease;
 
   .linha {
     justify-content: center;
   }
+}
 
-  &.selecionada {
-    background: $selected-bg;
-    box-shadow: inset 0 0 0 1px $selected-border;
-  }
+.selecionada {
+  background: $selected-bg;
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.5);
 }
 
 .cab-dia {
-  display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   gap: 3px;
+}
 
-  .dia-semana {
-    font-size: 10px;
-    font-weight: 500;
-    color: $text-muted;
-    line-height: 1;
-  }
+.dia-semana,
+.dia-numero {
+  line-height: 1;
+}
 
-  .dia-numero {
-    min-width: 18px;
-    padding: 2px 3px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    color: $text;
-    box-sizing: border-box;
-  }
+.dia-semana {
+  font-size: 10px;
+  font-weight: 500;
+}
 
-  .hoje & {
-    .dia-semana {
-      color: #93c5fd;
-      font-weight: 600;
-    }
+.dia-numero {
+  min-width: 18px;
+  padding: 2px 3px;
+  border-radius: 6px;
+  font-size: 11px;
+  text-align: center;
+}
 
-    .dia-numero {
-      background: $primary-strong;
-      color: #fff;
-    }
-  }
+.hoje .dia-semana {
+  color: #93c5fd;
+  font-weight: 600;
+}
 
-  .futura & {
-    .dia-semana,
-    .dia-numero {
-      color: $text-label;
-      font-weight: 500;
-    }
-  }
+.hoje .dia-numero {
+  background: $primary-strong;
+  color: #fff;
+}
+
+.futura .dia-semana,
+.futura .dia-numero {
+  color: $text-label;
+  font-weight: 500;
 }
 
 .celula {
   width: 22px;
   height: 22px;
   padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 6px;
   border: 1px solid $cell-empty-border;
   background: $cell-empty-bg;
   cursor: pointer;
-  transition:
-    transform 0.12s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
+  transition: transform 0.12s;
 
   &:hover:not(:disabled) {
     transform: scale(1.08);
@@ -398,46 +349,34 @@ button {
   }
 
   &.futura {
-    background: transparent;
-    border: 1px dashed $cell-future-border;
+    background: none;
+    border: 1px dashed #222b3d;
     cursor: default;
-  }
-
-  svg {
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: #fff;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
   }
 }
 
-/* ---------- Progresso ---------- */
+// Check branco (célula concluída e legenda)
+.celula svg,
+.amostra svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Progresso */
 
 .col-progresso {
-  flex: 0 0 $col-progresso;
-  width: $col-progresso;
+  flex: 0 0 140px;
+  width: 140px;
   padding-left: 10px;
   border-left: 1px solid $border-soft;
-  box-sizing: border-box;
 
   .cab {
-    display: flex;
-    align-items: center;
     justify-content: center;
-  }
-
-  @media (max-width: $mobile) {
-    flex-basis: 64px;
-    width: 64px;
-    padding-left: 6px;
-
-    .cab {
-      font-size: 9px;
-      letter-spacing: 0.06em;
-    }
   }
 }
 
@@ -451,20 +390,11 @@ button {
   border-radius: 10px;
   background: $tile;
   border: 1px solid $border;
-  box-sizing: border-box;
-
-  @media (max-width: $mobile) {
-    justify-content: center;
-    padding: 0;
-    background: transparent;
-    border-color: transparent;
-  }
 }
 
 .anel {
   position: relative;
   flex: 0 0 36px;
-  width: 36px;
   height: 36px;
 
   svg {
@@ -472,36 +402,31 @@ button {
     height: 100%;
     transform: rotate(-90deg);
   }
+}
 
-  circle {
-    fill: none;
-    stroke-width: 3.5;
-  }
+circle {
+  fill: none;
+  stroke-width: 3.5;
+}
 
-  .anel-trilho {
-    stroke: #2a3550;
-  }
+.anel-trilho {
+  stroke: $cell-empty-border;
+}
 
-  .anel-valor {
-    stroke: var(--cor-destaque, var(--cor));
-    stroke-linecap: round;
-    transition: stroke-dasharray 0.5s ease;
+.anel-valor {
+  stroke: $destaque;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s;
+}
 
-    &.vazio {
-      stroke-opacity: 0;
-    }
-  }
+.vazio {
+  stroke-opacity: 0;
+}
 
-  .anel-pct {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8.5px;
-    font-weight: 700;
-    color: $text;
-  }
+.anel-pct {
+  position: absolute;
+  inset: 0;
+  font-size: 8.5px;
 }
 
 .pilula-texto {
@@ -511,21 +436,14 @@ button {
 
   strong {
     font-size: 13px;
-    font-weight: 700;
-    color: $text;
   }
 
   span {
     font-size: 11px;
-    color: $text-muted;
-  }
-
-  @media (max-width: $mobile) {
-    display: none;
   }
 }
 
-/* ---------- Legenda ---------- */
+/* Legenda */
 
 .legenda {
   display: flex;
@@ -539,7 +457,6 @@ button {
     display: flex;
     align-items: center;
     gap: 7px;
-    font-size: 12px;
     color: #cbd5e1;
   }
 }
@@ -547,43 +464,33 @@ button {
 .amostra {
   width: 14px;
   height: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   border-radius: 4px;
-  box-sizing: border-box;
+  border: 1px solid $cell-empty-border;
+  background: $cell-empty-bg;
 
   &.concluida {
     background: $primary;
-    border: 1px solid $primary;
-
-    svg {
-      width: 10px;
-      height: 10px;
-      fill: none;
-      stroke: #fff;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-  }
-
-  &.nao-concluida {
-    background: $cell-empty-bg;
-    border: 1px solid $cell-empty-border;
+    border-color: $primary;
   }
 
   &.futura {
+    background: none;
     border: 1px dashed #2f3a52;
   }
 
   &.selecionada {
     background: $selected-bg;
-    border: 1px solid #60a5fa;
+    box-shadow: none;
+    border-color: #60a5fa;
+  }
+
+  svg {
+    width: 10px;
+    height: 10px;
   }
 }
 
-/* ---------- Painel do dia ---------- */
+/* Painel do dia */
 
 .painel {
   margin-top: 24px;
@@ -598,22 +505,6 @@ button {
     opacity: 0;
     transform: translateY(4px);
   }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .painel-conteudo {
-    animation: none;
-  }
-
-  .celula,
-  .anel .anel-valor {
-    transition: none;
-  }
 }
 
 .painel-header {
@@ -623,17 +514,18 @@ button {
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 16px;
-
-  h3 {
-    font-size: 18px;
-    font-weight: 700;
-    color: $text;
-  }
 }
 
-.painel-dia-semana {
+h3 {
+  font-size: 18px;
+}
+
+.painel-dia-semana,
+.tile-rotulo,
+.item-texto span,
+.status,
+.legenda li {
   font-size: 12px;
-  color: $text-muted;
 }
 
 .tiles {
@@ -641,10 +533,6 @@ button {
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-bottom: 20px;
-
-  @media (max-width: $mobile) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .tile {
@@ -657,28 +545,20 @@ button {
   border-radius: $radius-tile;
   background: $tile;
   border: 1px solid $border;
-  box-sizing: border-box;
-}
-
-.tile-rotulo {
-  font-size: 12px;
-  color: $text-muted;
 }
 
 .tile-valor {
   font-size: 20px;
-  font-weight: 700;
-  color: $text;
 }
 
 .tile-progresso {
   gap: 10px;
+}
 
-  .tile-linha {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.tile-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .barra {
@@ -690,9 +570,8 @@ button {
 
 .barra-preenchida {
   height: 100%;
-  border-radius: inherit;
   background: $primary;
-  transition: width 0.3s ease;
+  transition: width 0.3s;
 }
 
 .lista-titulo {
@@ -713,19 +592,14 @@ button {
   border-radius: $radius-tile;
   background: $card-2;
   border: 1px solid $border-soft;
+}
 
-  .faixa {
-    flex: 0 0 3px;
-    align-self: stretch;
-    margin: 2px 0;
-    border-radius: 2px;
-    background: var(--cor-destaque, var(--cor));
-  }
-
-  @media (max-width: $mobile) {
-    gap: 10px;
-    padding: 10px;
-  }
+.faixa {
+  flex: 0 0 3px;
+  align-self: stretch;
+  margin: 2px 0;
+  border-radius: 2px;
+  background: $destaque;
 }
 
 .item-texto {
@@ -737,13 +611,9 @@ button {
 
   strong {
     font-size: 14px;
-    font-weight: 700;
-    color: $text;
   }
 
   span {
-    font-size: 12px;
-    color: $text-muted;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -751,27 +621,26 @@ button {
 }
 
 .status {
-  flex: 0 0 auto;
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 5px 12px;
   border-radius: 999px;
-  font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+}
 
-  &.concluido {
-    color: #6ee7b7;
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(16, 185, 129, 0.45);
-  }
+.concluido {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
 
-  &.pendente {
-    color: #cbd5e1;
-    background: rgba(148, 163, 184, 0.1);
-    border: 1px solid #334155;
-  }
+.pendente {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid #334155;
 }
 
 .estado-vazio {
@@ -783,11 +652,85 @@ button {
   border: 1px dashed $border;
   border-radius: $radius-tile;
   text-align: center;
-  color: $text-muted;
   font-size: 13px;
 
   strong {
     color: $text;
     font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .painel-conteudo {
+    animation: none;
+  }
+
+  .celula,
+  .anel-valor {
+    transition: none;
+  }
+}
+
+/* Mobile (< 760px): colunas fixas mais estreitas, progresso só com o anel */
+
+@media (max-width: $mobile) {
+  .cal-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .cal-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .col-habitos {
+    flex-basis: 138px;
+    width: 138px;
+    padding-right: 8px;
+  }
+
+  .habito {
+    gap: 7px;
+  }
+
+  .nome {
+    font-size: 12px;
+  }
+
+  .icone-habito:not(.grande) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .col-progresso {
+    flex-basis: 64px;
+    width: 64px;
+    padding-left: 6px;
+
+    .cab {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  .pilula-progresso {
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border-color: transparent;
+  }
+
+  .pilula-texto {
+    display: none;
+  }
+
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+
+  .item {
+    gap: 10px;
+    padding: 10px;
   }
 }
