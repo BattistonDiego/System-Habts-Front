@@ -1,27 +1,4 @@
 <div class="conteudo">
-  <div class="date-container">
-    <button mat-icon-button (click)="changeDate(-1)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-
-    <div class="date-display">
-      <div class="date-info">
-        <mat-icon>calendar_month</mat-icon>
-        <span>{{ selectedDate | date: "dd 'de' MMMM 'de' yyyy" }}</span>
-      </div>
-      <a class="today" (click)="goToToday()">Hoje</a>
-
-      <div (click)="openHistoryModal()" class="history">
-        <mat-icon>access_time</mat-icon>
-        <span>Ver Histórico</span>
-      </div>
-    </div>
-
-    <button mat-icon-button (click)="changeDate(1)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
-
   <div class="cards">
     <app-card
       *ngFor="let card of listCards"

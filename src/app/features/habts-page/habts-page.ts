@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Card } from '../../components/card/card';
 import { CardHorizont } from '../../components/card-horizont/card-horizont';
-import { History } from '../../components/modals/history-modal/history';
 import { MatDialog } from '@angular/material/dialog';
 import { HabitModal } from '../../components/modals/habit-modal/habit-modal';
 import { HabitoService } from '../../service/habito.service';
@@ -24,18 +22,15 @@ import { switchMap } from 'rxjs';
   standalone: true,
   imports: [
     MatIconModule,
-    MatButtonModule,
     CommonModule,
     Card,
     CardHorizont,
-    History,
     MatSnackBarModule,
   ],
   templateUrl: './habts-page.html',
   styleUrl: './habts-page.scss',
 })
 export class HabtsPage implements OnInit {
-  selectedDate = new Date();
   completedHabitsCount = 0;
   progress = 0;
   restante = 100;
@@ -259,16 +254,6 @@ export class HabtsPage implements OnInit {
     });
   }
 
-  changeDate(days: number) {
-    const newDate = new Date(this.selectedDate);
-    newDate.setDate(this.selectedDate.getDate() + days);
-    this.selectedDate = newDate;
-  }
-
-  goToToday() {
-    this.selectedDate = new Date();
-  }
-
   getHabitosCompletadoHoje() {
     const listHabito = this.listHabitos;
     const listHistorico = this.listHistorico;
@@ -382,13 +367,5 @@ export class HabtsPage implements OnInit {
     if (streakCard) {
       streakCard.complement = this.streak + ' Dias';
     }
-  }
-
-  openHistoryModal() {
-    const dialogRef = this.dialog.open(History, {
-      data: {
-        // You can pass data to the modal here if needed
-      },
-    });
   }
 }

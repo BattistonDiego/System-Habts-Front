@@ -48,80 +48,10 @@
     }
   }
 
-  .date-container {
-    background-color: #1a1f2e;
-    display: flex;
-    justify-content: space-between;
-    height: 136px;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #2d3348;
-
-    @media (max-width: 480px) {
-      height: auto;
-      padding: 12px;
-      gap: 4px;
-    }
-
-    .date-display {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .date-info {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        span {
-          font-weight: 500;
-          color: white;
-
-          @media (max-width: 480px) {
-            font-size: 13px;
-          }
-        }
-      }
-
-      a {
-        width: 100%;
-        text-align: center;
-        display: block;
-        color: #4a90e2;
-        cursor: pointer;
-        margin-bottom: 15px;
-        margin-top: 3px;
-        font-size: 12px;
-      }
-
-      .history {
-        display: flex;
-        align-items: center;
-        gap: 3px;
-        justify-content: center;
-        height: 36px;
-        width: 150px;
-        background-color: #d1d5db54;
-        border-radius: 8px;
-        cursor: pointer;
-
-        @media (max-width: 480px) {
-          width: 120px;
-          height: 32px;
-        }
-
-        span {
-          font-size: 12px;
-          color: white;
-        }
-      }
-    }
-  }
-
   .cards {
     display: flex;
     gap: 15px;
-    margin-top: 16px;
+    margin-top: 0;
 
     @media (max-width: 600px) {
       flex-direction: column;
