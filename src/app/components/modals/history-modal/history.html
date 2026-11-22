@@ -56,12 +56,7 @@
       [class.completed]="item.concluido === true"
       [style.--habit-color]="getHabitColor(item.habito)">
       <div class="history-habit-icon" [style.--habit-color]="getHabitColor(item.habito)">
-        <span
-          *ngIf="isImageIcon(item.habito)"
-          class="history-icon-mask"
-          [style.--habit-icon-mask]="'url(' + getHabitIcon(item.habito) + ')'"
-          aria-hidden="true"></span>
-        <mat-icon *ngIf="!isImageIcon(item.habito)">{{ getHabitIconName(item.habito) }}</mat-icon>
+        <mat-icon aria-hidden="true">{{ getHabitIconName(item.habito) }}</mat-icon>
       </div>
       <div class="progress-bar">
         <span class="title">{{ item.habito.nome }}</span>

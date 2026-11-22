@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HistoricoRegistro } from '../interface/historico.model';
+import { CalendarioMesResponse, HistoricoRegistro } from '../interface/historico.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -50,6 +50,12 @@ export class HistoricoService {
 
   getEstatisticas(habitoId: number): Observable<any> {
     return this.http.get<any[]>(`${this.baseUrl}/${habitoId}/estatisticas`);
+  }
+
+  /** Hábitos do usuário logado e suas conclusões no mês (mes de 1 a 12). */
+  buscarMes(ano: number, mes: number): Observable<CalendarioMesResponse> {
+    const params = new HttpParams().set('ano', ano).set('mes', mes);
+    return this.http.get<CalendarioMesResponse>(`${this.baseUrl}/mes`, { params });
   }
 
   getAtividades(): Observable<any> {

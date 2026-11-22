@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackbar } from '../../custom-snackbar/custom-snackbar';
 import { HabitoService } from '../../../service/habito.service';
 import { Habito } from '../../../interface/habito.model';
+import { corDeDestaque } from '../../../core/utils/cor-habito';
+import { ICONE_PADRAO, iconeMaterial } from '../../../core/utils/icone-habito';
 
 @Component({
   selector: 'app-history',
@@ -34,13 +36,6 @@ import { Habito } from '../../../interface/habito.model';
   styleUrl: './history.scss',
 })
 export class History {
-  private readonly legacyIconNames: Record<string, string> = {
-    'assets/svg/icon-water.svg': 'water_drop',
-    'assets/png/icon-study.png': 'menu_book',
-    'assets/png/icon-workout.png': 'fitness_center',
-    'assets/svg/icon-code.svg': 'code',
-  };
-
   constructor(
     private dialogRef: MatDialogRef<History>,
     private historicoService: HistoricoService,
@@ -53,22 +48,14 @@ export class History {
 
   dataSelecionada = new FormControl<Date | null>(null);
 
+  /** Usada só em tingimento, borda e ícone: devolve o destaque claro para cores escuras. */
   getHabitColor(habit: Habito): string {
-    return habit.color || habit.cor || '#3b82f6';
+    return corDeDestaque(habit.color || '#3b82f6');
   }
 
-  getHabitIcon(habit: Habito): string {
-    return habit.icon || habit.icone || 'water_drop';
-  }
-
-  isImageIcon(habit: Habito): boolean {
-    const icon = this.getHabitIcon(habit);
-    return /^(assets\/|https?:\/\/|data:image\/)/i.test(icon) && !Object.hasOwn(this.legacyIconNames, icon);
-  }
-
+  /** Ligadura Material do ícone (aceita a chave nova e os valores antigos). */
   getHabitIconName(habit: Habito): string {
-    const icon = this.getHabitIcon(habit);
-    return this.legacyIconNames[icon] ?? icon;
+    return iconeMaterial(habit.icon);
   }
 
   close() {
@@ -118,7 +105,7 @@ export class History {
             const habito = habitos.find((item) => item.id === habitId);
             return {
               ...registro,
-              habito: habito ?? { id: habitId, nome: 'Hábito', icone: 'assets/svg/icon-water.svg' },
+              habito: habito ?? { id: habitId, nome: 'Hábito', icon: ICONE_PADRAO },
             };
           });
           this.showList = this.listHistorico.length > 0;

@@ -1,12 +1,17 @@
-<mat-card class="habit-card" [class.completed]="isCompleted" [style.--habit-color]="habitColor">
+<mat-card
+  class="habit-card"
+  [class.completed]="isCompleted"
+  [style.--habit-color]="habitColor"
+  [style.--habit-accent]="habitAccent"
+  [style.--habit-border]="habitBorder"
+>
   <div class="habit-main">
     <div class="habit-icon">
-      <span *ngIf="isImageIcon" class="habit-icon-mask" [style.--habit-icon-mask]="'url(' + iconValue + ')'" aria-hidden="true"></span>
-      <mat-icon *ngIf="!isImageIcon">{{ iconName }}</mat-icon>
+      <mat-icon aria-hidden="true">{{ iconName }}</mat-icon>
     </div>
     <div class="habit-copy">
       <div class="title">{{ habito.nome }}</div>
-      <div class="meta">{{ getHabitDisplayMeta(habito) }}</div>
+      <div class="meta" *ngIf="getHabitDisplayMeta(habito) as meta">{{ meta }}</div>
     </div>
 
     <div class="secondary-actions" aria-label="Ações do hábito">

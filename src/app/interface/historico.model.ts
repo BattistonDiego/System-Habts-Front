@@ -12,3 +12,25 @@ export interface HistoricoEstatistica {
   inicio: string;
   totalRegistro: number;
 }
+
+/** Resposta de GET /historico/mes?ano=&mes= (mes de 1 a 12). */
+export interface CalendarioMesResponse {
+  ano: number;
+  mes: number;
+  habitos: HabitoMes[];
+  conclusoes: ConclusaoMes[];
+}
+
+export interface HabitoMes {
+  id: number;
+  nome: string;
+  descricao: string | null;
+  color: string | null;
+  icon: string | null;
+}
+
+export interface ConclusaoMes {
+  habitoId: number;
+  /** yyyy-MM-dd */
+  data: string;
+}

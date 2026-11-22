@@ -10,10 +10,32 @@ import { User } from '../../interface/user.model';
 import { HabitoService } from '../../service/habito.service';
 import { LUCIDE_ICONS, LucideAngularModule, LucideIconProvider } from 'lucide-angular';
 import { Zap, Target, Award } from 'lucide-angular';
+import { CalendarioHabitosComponent } from '../../components/calendario-habitos/calendario-habitos';
+
+/**
+ * Eixo do gráfico "Hábitos por dia". A `chave` é o nome em inglês que o backend devolve
+ * (TO_CHAR(data, 'Day') no Postgres) e precisa continuar igual; o `rotulo` é o que aparece.
+ */
+export const DIAS_GRAFICO_SEMANAL = [
+  { chave: 'Monday', rotulo: 'Seg' },
+  { chave: 'Tuesday', rotulo: 'Ter' },
+  { chave: 'Wednesday', rotulo: 'Qua' },
+  { chave: 'Thursday', rotulo: 'Qui' },
+  { chave: 'Friday', rotulo: 'Sex' },
+  { chave: 'Saturday', rotulo: 'Sáb' },
+  { chave: 'Sunday', rotulo: 'Dom' },
+] as const;
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [RouterLink, Card, CommonModule, BaseChartDirective, LucideAngularModule],
+  imports: [
+    RouterLink,
+    Card,
+    CommonModule,
+    BaseChartDirective,
+    LucideAngularModule,
+    CalendarioHabitosComponent,
+  ],
   providers: [
     {
       provide: LUCIDE_ICONS,
@@ -34,10 +56,6 @@ export class DashboardPage implements OnInit {
   qntdEsteMes: number = 0;
   mediaHabitosCompletados: number = 0;
   streak: number = 0;
-  atividades: any[] = [];
-
-  dias: { data: string; qntd: number }[] = [];
-  semanas: { data: string; qntd: number }[][] = [];
 
   totalHabitos: number = 0;
   listHabitos: Habito[] = [];
@@ -120,19 +138,17 @@ export class DashboardPage implements OnInit {
     this.loadHabitos();
     this.loadQntdHabEsteMes();
     this.loadMediaHabitosCompletados();
-    this.loadAtividades();
   }
 
   loadResumoSemanal(userId: number) {
     this.historicoService.getResumoSemanal(userId).subscribe((res) => {
-      const dias = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       const mapaQuantidade = new Map(res.map((r) => [r.dia.trim(), r.quantidade]));
 
       this.barChartData = {
-        labels: dias,
+        labels: DIAS_GRAFICO_SEMANAL.map((d) => d.rotulo),
         datasets: [
           {
-            data: dias.map((d) => mapaQuantidade.get(d) ?? 0),
+            data: DIAS_GRAFICO_SEMANAL.map((d) => mapaQuantidade.get(d.chave) ?? 0),
             label: 'Hábitos concluídos',
             backgroundColor: '#3b82f6',
           },
@@ -146,7 +162,6 @@ export class DashboardPage implements OnInit {
       this.listHabitos = habitos.map((h) => ({
         ...h,
         meta: 1,
-        unidade: 'vez',
         current: 0,
       }));
       this.quantidadeHabitos = habitos.length;
@@ -227,78 +242,6 @@ export class DashboardPage implements OnInit {
     });
   }
 
-  loadAtividades() {
-    this.historicoService.getAtividades().subscribe({
-      next: (res) => {
-        this.atividades = res;
-        this.dias = this.gerarDias();
-        this.semanas = this.gerarSemanas();
-      },
-    });
-  }
-
-  gerarDias(): { data: string; qntd: number }[] {
-    const dias = [];
-    const hoje = new Date();
-    const inicio = new Date();
-    inicio.setMonth(hoje.getMonth() - 6);
-
-    const current = new Date(inicio);
-
-    while (current <= hoje) {
-      const dataFormatada = current.toISOString().split('T')[0];
-
-      const encontrado = this.atividades.find((a) => a.data === dataFormatada);
-
-      dias.push({
-        data: dataFormatada,
-        qntd: encontrado ? encontrado.qntdHabitos : 0,
-      });
-
-      current.setDate(current.getDate() + 1);
-    }
-
-    return dias;
-  }
-
-  gerarSemanas(): { data: string; qntd: number }[][] {
-    const dias = this.dias;
-    const semanas: { data: string; qntd: number }[][] = [];
-
-    const primeiroDia = new Date(dias[0].data);
-    const diaDaSemana = primeiroDia.getDay();
-
-    let semanaAtual: { data: string; qntd: number }[] = [];
-    for (let i = 0; i < diaDaSemana; i++) {
-      semanaAtual.push({ data: '', qntd: -1 });
-    }
-
-    for (const dia of dias) {
-      semanaAtual.push(dia);
-      if (semanaAtual.length === 7) {
-        semanas.push(semanaAtual);
-        semanaAtual = [];
-      }
-    }
-
-    if (semanaAtual.length > 0) {
-      while (semanaAtual.length < 7) {
-        semanaAtual.push({ data: '', qntd: -1 });
-      }
-      semanas.push(semanaAtual);
-    }
-
-    return semanas;
-  }
-
-  getColor(qntd: number): string {
-    if (qntd === 0) return '#1e2333';
-    if (qntd === 1) return '#1e3a5f';
-    if (qntd === 2) return '#1d5fa6';
-    if (qntd === 3) return '#2563eb';
-    return '#3b82f6'; // 4+
-  }
-
   loadMediaHabitosCompletados() {
     this.historicoService.getMediaHabitoCompletado(this.usuario.id).subscribe({
       next: (res) => (this.mediaHabitosCompletados = res),
@@ -328,16 +271,6 @@ export class DashboardPage implements OnInit {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-    });
-  }
-
-  formatarData(data: string): string {
-    if (!data) return '';
-    const date = new Date(data + 'T00:00:00');
-    return date.toLocaleDateString('pt-BR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
     });
   }
 }

@@ -7,6 +7,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Habito } from '../../../interface/habito.model';
+import { COR_PRETA, corDeDestaque, isCorEscura } from '../../../core/utils/cor-habito';
+import {
+  ChaveIcone,
+  ICONES_HABITO,
+  ICONE_PADRAO,
+  iconeMaterial,
+  normalizarIcone,
+} from '../../../core/utils/icone-habito';
+import { limparDescricao } from '../../../core/utils/descricao-habito';
 
 @Component({
   selector: 'app-add-habit-modal',
@@ -23,16 +32,7 @@ import { Habito } from '../../../interface/habito.model';
   styleUrl: './habit-modal.scss',
 })
 export class HabitModal implements OnInit {
-  readonly icons = [
-    { name: 'water_drop', label: 'Água', value: 'assets/svg/icon-water.svg' },
-    { name: 'menu_book', label: 'Leitura', value: 'assets/png/icon-study.png' },
-    { name: 'fitness_center', label: 'Exercício', value: 'assets/png/icon-workout.png' },
-    { name: 'code', label: 'Programação', value: 'assets/svg/icon-code.svg' },
-    { name: 'psychology', label: 'Aprendizado', value: 'psychology' },
-    { name: 'translate', label: 'Idiomas', value: 'translate' },
-    { name: 'bedtime', label: 'Sono', value: 'bedtime' },
-    { name: 'footprint', label: 'Caminhada', value: 'footprint' },
-  ];
+  readonly icons = ICONES_HABITO;
   readonly colors = [
     '#3B82F6',
     '#22C55E',
@@ -42,14 +42,31 @@ export class HabitModal implements OnInit {
     '#EC4899',
     '#06B6D4',
     '#94A3B8',
+    COR_PRETA,
   ];
 
-  habitPreview = { name: '', icon: 'assets/svg/icon-water.svg', color: '#3B82F6', target: '' };
+  readonly isCorEscura = isCorEscura;
+
+  /** `icon` fica `null` quando o hábito editado tem um ícone que o catálogo não reconhece. */
+  habitPreview: { name: string; icon: ChaveIcone | null; color: string; target: string } = {
+    name: '',
+    icon: ICONE_PADRAO,
+    color: '#3B82F6',
+    target: '',
+  };
   habitoForm!: FormGroup;
   habito!: Habito;
 
+  /** Valor de `icon` com que o hábito chegou; usado se o usuário salvar sem escolher outro. */
+  private iconeOriginal: string | null = null;
+
+  /** Cor da prévia (ícone, borda, tingimento): clara quando a cor escolhida é escura. */
+  get corDestaque(): string {
+    return corDeDestaque(this.habitPreview.color);
+  }
+
   get iconName(): string {
-    return this.icons.find((icon) => icon.value === this.habitPreview.icon)?.name ?? 'water_drop';
+    return iconeMaterial(this.habitPreview.icon ?? this.iconeOriginal);
   }
 
   constructor(
@@ -78,13 +95,17 @@ export class HabitModal implements OnInit {
   loadForm() {
     this.habitoForm.patchValue({
       nome: this.habito.nome,
-      target: `Meta: ${this.habito.nome} ${this.habito.meta} ${this.habito.unidade ?? ''}`.trim(),
+      // Só a descrição pura: o prefixo "Meta:" é coisa da exibição.
+      target: limparDescricao(this.habito.descricao),
     });
-    this.habitPreview.icon = this.habito.icon || this.habito.icone || 'assets/svg/icon-water.svg';
-    this.habitPreview.color = this.habito.color || this.habito.cor || '#3B82F6';
+    // Valor antigo conhecido → já vem selecionado (e é salvo como chave nova).
+    // Valor desconhecido → nenhum ícone selecionado; se salvar assim, o original é mantido.
+    this.iconeOriginal = this.habito.icon ?? null;
+    this.habitPreview.icon = normalizarIcone(this.habito.icon);
+    this.habitPreview.color = this.habito.color || '#3B82F6';
   }
 
-  selectIcon(icon: string) {
+  selectIcon(icon: ChaveIcone) {
     this.habitPreview.icon = icon;
   }
 
@@ -98,9 +119,12 @@ export class HabitModal implements OnInit {
 
   addHabit() {
     this.dialogRef.close({
-      icon: this.habitPreview.icon,
+      icon: this.habitPreview.icon ?? this.iconeOriginal,
       color: this.habitPreview.color,
-      habit: { nome: this.habitoForm.value.nome, descricao: this.habitoForm.value.target },
+      habit: {
+        nome: this.habitoForm.value.nome,
+        descricao: limparDescricao(this.habitoForm.value.target),
+      },
     });
   }
 }

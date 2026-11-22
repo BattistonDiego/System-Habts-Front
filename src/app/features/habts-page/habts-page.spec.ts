@@ -11,6 +11,7 @@ import { UsuarioService } from '../../service/usuario.service';
 import { HistoricoService } from '../../service/historico.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { provideLocalePtBr } from '../../core/locale/locale-pt-br';
 
 describe('HabtsPage', () => {
   let component: HabtsPage;
@@ -34,6 +35,7 @@ describe('HabtsPage', () => {
     await TestBed.configureTestingModule({
       imports: [HabtsPage],
       providers: [
+        provideLocalePtBr(),
         provideRouter([]),
         provideHttpClient(withFetch()),
         provideHttpClientTesting(),
@@ -53,6 +55,16 @@ describe('HabtsPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('mostra a data do cabeçalho em pt-BR (não "November")', () => {
+    loadHabit(makeHabit(false), false);
+    component.selectedDate = new Date(2026, 10, 21);
+    fixture.detectChanges();
+
+    const texto = (fixture.nativeElement as HTMLElement).querySelector('.date-info')!.textContent!;
+    expect(texto).toContain('21 de novembro de 2026');
+    expect(texto).not.toContain('November');
+  });
+
   it('deve retornar lista de habitos', () => {
     // Arrange
     const habitos: Habito[] = [
@@ -69,9 +81,8 @@ describe('HabtsPage', () => {
         },
         nome: 'Beber água',
         meta: 2000,
-        unidade: 'ml',
-        icone: 'water_drop',
-        cor: '#2196F3',
+        icon: 'water_drop',
+        color: '#2196F3',
         current: 1200,
         concluidoHoje: false,
       },
@@ -107,9 +118,9 @@ describe('HabtsPage', () => {
     const habit = makeHabit(true);
     loadHabit(habit, true);
     dialog.open.and.returnValue(dialogResult({
-      habit: { nome: 'Estudar Java e Spring', meta: 1, unidade: 'vez' },
-      icon: habit.icone,
-      color: habit.cor,
+      habit: { nome: 'Estudar Java e Spring', meta: 1 },
+      icon: habit.icon,
+      color: habit.color,
     }) as MatDialogRef<unknown>);
     habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Estudar Java e Spring', concluidoHoje: false }));
 
@@ -124,9 +135,9 @@ describe('HabtsPage', () => {
     const habit = makeHabit(true);
     loadHabit(habit, true);
     dialog.open.and.returnValue(dialogResult({
-      habit: { nome: habit.nome, meta: 5, unidade: 'vezes' },
-      icon: habit.icone,
-      color: habit.cor,
+      habit: { nome: habit.nome, meta: 5 },
+      icon: habit.icon,
+      color: habit.color,
     }) as MatDialogRef<unknown>);
     habitService.editHabitos.and.returnValue(of({ ...habit, concluidoHoje: false }));
 
@@ -140,31 +151,50 @@ describe('HabtsPage', () => {
     const habit = makeHabit(true);
     loadHabit(habit, true);
     dialog.open.and.returnValue(dialogResult({
-      habit: { nome: habit.nome, meta: 1, unidade: 'vez' },
+      habit: { nome: habit.nome, meta: 1 },
       icon: 'code',
       color: '#FACC15',
     }) as MatDialogRef<unknown>);
     habitService.editHabitos.and.returnValue(of({
       ...habit,
-      icone: 'code',
-      cor: '#FACC15',
+      icon: 'code',
+      color: '#FACC15',
       concluidoHoje: false,
     }));
 
     component.updateHabit(habit.id);
 
     expect(component.listHabitos[0].concluidoHoje).toBeTrue();
-    expect(component.listHabitos[0].icone).toBe('code');
-    expect(component.listHabitos[0].cor).toBe('#FACC15');
+    expect(component.listHabitos[0].icon).toBe('code');
+    expect(component.listHabitos[0].color).toBe('#FACC15');
+  });
+
+  it('salva a cor preta escolhida no modal de edição', () => {
+    const habit = makeHabit(false);
+    loadHabit(habit, false);
+    dialog.open.and.returnValue(dialogResult({
+      habit: { nome: habit.nome, descricao: 'Meditar 10 minutos' },
+      icon: 'psychology',
+      color: '#0A0A0A',
+    }) as MatDialogRef<unknown>);
+    habitService.editHabitos.and.returnValue(of({ ...habit, icon: 'psychology', color: '#0A0A0A' }));
+
+    component.updateHabit(habit.id);
+
+    expect(habitService.editHabitos).toHaveBeenCalledWith(
+      habit.id,
+      jasmine.objectContaining({ color: '#0A0A0A', icon: 'psychology' }),
+    );
+    expect(component.listHabitos[0].color).toBe('#0A0A0A');
   });
 
   it('mantém não concluído ao editar um hábito não concluído', () => {
     const habit = makeHabit(false);
     loadHabit(habit, false);
     dialog.open.and.returnValue(dialogResult({
-      habit: { nome: 'Hábito atualizado', meta: 1, unidade: 'vez' },
-      icon: habit.icone,
-      color: habit.cor,
+      habit: { nome: 'Hábito atualizado', meta: 1 },
+      icon: habit.icon,
+      color: habit.color,
     }) as MatDialogRef<unknown>);
     habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Hábito atualizado' }));
 
@@ -178,9 +208,9 @@ describe('HabtsPage', () => {
     const habit = makeHabit(true);
     loadHabit(habit, true);
     dialog.open.and.returnValue(dialogResult({
-      habit: { nome: 'Hábito após edição', meta: 1, unidade: 'vez' },
-      icon: habit.icone,
-      color: habit.cor,
+      habit: { nome: 'Hábito após edição', meta: 1 },
+      icon: habit.icon,
+      color: habit.color,
     }) as MatDialogRef<unknown>);
     habitService.editHabitos.and.returnValue(of({ ...habit, nome: 'Hábito após edição', concluidoHoje: false }));
     habitService.getHabitos.and.returnValue(of([{ ...habit, concluidoHoje: false }]));
@@ -199,9 +229,8 @@ describe('HabtsPage', () => {
       id: 8,
       nome: 'Estudar Java',
       meta: 1,
-      unidade: 'vez',
-      icone: 'code',
-      cor: '#FACC15',
+      icon: 'code',
+      color: '#FACC15',
       current: concluido ? 1 : 0,
       concluidoHoje: concluido,
     };

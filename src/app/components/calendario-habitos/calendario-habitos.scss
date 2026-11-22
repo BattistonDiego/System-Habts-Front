@@ -1,0 +1,736 @@
+// Calendário de hábitos — tema escuro do dashboard.
+//
+// Escrito para caber no orçamento de 8 kB por componente (angular.json): com o encapsulamento
+// emulado, cada parte de um seletor ganha um atributo [_ngcontent-…] no CSS final. Por isso:
+// - classes únicas no lugar de seletores aninhados (`.ponto` em vez de `.habito .ponto`);
+// - a cor de texto padrão vem do :host e é herdada (só se declara quando muda);
+// - todas as regras de mobile ficam num único @media no fim do arquivo.
+
+$card: #121929;
+$card-2: #161d2e;
+$tile: #18203a;
+$border: #263048;
+$border-soft: #1f2840;
+$text: #f1f5f9;
+$text-muted: #94a3b8;
+$text-label: #8b96ab;
+$primary: #3b82f6;
+$primary-strong: #2563eb;
+$radius-tile: 12px;
+$cell-empty-bg: #1c2436;
+$cell-empty-border: #2a3550;
+$selected-bg: rgba(59, 130, 246, 0.1);
+$mobile: 760px;
+
+// Cor do hábito: `--cor` (preenchimento), `--cor-destaque` (traço/ícone), `--cor-borda`.
+$destaque: var(--cor-destaque, var(--cor));
+
+:host {
+  display: block;
+  min-width: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: $text;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h2,
+h3,
+h4,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+h2,
+h3,
+.cal-mes,
+.dia-numero,
+.anel-pct,
+.tile-valor,
+.pilula-texto strong,
+.item-texto strong {
+  font-weight: 700;
+}
+
+.dia-semana,
+.cal-subtitulo,
+.painel-dia-semana,
+.tile-rotulo,
+.pilula-texto span,
+.item-texto span,
+.estado-vazio,
+.cal-status {
+  color: $text-muted;
+}
+
+// Blocos centralizados em flex
+.btn-nav,
+.icone-habito,
+.celula,
+.amostra,
+.anel-pct {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cartao {
+  background: $card;
+  border: 1px solid $border-soft;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $text-label;
+}
+
+/* Cabeçalho */
+
+.cal-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $border-soft;
+}
+
+h2,
+.cal-mes {
+  font-size: 16px;
+}
+
+.cal-subtitulo {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cal-mes {
+  min-width: 150px;
+  text-align: center;
+}
+
+.cal-acoes {
+  justify-self: end;
+}
+
+.btn-nav,
+.btn-hoje {
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-nav {
+  width: 36px;
+  height: 36px;
+  border: 1px solid $border;
+  background: $card-2;
+  color: $text;
+
+  &:hover:not(:disabled) {
+    background: $tile;
+    border-color: #33405e;
+  }
+
+  &:disabled {
+    color: #4b5873;
+    cursor: not-allowed;
+  }
+}
+
+.btn-hoje {
+  padding: 7px 14px;
+  border: 1px solid rgba(96, 165, 250, 0.6);
+  background: rgba(59, 130, 246, 0.14);
+  color: #bfdbfe;
+  font-size: 13px;
+  font-weight: 600;
+
+  &:hover {
+    background: rgba(59, 130, 246, 0.24);
+  }
+}
+
+button:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.cal-status {
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.erro {
+  color: #fca5a5;
+}
+
+/* Grade: hábitos | dias (rola) | progresso */
+
+.cal-grade {
+  display: flex;
+  align-items: flex-start;
+}
+
+.cab {
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.linha {
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.col-habitos {
+  flex: 0 0 210px;
+  width: 210px;
+  padding-right: 12px;
+  border-right: 1px solid $border-soft;
+}
+
+.col-habitos .cab,
+.habito {
+  padding-left: 4px;
+}
+
+.habito {
+  gap: 10px;
+}
+
+.ponto {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cor);
+  border: 1px solid var(--cor-borda, var(--cor));
+}
+
+.nome {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.icone-habito {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  color: $destaque;
+  background: color-mix(in srgb, #{$destaque} 16%, transparent);
+  border: 1px solid color-mix(in srgb, #{$destaque} 22%, transparent);
+}
+
+.grande {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.area-dias {
+  flex: 1;
+  min-width: 0;
+  // Sem isto, a largura max-content das 30/31 colunas sobe pelos contêineres flex
+  // e alarga a página inteira; com isto, só esta área rola na horizontal.
+  contain: inline-size;
+  overflow: auto hidden;
+  position: relative;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: $cell-empty-border transparent;
+}
+
+.trilha {
+  display: flex;
+  width: max-content;
+  padding: 0 6px;
+}
+
+.coluna-dia {
+  flex: 0 0 28px;
+  border-radius: 10px;
+
+  .linha {
+    justify-content: center;
+  }
+}
+
+.selecionada {
+  background: $selected-bg;
+  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.5);
+}
+
+.cab-dia {
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+
+.dia-semana,
+.dia-numero {
+  line-height: 1;
+}
+
+.dia-semana {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.dia-numero {
+  min-width: 18px;
+  padding: 2px 3px;
+  border-radius: 6px;
+  font-size: 11px;
+  text-align: center;
+}
+
+.hoje .dia-semana {
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+.hoje .dia-numero {
+  background: $primary-strong;
+  color: #fff;
+}
+
+.futura .dia-semana,
+.futura .dia-numero {
+  color: $text-label;
+  font-weight: 500;
+}
+
+.celula {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid $cell-empty-border;
+  background: $cell-empty-bg;
+  cursor: pointer;
+  transition: transform 0.12s;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.08);
+  }
+
+  &.concluida {
+    background: var(--cor);
+    border-color: var(--cor-borda, var(--cor));
+  }
+
+  &.futura {
+    background: none;
+    border: 1px dashed #222b3d;
+    cursor: default;
+  }
+}
+
+// Check branco (célula concluída e legenda)
+.celula svg,
+.amostra svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Progresso */
+
+.col-progresso {
+  flex: 0 0 140px;
+  width: 140px;
+  padding-left: 10px;
+  border-left: 1px solid $border-soft;
+
+  .cab {
+    justify-content: center;
+  }
+}
+
+.pilula-progresso {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 6px;
+  border-radius: 10px;
+  background: $tile;
+  border: 1px solid $border;
+}
+
+.anel {
+  position: relative;
+  flex: 0 0 36px;
+  height: 36px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+}
+
+circle {
+  fill: none;
+  stroke-width: 3.5;
+}
+
+.anel-trilho {
+  stroke: $cell-empty-border;
+}
+
+.anel-valor {
+  stroke: $destaque;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s;
+}
+
+.vazio {
+  stroke-opacity: 0;
+}
+
+.anel-pct {
+  position: absolute;
+  inset: 0;
+  font-size: 8.5px;
+}
+
+.pilula-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+
+  strong {
+    font-size: 13px;
+  }
+
+  span {
+    font-size: 11px;
+  }
+}
+
+/* Legenda */
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid $border-soft;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #cbd5e1;
+  }
+}
+
+.amostra {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid $cell-empty-border;
+  background: $cell-empty-bg;
+
+  &.concluida {
+    background: $primary;
+    border-color: $primary;
+  }
+
+  &.futura {
+    background: none;
+    border: 1px dashed #2f3a52;
+  }
+
+  &.selecionada {
+    background: $selected-bg;
+    box-shadow: none;
+    border-color: #60a5fa;
+  }
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Painel do dia */
+
+.painel {
+  margin-top: 24px;
+}
+
+.painel-conteudo {
+  animation: fade-in 0.22s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.painel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+.painel-dia-semana,
+.tile-rotulo,
+.item-texto span,
+.status,
+.legenda li {
+  font-size: 12px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-height: 72px;
+  padding: 12px 16px;
+  border-radius: $radius-tile;
+  background: $tile;
+  border: 1px solid $border;
+}
+
+.tile-valor {
+  font-size: 20px;
+}
+
+.tile-progresso {
+  gap: 10px;
+}
+
+.tile-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.barra {
+  height: 5px;
+  border-radius: 999px;
+  background: $border;
+  overflow: hidden;
+}
+
+.barra-preenchida {
+  height: 100%;
+  background: $primary;
+  transition: width 0.3s;
+}
+
+.lista-titulo {
+  margin-bottom: 10px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: $radius-tile;
+  background: $card-2;
+  border: 1px solid $border-soft;
+}
+
+.faixa {
+  flex: 0 0 3px;
+  align-self: stretch;
+  margin: 2px 0;
+  border-radius: 2px;
+  background: $destaque;
+}
+
+.item-texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 14px;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.status {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.concluido {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+.pendente {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid #334155;
+}
+
+.estado-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 16px;
+  border: 1px dashed $border;
+  border-radius: $radius-tile;
+  text-align: center;
+  font-size: 13px;
+
+  strong {
+    color: $text;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .painel-conteudo {
+    animation: none;
+  }
+
+  .celula,
+  .anel-valor {
+    transition: none;
+  }
+}
+
+/* Mobile (< 760px): colunas fixas mais estreitas, progresso só com o anel */
+
+@media (max-width: $mobile) {
+  .cal-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .cal-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .col-habitos {
+    flex-basis: 138px;
+    width: 138px;
+    padding-right: 8px;
+  }
+
+  .habito {
+    gap: 7px;
+  }
+
+  .nome {
+    font-size: 12px;
+  }
+
+  .icone-habito:not(.grande) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .col-progresso {
+    flex-basis: 64px;
+    width: 64px;
+    padding-left: 6px;
+
+    .cab {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  .pilula-progresso {
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border-color: transparent;
+  }
+
+  .pilula-texto {
+    display: none;
+  }
+
+  .tiles {
+    grid-template-columns: 1fr;
+  }
+
+  .item {
+    gap: 10px;
+    padding: 10px;
+  }
+}

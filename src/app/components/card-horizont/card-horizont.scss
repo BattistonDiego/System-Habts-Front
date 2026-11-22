@@ -2,6 +2,8 @@
 
 .habit-card {
   --habit-color: #3b82f6;
+  --habit-accent: var(--habit-color);
+  --habit-border: var(--habit-color);
   position: relative;
   box-sizing: border-box;
   min-height: 74px;
@@ -15,10 +17,10 @@
   box-shadow: none;
   transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 
-  &:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--habit-color) 42%, #1e293b); }
+  &:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--habit-accent) 42%, #1e293b); }
   &.completed {
-    border-color: color-mix(in srgb, var(--habit-color) 50%, transparent);
-    background: color-mix(in srgb, var(--habit-color) 12%, #111827);
+    border-color: color-mix(in srgb, var(--habit-accent) 50%, transparent);
+    background: color-mix(in srgb, var(--habit-accent) 12%, #111827);
   }
 }
 
@@ -30,19 +32,12 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--habit-color) 35%, transparent);
+  border: 1px solid color-mix(in srgb, var(--habit-accent) 35%, transparent);
   border-radius: 12px;
-  background: color-mix(in srgb, var(--habit-color) 17%, transparent);
-  color: var(--habit-color);
+  background: color-mix(in srgb, var(--habit-accent) 17%, transparent);
+  color: var(--habit-accent);
   transition: background-color 200ms ease, color 200ms ease;
   mat-icon { width: 24px; height: 24px; font-size: 24px; color: inherit; }
-}
-.habit-icon-mask {
-  width: 24px;
-  height: 24px;
-  background: currentColor;
-  mask: var(--habit-icon-mask) center / contain no-repeat;
-  -webkit-mask: var(--habit-icon-mask) center / contain no-repeat;
 }
 .habit-copy { min-width: 0; flex: 1; }
 .title { overflow: hidden; color: #f8fafc; font-size: 14px; font-weight: 600; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
@@ -62,8 +57,8 @@
   cursor: pointer;
   transition: transform 200ms ease, border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
   mat-icon { width: 19px; height: 19px; font-size: 19px; }
-  &:hover { transform: scale(1.06); border-color: var(--habit-color); }
-  &.checked { transform: scale(1); border-color: var(--habit-color); background: var(--habit-color); animation: complete-pop 200ms ease-out; }
+  &:hover { transform: scale(1.06); border-color: var(--habit-accent); }
+  &.checked { transform: scale(1); border-color: var(--habit-border); background: var(--habit-color); animation: complete-pop 200ms ease-out; }
 }
 
 .secondary-actions {
