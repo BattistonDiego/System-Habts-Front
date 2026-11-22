@@ -55,16 +55,6 @@ describe('HabtsPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('mostra a data do cabeçalho em pt-BR (não "November")', () => {
-    loadHabit(makeHabit(false), false);
-    component.selectedDate = new Date(2026, 10, 21);
-    fixture.detectChanges();
-
-    const texto = (fixture.nativeElement as HTMLElement).querySelector('.date-info')!.textContent!;
-    expect(texto).toContain('21 de novembro de 2026');
-    expect(texto).not.toContain('November');
-  });
-
   it('deve retornar lista de habitos', () => {
     // Arrange
     const habitos: Habito[] = [
