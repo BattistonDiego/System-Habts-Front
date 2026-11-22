@@ -35,12 +35,12 @@
           type="button"
           *ngFor="let ic of icons"
           class="icon-choice"
-          [class.selected]="habitPreview.icon === ic.value"
+          [class.selected]="habitPreview.icon === ic.chave"
           [attr.aria-label]="ic.label"
-          [attr.aria-pressed]="habitPreview.icon === ic.value"
-          (click)="selectIcon(ic.value)"
+          [attr.aria-pressed]="habitPreview.icon === ic.chave"
+          (click)="selectIcon(ic.chave)"
         >
-          <mat-icon>{{ ic.name }}</mat-icon>
+          <mat-icon>{{ ic.material }}</mat-icon>
         </button>
       </div>
     </section>
@@ -51,7 +51,7 @@
         id="habit-target"
         class="text-input"
         formControlName="target"
-        placeholder="Meta: Beber 2 litros de água"
+        placeholder="Ex.: Beber 2 litros de água"
       />
       <small>Descreva livremente, ex.: “Ler 20 páginas”.</small>
     </div>

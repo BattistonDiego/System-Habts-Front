@@ -1,5 +1,7 @@
 import { CalendarioMesResponse } from '../../interface/historico.model';
 import { corDeBorda, corDeDestaque } from '../../core/utils/cor-habito';
+import { ChaveIcone, normalizarIcone } from '../../core/utils/icone-habito';
+import { limparDescricao } from '../../core/utils/descricao-habito';
 
 /** Cores usadas apenas quando o hábito não tem cor cadastrada (por índice). */
 export const CORES_PADRAO = ['#3b82f6', '#22d3ee', '#10b981', '#f97316'] as const;
@@ -31,32 +33,8 @@ export const MESES = [
   'dezembro',
 ] as const;
 
-export type IconeHabito =
-  | 'code'
-  | 'agua'
-  | 'leitura'
-  | 'exercicio'
-  | 'mente'
-  | 'idiomas'
-  | 'sono'
-  | 'caminhada'
-  | 'padrao';
-
-/** O backend guarda o ícone como caminho de asset (legado) ou nome de ícone Material. */
-const MAPA_ICONES: Record<string, IconeHabito> = {
-  'assets/svg/icon-code.svg': 'code',
-  code: 'code',
-  'assets/svg/icon-water.svg': 'agua',
-  water_drop: 'agua',
-  'assets/png/icon-study.png': 'leitura',
-  menu_book: 'leitura',
-  'assets/png/icon-workout.png': 'exercicio',
-  fitness_center: 'exercicio',
-  psychology: 'mente',
-  translate: 'idiomas',
-  bedtime: 'sono',
-  footprint: 'caminhada',
-};
+/** Chave do catálogo de ícones, ou 'padrao' quando o valor salvo não é reconhecido. */
+export type IconeHabito = ChaveIcone | 'padrao';
 
 /** Mês de 1 a 12, igual ao contrato da API. */
 export interface Periodo {
@@ -67,7 +45,8 @@ export interface Periodo {
 export interface HabitoCalendario {
   id: number;
   nome: string;
-  meta: string;
+  /** Descrição pura, sem o prefixo "Meta:". */
+  descricao: string;
   /** Cor do hábito, usada em preenchimentos sólidos. */
   cor: string;
   /** Traços, ícones, tingimentos e faixa (claro quando `cor` é escura). */
@@ -134,7 +113,7 @@ export interface CalendarioCalculado {
 }
 
 export function resolverIcone(valor: string | null | undefined): IconeHabito {
-  return (valor && MAPA_ICONES[valor]) || 'padrao';
+  return normalizarIcone(valor) ?? 'padrao';
 }
 
 export function chaveConclusao(data: string, habitoId: number): string {
@@ -203,15 +182,15 @@ export function montarCalendario(
   const nomeMes = nomeDoMes(periodo.mes);
 
   const habitos: HabitoCalendario[] = resposta.habitos.map((h, indice) => {
-    const cor = h.cor || CORES_PADRAO[indice % CORES_PADRAO.length];
+    const cor = h.color || CORES_PADRAO[indice % CORES_PADRAO.length];
     return {
       id: h.id,
       nome: h.nome,
-      meta: h.meta ?? '',
+      descricao: limparDescricao(h.descricao),
       cor,
       destaque: corDeDestaque(cor),
       borda: corDeBorda(cor),
-      icone: resolverIcone(h.icone),
+      icone: resolverIcone(h.icon),
     };
   });
 

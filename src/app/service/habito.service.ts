@@ -19,13 +19,13 @@ export class HabitoService {
   }
 
   postHabitos(
-    body: Partial<Habito> & { usuarioId?: number; icon?: string; color?: string },
+    body: Partial<Habito> & { usuarioId?: number },
   ): Observable<any> {
     const payload = {
       usuarioId: body.usuarioId ?? body.usuario?.id,
       nome: body.nome,
-      icon: body.icon ?? body.icone,
-      color: body.color ?? body.cor,
+      icon: body.icon,
+      color: body.color,
       descricao: body.descricao ?? '',
     };
     return this.http.post<any>(this.baseUrl, payload);
@@ -41,8 +41,8 @@ export class HabitoService {
     return this.http
       .put<any>(`${this.baseUrl}/${id}`, {
         nome: body.nome,
-        icon: body.icon ?? body.icone,
-        color: body.color ?? body.cor,
+        icon: body.icon,
+        color: body.color,
         descricao: body.descricao,
       })
       .pipe(map((habito) => this.fromApi(habito)));
@@ -51,10 +51,8 @@ export class HabitoService {
   private fromApi(habito: HabitoApiResponse): Habito {
     return {
       ...habito,
+      descricao: habito.descricao ?? undefined,
       meta: 1,
-      unidade: 'vez',
-      icone: habito.icon,
-      cor: habito.color,
       current: 0,
       concluidoHoje: false,
     };

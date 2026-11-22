@@ -22,7 +22,7 @@ describe('HabitoService', () => {
 
   it('envia a cor preta como "color" ao criar um hábito', () => {
     service
-      .postHabitos({ usuarioId: 1, nome: 'Meditar', icone: 'psychology', cor: '#0A0A0A', descricao: '' })
+      .postHabitos({ usuarioId: 1, nome: 'Meditar', icon: 'psychology', color: '#0A0A0A', descricao: '' })
       .subscribe();
 
     const req = http.expectOne(url);
@@ -33,7 +33,7 @@ describe('HabitoService', () => {
 
   it('envia a cor preta como "color" ao editar e devolve o hábito com a cor', () => {
     let corSalva: string | undefined;
-    service.editHabitos(3, { nome: 'Meditar', cor: '#0A0A0A' }).subscribe((h) => (corSalva = h.cor));
+    service.editHabitos(3, { nome: 'Meditar', color: '#0A0A0A' }).subscribe((h) => (corSalva = h.color));
 
     const req = http.expectOne(`${url}/3`);
     expect(req.request.method).toBe('PUT');

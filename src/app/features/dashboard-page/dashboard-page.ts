@@ -12,6 +12,20 @@ import { LUCIDE_ICONS, LucideAngularModule, LucideIconProvider } from 'lucide-an
 import { Zap, Target, Award } from 'lucide-angular';
 import { CalendarioHabitosComponent } from '../../components/calendario-habitos/calendario-habitos';
 
+/**
+ * Eixo do gráfico "Hábitos por dia". A `chave` é o nome em inglês que o backend devolve
+ * (TO_CHAR(data, 'Day') no Postgres) e precisa continuar igual; o `rotulo` é o que aparece.
+ */
+export const DIAS_GRAFICO_SEMANAL = [
+  { chave: 'Monday', rotulo: 'Seg' },
+  { chave: 'Tuesday', rotulo: 'Ter' },
+  { chave: 'Wednesday', rotulo: 'Qua' },
+  { chave: 'Thursday', rotulo: 'Qui' },
+  { chave: 'Friday', rotulo: 'Sex' },
+  { chave: 'Saturday', rotulo: 'Sáb' },
+  { chave: 'Sunday', rotulo: 'Dom' },
+] as const;
+
 @Component({
   selector: 'app-dashboard-page',
   imports: [
@@ -128,14 +142,13 @@ export class DashboardPage implements OnInit {
 
   loadResumoSemanal(userId: number) {
     this.historicoService.getResumoSemanal(userId).subscribe((res) => {
-      const dias = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       const mapaQuantidade = new Map(res.map((r) => [r.dia.trim(), r.quantidade]));
 
       this.barChartData = {
-        labels: dias,
+        labels: DIAS_GRAFICO_SEMANAL.map((d) => d.rotulo),
         datasets: [
           {
-            data: dias.map((d) => mapaQuantidade.get(d) ?? 0),
+            data: DIAS_GRAFICO_SEMANAL.map((d) => mapaQuantidade.get(d.chave) ?? 0),
             label: 'Hábitos concluídos',
             backgroundColor: '#3b82f6',
           },
@@ -149,7 +162,6 @@ export class DashboardPage implements OnInit {
       this.listHabitos = habitos.map((h) => ({
         ...h,
         meta: 1,
-        unidade: 'vez',
         current: 0,
       }));
       this.quantidadeHabitos = habitos.length;

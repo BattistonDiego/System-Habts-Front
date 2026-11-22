@@ -24,9 +24,9 @@ export interface CalendarioMesResponse {
 export interface HabitoMes {
   id: number;
   nome: string;
-  meta: string | null;
-  cor: string | null;
-  icone: string | null;
+  descricao: string | null;
+  color: string | null;
+  icon: string | null;
 }
 
 export interface ConclusaoMes {

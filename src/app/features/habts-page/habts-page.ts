@@ -82,7 +82,6 @@ export class HabtsPage implements OnInit {
           this.listHabitos = habitos.map((h) => ({
             ...h,
             meta: 1,
-            unidade: 'vez',
             current: 0,
           }));
 
@@ -113,7 +112,6 @@ export class HabtsPage implements OnInit {
           this.listHabitos = habitos.map((h) => ({
             ...h,
             meta: 1,
-            unidade: 'vez',
             current: 0,
           }));
 
@@ -229,9 +227,8 @@ export class HabtsPage implements OnInit {
         const body = {
           nome: result.habit.nome,
           descricao: result.habit.descricao,
-          unidade: result.habit.unidade,
-          icone: result.icon,
-          cor: result.color,
+          icon: result.icon,
+          color: result.color,
         };
         this.habitoService.editHabitos(habitoSelected.id, body).subscribe({
           next: (res) => {
@@ -362,8 +359,8 @@ export class HabtsPage implements OnInit {
           usuarioId: this.usuarioId,
           nome: result.habit.nome,
           descricao: result.habit.descricao,
-          icone: result.icon,
-          cor: result.color,
+          icon: result.icon,
+          color: result.color,
         };
         this.addHabit(newHabit);
       }

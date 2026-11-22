@@ -13,9 +13,11 @@ import { routes } from './app.routes';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
+import { provideLocalePtBr } from './core/locale/locale-pt-br';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideLocalePtBr(),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

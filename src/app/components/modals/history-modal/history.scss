@@ -152,14 +152,6 @@
       mat-icon { width: 21px; height: 21px; font-size: 21px; color: inherit; }
     }
 
-    .history-icon-mask {
-      width: 21px;
-      height: 21px;
-      background: currentColor;
-      mask: var(--habit-icon-mask) center / contain no-repeat;
-      -webkit-mask: var(--habit-icon-mask) center / contain no-repeat;
-    }
-
     .progress-bar {
       width: 385px;
     }
