@@ -10,7 +10,6 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 import { routes } from './app.routes';
-import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
 import { provideLocalePtBr } from './core/locale/locale-pt-br';
@@ -22,6 +21,5 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
-    provideNativeDateAdapter(),
   ],
 };
